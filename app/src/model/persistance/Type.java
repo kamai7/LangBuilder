@@ -1,21 +1,39 @@
 package model.persistance;
 
+import model.DAO.TypeDAO;
+
 public class Type {
     
     private int id;
     private String label;
     private Type parent;
+    private Word root;
     private int position;
 
     private TypeDAO dao;
     
-    public Type(String label, Type parent, int position) {
+    public Type(String label, Type parent, Word root, int position) {
 
-        if (label == null || parent == null) {
+        if (label == null) {
             throw new IllegalArgumentException("parameters cannot be null");
         }
-        if (position < 0 || position > 2) {
+        if (label.trim().length() == 0) {
+            throw new IllegalArgumentException("label cannot be empty");
+        }
+        if (root != null && (position < 0 || position > 2)) {
             throw new IllegalArgumentException("position must be between 0 and 2");
+        }
+
+        this.id = -1;
+        this.label = label;
+        this.parent = parent;
+        this.root = root;
+        this.position = position;
+    }
+
+    public Type(String label) {
+        if (label == null) {
+            throw new IllegalArgumentException("parameters cannot be null");
         }
         if (label.trim().length() == 0) {
             throw new IllegalArgumentException("label cannot be empty");
@@ -23,11 +41,9 @@ public class Type {
 
         this.id = -1;
         this.label = label;
-        this.parent = parent;
-        this.position = position;
     }
 
-    public updateValues(){
+    public void updateValues(){
 
         this.id = dao.findId(this);
 
@@ -35,6 +51,7 @@ public class Type {
 
         this.label = reference.getLabel();
         this.parent = reference.getParent();
+        this.root = reference.getRoot();
         this.position = reference.getPosition();
     }
 
@@ -57,10 +74,15 @@ public class Type {
     }
 
     public void setParent(Type parent) {
-        if (parent == null) {
-            throw new IllegalArgumentException("parent cannot be null");
-        }
         this.parent = parent;
+    }
+
+    public Word getRoot() {
+        return root;
+    }
+
+    public void setRoot(Word root) {
+        this.root = root;
     }
 
     public int getPosition() {
@@ -72,6 +94,10 @@ public class Type {
             throw new IllegalArgumentException("position must be between 0 and 2");
         }
         this.position = position;
+    }
+
+    public int getId() {
+        return id;
     }
 
 }

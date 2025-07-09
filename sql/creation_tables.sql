@@ -117,7 +117,8 @@ create table Type(
     CONSTRAINT pk_Type primary key(typeId),
     FOREIGN KEY (rootId) REFERENCES Word(wordId),
     FOREIGN KEY (parentId) REFERENCES Type(typeId),
-    CONSTRAINT ck_TypePosition CHECK(position IN (0,1,2))
+    CONSTRAINT ck_TypePosition CHECK(position IN (0,1,2)),
+    CONSTRAINT uq_label UNIQUE(label)
 );
 
 create table WordsTypes(
