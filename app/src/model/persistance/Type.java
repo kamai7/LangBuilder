@@ -27,6 +27,17 @@ public class Type {
         this.position = position;
     }
 
+    public updateValues(){
+
+        this.id = dao.findId(this);
+
+        Type reference = dao.findById(this.id);
+
+        this.label = reference.getLabel();
+        this.parent = reference.getParent();
+        this.position = reference.getPosition();
+    }
+
     public String getLabel() {
         return label;
     }

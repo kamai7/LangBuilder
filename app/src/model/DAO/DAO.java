@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.HashSet;
 
 
-public class DAO<T> {
+public abstract class DAO<T> {
 
 
     private String url = "jdbc:mysql://localhost:3306/LangEngine";
@@ -18,9 +18,7 @@ public class DAO<T> {
     DAO() {
     }
 
-    public HashSet<T> findAll() {
-        return null;
-    }
+    public abstract HashSet<T> findAll();
 
     Connection getConnection() {
         Connection c = null;
@@ -40,9 +38,7 @@ public class DAO<T> {
         }
     }
 
-    public int findId(T word){
-        return 0;
-    }
+    public abstract int findId(T word);
 
     public int getRowsCount(String tableName){
         int ret = 0;
