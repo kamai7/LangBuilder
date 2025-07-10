@@ -7,27 +7,48 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
 
 public class WordDAO extends DAO<Word> {
+    public static void main(String[] args) {
+        WordDAO wordDAO = new WordDAO();
+        LetterDAO letterDAO = new LetterDAO();
+        
+        Letter A = letterDAO.findById(0);
+        Letter B = letterDAO.findById(1);
+        Letter C = letterDAO.findById(2);
+
+        for (Word w : wordDAO.findAll()) {
+            wordDAO.delete(w);
+        }
+        
+        Word word = new Word(
+            new ArrayList<>(List.of(A, B, C)),
+            0.5, 0.5, 0.5
+        );
+
+        System.out.println("Creating word: " + word.getLetters());
+
+        wordDAO.create(word);
+
+        System.out.println(wordDAO.findAll());
+    }
 
     @Override
     public ArrayList<Word> findAll() {
         ArrayList<Word> ret = new ArrayList<>();
-        String query = "SELECT * FROM Word";
+        String query = "SELECT wordId FROM Word";
 
         try (Connection c = getConnection();
              Statement st = c.createStatement();
              ResultSet rs = st.executeQuery(query)) {
 
-            while(rs.next()){
-
-                int id = rs.getInt("wordId");
-                Word word = findById(id);
-                ret.add(word);
+            while (rs.next()) {
+                ret.add(findById(rs.getInt("wordId")));
             }
 
         } catch(SQLException e) {
@@ -70,13 +91,13 @@ public class WordDAO extends DAO<Word> {
     @Override
     public Word findById(int id){
         Word ret = null;
-        String query = "SELECT * FROM Word WHERE WordId = ?;" +
+        String query = "SELECT * FROM Word WHERE wordId = ?;" +
                        "SELECT * FROM WordsLetters WHERE wordLId = ?;" +
                        "SELECT * FROM Definition WHERE dWordId = ?;" +
                        "SELECT * FROM Translation WHERE tWordId = ?;" +
                        "SELECT * FROM UsedRoots WHERE roWordId = ?;" +
                        "SELECT * FROM Link WHERE lWordId = ?;" +
-                       "SELECT * FROM Type WHERE tWordId = ?;";
+                       "SELECT * FROM WordsTypes WHERE tyWordId = ?;";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
@@ -146,6 +167,7 @@ public class WordDAO extends DAO<Word> {
                 }
 
                 ret = new Word(letters, emotional, formality, vulgarity, translations, definitions, links, roots, types);
+                ret.setId(id);
             }
         } catch(SQLException e) {
             System.err.println("WordDAO findById: " + e.getMessage());
@@ -190,35 +212,35 @@ public class WordDAO extends DAO<Word> {
     }
 
     public void updateParameters(Word word) {
-        String query = "UPDATE Word SET emotional=?, formality=?, vulgarity=? WHERE wordId = ?";
+        String query = "UPDATE Word SET emotional = ?, formality = ?, vulgarity = ? WHERE wordId = ?";
         
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
 
             ps.setDouble(1, word.getEmotional());
             ps.setDouble(2, word.getFormality());
             ps.setDouble(3, word.getVulgarity());
             ps.setInt(4, word.getId());
-        }
-        catch(SQLException e) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
             System.err.println("WordDAO updateParameters: invalid parameters\n" + e.getMessage());
         }
     }
 
-    public void updateLetters(Word word){
+    public void updateLetters(Word word) {
         String queryAdd = "INSERT INTO WordsLetters VALUES (?, ?, ?)";
         String queryDelete = "DELETE FROM WordsLetters WHERE wordLId = ?";
         int rows = 0;
-        try(Connection c = getConnection()){
 
-            try(PreparedStatement ps = c.prepareStatement(queryDelete)){
+        try(Connection c = getConnection()){
+            try (PreparedStatement ps = c.prepareStatement(queryDelete)) {
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
-            }catch(SQLException e){
+            } catch(SQLException e) {
                 System.err.println("WordDAO updateLetters: invalid id\n" + e.getMessage());
             }
 
-            try(PreparedStatement ps = c.prepareStatement(queryAdd)){
+            try (PreparedStatement ps = c.prepareStatement(queryAdd)) {
                 for(int i = 0; i < word.getLetters().size(); i++){
                     ps.setInt(1, word.getId());
                     ps.setInt(2, i + 1);
@@ -226,11 +248,11 @@ public class WordDAO extends DAO<Word> {
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
-            }catch(SQLException e){
+            } catch(SQLException e) {
                 System.err.println("WordDAO updateLetters: invalid letters\n" + e.getMessage());
             }
             System.out.println(rows + " rows updated");
-        }catch(SQLException e){
+        } catch(SQLException e) {
             System.err.println("WordDAO updateLetters: invalid parameters\n" + e.getMessage());
         }
     }
@@ -323,8 +345,8 @@ public class WordDAO extends DAO<Word> {
     }
 
     public void updateLinks(Word word) {
-        String deleteLinkQuery = "DELETE FROM Links WHERE lWordId = ? AND linkedWordId = ?";
-        String insertLinkQuery = "INSERT INTO Links (lWordId, linkedWordId) VALUES (?, ?)";
+        String deleteLinkQuery = "DELETE FROM Link WHERE lWordId = ? AND linkedWordId = ?";
+        String insertLinkQuery = "INSERT INTO Link (lWordId, linkedWordId) VALUES (?, ?)";
 
         try (Connection c = getConnection()) {
             c.setAutoCommit(false); // Démarre une transaction
@@ -400,8 +422,8 @@ public class WordDAO extends DAO<Word> {
         String queryLetters = "DELETE FROM WordsLetters WHERE wordLId = ?";
         String queryDef = "DELETE FROM Definition WHERE dWordId = ?";
         String queryTrans = "DELETE FROM Translation WHERE tWordId = ?";
-        String queryRoot = "DELETE FROM Root WHERE rWordId = ?";
-        String queryLink = "DELETE FROM Links WHERE lWordId = ? OR linkedWordId = ?";
+        String queryRoot = "DELETE FROM UsedRoots WHERE roWordId = ?";
+        String queryLink = "DELETE FROM Link WHERE lWordId = ? OR linkedWordId = ?";
 
         int rows = 0;
 
@@ -456,22 +478,25 @@ public class WordDAO extends DAO<Word> {
 
     @Override
     public int create(Word word) {
-        String query = "INSERT INTO Word VALUES (?, ?, ?, ?)";
-        String queryLetters = "INSERT INTO WordsLetters VALUES (?, ?, ?)";
-        String queryDef = "INSERT INTO Definition VALUES (?, ?)";
-        String queryTrans = "INSERT INTO Translation VALUES (?, ?)";
-        String queryLink = "INSERT INTO Links VALUES (?, ?)";
+        String query = "INSERT INTO Word (wordId, emotional, formality, vulgarity, isUsable) VALUES (?, ?, ?, ?, ?)";
+        String queryLetters = "INSERT INTO WordsLetters (wordLid, position, letterWId) VALUES (?, ?, ?)";
+        String queryDef = "INSERT INTO Definition (dWordId, def) VALUES (?, ?)";
+        String queryTrans = "INSERT INTO Translation (tWordId, translation) VALUES (?, ?)";
+        String queryLink = "INSERT INTO Link (lWordId, linkedWordId) VALUES (?, ?)";
 
         int rows = 0;
-
-        int wordId = getRowsCount("Word") + 1;
+        int retId = -1;
 
         try(Connection c = getConnection()) {
+            c.setAutoCommit(false);
+            int wordId = nextId("Word", "wordId");
+
             try (PreparedStatement ps = c.prepareStatement(query)) {
                 ps.setInt(1, wordId);
                 ps.setDouble(2, word.getEmotional());
                 ps.setDouble(3, word.getFormality());
                 ps.setDouble(4, word.getVulgarity());
+                ps.setBoolean(5, word.isUsable());
                 rows += ps.executeUpdate();
             }
 
@@ -515,14 +540,19 @@ public class WordDAO extends DAO<Word> {
                 }
                 rows += ps.executeBatch().length;
             }
+
+            c.commit();
+
+            // Only if the commit was successful
+            word.setId(wordId);
+            retId = wordId;
         }
         catch (SQLException e) {
-            System.err.println("WordDAO create: invalid parameters\n" + e.getMessage());
+            System.err.println("WordDAO create: invalid parameters (" + e.getMessage() + ")");
         }
 
         System.out.println(rows + " rows inserted");
         
-        word.setId(wordId);
-        return wordId;
+        return retId;
     }
 }

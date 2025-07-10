@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class Word {
 
-    private int id;
+    private int id = -1;
 
     private ArrayList<Letter> letters;
     private ArrayList<String> lettersAscii;
@@ -14,6 +14,7 @@ public class Word {
     private double emotional;
     private double formality;
     private double vulgarity;
+    private boolean isUsable = true;
 
     private ArrayList<String> translations;
     private ArrayList<String> definitions;
@@ -34,8 +35,6 @@ public class Word {
         if (letters.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
             throw new IllegalArgumentException("invalid parameters, no letters or out of range");
         }
-
-        this.id = -1;
 
         this.letters = letters;
         this.lettersAscii = new ArrayList<>();
@@ -122,6 +121,10 @@ public class Word {
         return vulgarity;
     }
 
+    public boolean isUsable() {
+        return isUsable;
+    }
+
     public int getId() {
         return id;
     }
@@ -139,9 +142,6 @@ public class Word {
     }
 
     public void setId(int id) {
-        if (id < 0) {
-            throw new IllegalArgumentException("id cannot be negative");
-        }
         this.id = id;
     }
 
@@ -189,6 +189,10 @@ public class Word {
             throw new IllegalArgumentException("vulgarity must be between 0 and 1");
         }
         this.vulgarity = vulgarity;
+    }
+
+    public void setUsable(boolean isUsable) {
+        this.isUsable = isUsable;
     }
 
     public void setRoots(HashSet<Word> roots) {
