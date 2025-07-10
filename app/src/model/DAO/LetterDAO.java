@@ -5,8 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-
+import java.util.ArrayList;
 import model.persistance.Letter;
 
 public  class LetterDAO extends DAO<Letter> {
@@ -16,9 +15,8 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
-    public HashSet<Letter> findAll() {
-        
-        HashSet<Letter> ret = new HashSet<>();
+    public ArrayList<Letter> findAll() {
+        ArrayList<Letter> ret = new ArrayList<>();
         String query = "SELECT * FROM Letter";
 
         try(Connection c = getConnection();
@@ -27,7 +25,6 @@ public  class LetterDAO extends DAO<Letter> {
 
             while(rs.next()){
                 Letter letter = new Letter(rs.getString("letter"), rs.getString("letterAscii"));
-                letter.updateValues();
                 ret.add(letter);
             }
 
@@ -39,32 +36,6 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
-    public int findId(Letter letter){
-
-        int ret = -1;
-        String character = letter.getCharacter();
-        String characterAscii = letter.getCharacterAscii();
-
-        String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ?";
-
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
-            
-            ps.setString(1, character);
-            ps.setString(2, characterAscii);
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()){
-                ret = rs.getInt("letterId");
-            }
-
-        }catch(SQLException e){
-            System.err.println("LetterDAO findId: " + e.getMessage());
-        }
-    
-        return ret;
-    }
-
     public Letter findById(int id){
         Letter ret = null;
         String query = "SELECT * FROM Letter WHERE letterId = ?";
@@ -77,7 +48,7 @@ public  class LetterDAO extends DAO<Letter> {
 
             if(rs.next()){
                 ret = new Letter(rs.getString("letter"), rs.getString("letterAscii"));
-                ret.updateValues();
+                ret.setId(id);
             }
 
         }catch(SQLException e){
@@ -87,48 +58,7 @@ public  class LetterDAO extends DAO<Letter> {
         return ret;
     }
 
-    public String findCharacter(Letter letter){
-        String ret = null;
-        String query = "SELECT * FROM Letter WHERE letterId = ?";
-
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
-            
-            ps.setInt(1, letter.getId());
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()){
-                ret = rs.getString("letter");
-            }
-
-        }catch(SQLException e){
-            System.err.println("LetterDAO findCharacter: " + e.getMessage());
-        }
-    
-        return ret;
-    }
-
-    public String findCharacterAscii(Letter letter){
-        String ret = null;
-        String query = "SELECT * FROM Letter WHERE letterId = ?";
-
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
-            
-            ps.setInt(1, letter.getId());
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()){
-                ret = rs.getString("letterAscii");
-            }
-
-        }catch(SQLException e){
-            System.err.println("LetterDAO findCharacterAscii: " + e.getMessage());
-        }
-    
-        return ret;
-    }
-
+    @Override
     public void delete(Letter letter){
         String query = "DELETE FROM Letter WHERE letterId = ?";
 
@@ -143,6 +73,7 @@ public  class LetterDAO extends DAO<Letter> {
         }
     }
 
+    @Override
     public void update(Letter letter){
         String query = "UPDATE Letter SET letter = ?, letterAscii = ? WHERE letterId = ?";
 
@@ -159,20 +90,23 @@ public  class LetterDAO extends DAO<Letter> {
         }
     }
 
-    public void create(Letter letter){
+    @Override
+    public int create(Letter letter){
+        /*int id = getNe
         String query = "INSERT INTO Letter VALUES (?, ?, ?)";
 
-        try(Connection c = getConnection()){
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            int id = 
+            ps.setInt(1, getRowsCount("Letter") + 1);
+            ps.setString(2, letter.getCharacter());
+            ps.setString(3, letter.getCharacterAscii());
+            ps.executeUpdate();
 
-            try(PreparedStatement ps = c.prepareStatement(query)){
-                ps.setInt(1, getRowsCount("Letter") + 1);
-                ps.setString(2, letter.getCharacter());
-                ps.setString(3, letter.getCharacterAscii());
-                ps.executeUpdate();
-            }
-
-        }catch(SQLException e){
+        } catch(SQLException e){
             System.err.println("LetterDAO create: " + e.getMessage());
-        }
+        }*/
+
+        return 0;
     }
 }

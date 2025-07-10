@@ -2,11 +2,9 @@ package model.persistance;
 
 import java.util.Objects;
 
-import model.DAO.LetterDAO;
-
 public class Letter {
 
-    private int id;
+    private int id = -1;
     private String character;
     private String characterAscii;
 
@@ -24,6 +22,10 @@ public class Letter {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getCharacter() {
         return character;
     }
@@ -39,7 +41,7 @@ public class Letter {
     public void setCharacterAscii(String characterAscii) {
         this.characterAscii = characterAscii;
     }
-
+/*
     public void updateValues() {
 
         LetterDAO letterDAO = new LetterDAO();
@@ -53,7 +55,7 @@ public class Letter {
             this.characterAscii = letterDAO.findCharacterAscii(this);
         }
     }
-
+*/
     public String toString() {
         return character + " -> " + characterAscii + " (" + id + ")";
     }
