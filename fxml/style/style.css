@@ -1,0 +1,42 @@
+.nav{
+    -fx-background-color: #141414;
+}
+
+.icon{
+    -fx-scale-x: 0.8;
+    -fx-scale-y: 0.8;
+}
+
+
+.input{
+    -fx-border-color: #868686;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}
+
+.outline1{
+    -fx-border-color: #505050 transparent #505050 transparent;
+    -fx-border-width: 2px;
+    -fx-background-color: transparent;
+}
+
+.text-color1{
+    -fx-text-fill: #c0c0c0;
+}
+
+.scroll-pane{
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .viewport, .scroll-pane > .corner, .scroll-pane > .track{
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .increment-button, .scroll-pane > .decrement-button{
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .thumb{
+    -fx-background-color: #868686;
+    -fx-background-radius: 0px;
+}
