@@ -1,18 +1,15 @@
 package model.persistance;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 
-import model.DAO.WordDAO;
-
-public class Word{
+public class Word {
 
     private int id;
 
-    private Letter[] word;
-    private String[] wordAscii;
+    private ArrayList<Letter> letters;
+    private ArrayList<String> lettersAscii;
 
     private double emotional;
     private double formality;
@@ -21,32 +18,29 @@ public class Word{
     private ArrayList<String> translations;
     private ArrayList<String> definitions;
     
-    /** non-directed graph!!!*/
+    /** non-directed graph!!! */
     private HashSet<Word> links;
     
     private HashSet<Word> roots;
 
     private HashSet<Type> types;
-
-    private WordDAO dao;
     
     
-    public Word(Letter[] word, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, HashSet<Word> links, HashSet<Word> roots, HashSet<Type> types) {
-        if (word == null || translations == null || definitions == null || links == null || roots == null || types == null) {
+    public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, HashSet<Word> links, HashSet<Word> roots, HashSet<Type> types) {
+        if (letters == null || translations == null || definitions == null || links == null || roots == null || types == null) {
             throw new IllegalArgumentException("parameters are null");
         }
 
-        if (word.length == 0 || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
-            throw new IllegalArgumentException("invalid parameters, no word or out of range");
+        if (letters.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
+            throw new IllegalArgumentException("invalid parameters, no letters or out of range");
         }
 
         this.id = -1;
 
-        this.word = word;
-        this.wordAscii = new String[word.length];
-
-        for (int i = 0; i < wordAscii.length; i++) {
-            this.wordAscii[i] = word[i].getCharacterAscii();
+        this.letters = letters;
+        this.lettersAscii = new ArrayList<>();
+        for (Letter letter : letters) {
+            this.lettersAscii.add(letter.getCharacterAscii());
         }
 
         this.emotional = emotional;
@@ -60,19 +54,20 @@ public class Word{
         this.roots = roots;
 
         this.types = types;
-        
-        this.dao = new WordDAO();
     }
 
-    public Word(Letter[] word) {
-        this(word, 0, 0, 0, new ArrayList<String>(), new ArrayList<String>(), new HashSet<Word>(), new HashSet<Word>(), new HashSet<Type>());
+    public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity) {
+        this(letters, emotional, formality, vulgarity, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
+    public Word(ArrayList<Letter> letters) {
+        this(letters, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
+    }
+/*
     public void updateValues(){
+        Word reference = dao.findByLetters(letters);
 
-        this.id = dao.findId(this);
-
-        Word reference = dao.findById(this.id);
+        this.id = reference.getId();
 
         this.emotional = reference.getEmotional();
         this.formality = reference.getFormality();
@@ -84,11 +79,11 @@ public class Word{
         this.links = reference.getLinks();
         this.types = reference.getTypes();
     }
-
+*/
+    @Override
     public String toString() {
         return "Word: " + id + " : " +
-            ", " + Arrays.toString(word) +
-            ", -> " + Arrays.toString(wordAscii) +
+            letters + " (" + lettersAscii + ") " +
             "\n\t translations=" + translations +
             "\n\t definitions=" + definitions +
             "\n\t emotional=" + emotional +
@@ -99,12 +94,12 @@ public class Word{
             "\n\t types=" + types;
     }
 
-    public Letter[] getWord() {
-        return word;
+    public ArrayList<Letter> getLetters() {
+        return letters;
     }
 
-    public String[] getWordAscii() {
-        return wordAscii;
+    public ArrayList<String> getLettersAscii() {
+        return lettersAscii;
     }
 
     public ArrayList<String> getTranslations() {
@@ -143,14 +138,21 @@ public class Word{
         return types;
     }
 
-    public void setWord(Letter[] word) {
-        if (word == null || word.length == 0) {
-            throw new IllegalArgumentException("word cannot be null or empty");
+    public void setId(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException("id cannot be negative");
         }
-        this.word = word;
-        this.wordAscii = new String[word.length];
-        for (int i = 0; i < wordAscii.length; i++) {
-            this.wordAscii[i] = word[i].getCharacterAscii();
+        this.id = id;
+    }
+
+    public void setLetters(ArrayList<Letter> letters) {
+        if (letters == null || letters.isEmpty()) {
+            throw new IllegalArgumentException("letters cannot be null or empty");
+        }
+        this.letters = new ArrayList<>(letters);
+        this.lettersAscii = new ArrayList<>();
+        for (Letter letter : letters) {
+            this.lettersAscii.add(letter.getCharacterAscii());
         }
     }
 
@@ -215,4 +217,21 @@ public class Word{
         return Objects.hash(id);
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Word other = (Word) obj;
+        return this.id == other.id &&
+               Double.compare(other.emotional, this.emotional) == 0 &&
+               Double.compare(other.formality, this.formality) == 0 &&
+               Double.compare(other.vulgarity, this.vulgarity) == 0 &&
+               this.letters.equals(other.letters) &&
+               this.lettersAscii.equals(other.lettersAscii) &&
+               Objects.equals(this.translations, other.translations) &&
+               Objects.equals(this.definitions, other.definitions) &&
+               Objects.equals(this.links, other.links) &&
+               Objects.equals(this.roots, other.roots) &&
+               Objects.equals(this.types, other.types);
+    }
 }
