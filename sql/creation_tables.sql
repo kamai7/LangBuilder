@@ -1,17 +1,6 @@
-drop table if exists WordsTypes;
-drop table if exists Type;
-drop table if exists UsedRoots;
-drop table if exists Links;
-drop table if exists Definition;
-drop table if exists Translation;
-drop table if exists WordsLetters;
-drop table if exists Word;
-drop table if exists Letter;
-drop database if exists LangEngine;
-
-create database LangEngine;
-
-use LangEngine;
+drop database if exists LangBuilder;
+create database LangBuilder;
+use LangBuilder;
 
 /*
 letters which will be used in yout language
@@ -84,7 +73,7 @@ create table Definition(
 stores links between word to make a giant graph of the whole language
 like "oak" will be linked to "tree"
 */
-create table Links(
+create table Link(
 	lWordId int,
     linkedWordId int,
     
