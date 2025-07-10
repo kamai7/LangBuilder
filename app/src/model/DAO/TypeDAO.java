@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
 import model.persistance.Type;
 import model.persistance.Word;
 
@@ -38,6 +37,7 @@ public class TypeDAO extends DAO<Type>{
         return ret;
     }
 
+    @Override
     public Type findById(int id){
         Type ret = null;
         String query = "SELECT * FROM Type WHERE typeId = ?";
@@ -48,10 +48,20 @@ public class TypeDAO extends DAO<Type>{
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()){
-                Type parent = shallowFind(rs.getInt("parentId"));
-                WordDAO wordDAO = new WordDAO();
-                Word word = wordDAO.findById(rs.getInt("rWordId"));
-                ret = new Type(rs.getString("label"), parent, word ,rs.getInt("position"));
+                Type parent = null;
+                int parentId = rs.getInt("parentId");
+                if (!rs.wasNull()) {
+                    parent = findShallow(parentId);
+                }
+
+                Word root = null;
+                int rootId = rs.getInt("rootId");
+                if (!rs.wasNull()) {
+                    root = new WordDAO().findById(rootId);
+                }
+
+                ret = new Type(rs.getString("label"), parent, root, rs.getInt("position"));
+                ret.setId(id);
             }
 
         }catch (Exception e){
@@ -61,7 +71,7 @@ public class TypeDAO extends DAO<Type>{
         return ret;
     }
 
-    private Type shallowFind(int id){
+    private Type findShallow(int id){
         Type ret = null;
         String query = "SELECT * FROM Type WHERE typeId = ?";
 
@@ -81,24 +91,28 @@ public class TypeDAO extends DAO<Type>{
         return ret;
     }
 
+    @Override
     public void update(Type type){
         int lines = 0;
         String query = "UPDATE Type SET label = ?, parentId = ?, rootId = ?, position = ? WHERE typeId = ?";
 
         try (Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
+             PreparedStatement ps = c.prepareStatement(query)){
 
             ps.setString(1, type.getLabel());
+
             if (type.getParent() == null) {
-                ps.setInt(2, 0);
-            }else{
-                ps.setInt(2, type.getParent().getId());
+                ps.setNull(3, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(3, type.getParent().getId());
             }
+
             if (type.getRoot() == null) {
-                ps.setInt(3, 0);
-            }else{
-                ps.setInt(3, type.getRoot().getId());
+                ps.setNull(4, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(4, type.getRoot().getId());
             }
+
             ps.setInt(4, type.getPosition());
             ps.setInt(5, type.getId());
             lines = ps.executeUpdate();
@@ -108,35 +122,45 @@ public class TypeDAO extends DAO<Type>{
         }
     }
 
+    @Override
     public int create(Type type){
         String query = "INSERT INTO Type VALUES (?, ?, ?, ?, ?)";
-        int ret = -1;
+        int retId = -1;
 
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
-            ret = getRowsCount("Type") + 1;
-            ps.setInt(1, ret);
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+
+            int id = nextId("Type", "typeId");
+            ps.setInt(1, id);
             ps.setString(2, type.getLabel());
+
             if (type.getParent() == null) {
-                ps.setInt(3, 0);
-            }else{
+                ps.setNull(3, java.sql.Types.INTEGER);
+            } else {
                 ps.setInt(3, type.getParent().getId());
             }
+
             if (type.getRoot() == null) {
-                ps.setInt(4, 0);
-            }else{
+                ps.setNull(4, java.sql.Types.INTEGER);
+            } else {
                 ps.setInt(4, type.getRoot().getId());
             }
+
             ps.setInt(5, type.getPosition());
             ps.executeUpdate();
 
-        }catch (SQLException e){
+            // Only if the insert was successful
+            type.setId(id);
+            retId = id;
+        }
+        catch (SQLException e) {
             System.err.println("TypeDAO create: " + e.getMessage());
         }
 
-        return ret;
+        return retId;
     }
 
+    @Override
     public void delete(Type type){
         String query = "DELETE FROM Type WHERE typeId = ?";
         int rows = 0;

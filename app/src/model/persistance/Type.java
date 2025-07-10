@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class Type {
     
-    private int id;
+    private int id = -1;
     private String label;
     private Type parent;
     private Word root;
@@ -84,6 +84,10 @@ public class Type {
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override
