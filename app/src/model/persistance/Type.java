@@ -1,5 +1,7 @@
 package model.persistance;
 
+import java.util.Objects;
+
 import model.DAO.TypeDAO;
 
 public class Type {
@@ -98,6 +100,11 @@ public class Type {
 
     public int getId() {
         return id;
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(id);
     }
 
 }

@@ -2,6 +2,7 @@ package model.persistance;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Objects;
 
 import model.DAO.WordDAO;
@@ -21,16 +22,16 @@ public class Word{
     private ArrayList<String> definitions;
     
     /** non-directed graph!!!*/
-    private ArrayList<Word> links;
+    private HashSet<Word> links;
     
-    private ArrayList<Word> roots;
+    private HashSet<Word> roots;
 
-    private ArrayList<Type> types = new ArrayList<Type>();
+    private HashSet<Type> types;
 
     private WordDAO dao;
     
     
-    public Word(Letter[] word, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, ArrayList<Word> links, ArrayList<Word> roots, ArrayList<Type> types) {
+    public Word(Letter[] word, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, HashSet<Word> links, HashSet<Word> roots, HashSet<Type> types) {
         if (word == null || translations == null || definitions == null || links == null || roots == null || types == null) {
             throw new IllegalArgumentException("parameters are null");
         }
@@ -64,7 +65,7 @@ public class Word{
     }
 
     public Word(Letter[] word) {
-        this(word, 0, 0, 0, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<Word>(), new ArrayList<Word>(), new ArrayList<Type>());
+        this(word, 0, 0, 0, new ArrayList<String>(), new ArrayList<String>(), new HashSet<Word>(), new HashSet<Word>(), new HashSet<Type>());
     }
 
     public void updateValues(){
@@ -130,15 +131,15 @@ public class Word{
         return id;
     }
 
-    public ArrayList<Word> getRoots() {
+    public HashSet<Word> getRoots() {
         return roots;
     }
 
-    public ArrayList<Word> getLinks() {
+    public HashSet<Word> getLinks() {
         return links;
     }
 
-    public ArrayList<Type> getTypes() {
+    public HashSet<Type> getTypes() {
         return types;
     }
 
@@ -188,21 +189,21 @@ public class Word{
         this.vulgarity = vulgarity;
     }
 
-    public void setRoots(ArrayList<Word> roots) {
+    public void setRoots(HashSet<Word> roots) {
         if (roots == null) {
             throw new IllegalArgumentException("roots cannot be null");
         }
         this.roots = roots;
     }
 
-    public void setLinks(ArrayList<Word> links) {
+    public void setLinks(HashSet<Word> links) {
         if (links == null) {
             throw new IllegalArgumentException("links cannot be null");
         }
         this.links = links;
     }
 
-    public void setTypes(ArrayList<Type> types) {
+    public void setTypes(HashSet<Type> types) {
         if (types == null) {
             throw new IllegalArgumentException("types cannot be null");
         }
