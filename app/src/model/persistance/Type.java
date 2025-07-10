@@ -2,8 +2,6 @@ package model.persistance;
 
 import java.util.Objects;
 
-import model.DAO.TypeDAO;
-
 public class Type {
     
     private int id;
@@ -11,8 +9,6 @@ public class Type {
     private Type parent;
     private Word root;
     private int position;
-
-    private TypeDAO dao;
     
     public Type(String label, Type parent, Word root, int position) {
 
@@ -43,18 +39,6 @@ public class Type {
 
         this.id = -1;
         this.label = label;
-    }
-
-    public void updateValues(){
-
-        this.id = dao.findId(this);
-
-        Type reference = dao.findById(this.id);
-
-        this.label = reference.getLabel();
-        this.parent = reference.getParent();
-        this.root = reference.getRoot();
-        this.position = reference.getPosition();
     }
 
     public String getLabel() {

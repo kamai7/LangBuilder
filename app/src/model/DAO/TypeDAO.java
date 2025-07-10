@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 import model.persistance.Type;
 import model.persistance.Word;
@@ -12,16 +12,14 @@ import model.persistance.Word;
 public class TypeDAO extends DAO<Type>{
     
     @Override
-    public HashSet<Type> findAll(){
-        HashSet<Type> ret = new HashSet<Type>();
+    public ArrayList<Type> findAll(){
+        ArrayList<Type> ret = new ArrayList<>();
 
         return ret;
     }
 
-    @Override
-    public int findId(Type type){
-        int ret = -1;
-        String label = type.getLabel();
+    public Type findByLabel(String label){
+        Type ret = null;
         String query = "SELECT typeId FROM Type WHERE label = ?";
 
         try(Connection c = getConnection();
@@ -30,7 +28,7 @@ public class TypeDAO extends DAO<Type>{
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()){
-                ret = rs.getInt("typeId");
+                ret = findById(rs.getInt("typeId"));
             }
 
         }catch (Exception e){
@@ -110,13 +108,14 @@ public class TypeDAO extends DAO<Type>{
         }
     }
 
-    public void create(Type type){
+    public int create(Type type){
         String query = "INSERT INTO Type VALUES (?, ?, ?, ?, ?)";
+        int ret = -1;
 
         try(Connection c = getConnection();
             PreparedStatement ps = c.prepareStatement(query)){
-
-            ps.setInt(1, getRowsCount("Type") + 1);
+            ret = getRowsCount("Type") + 1;
+            ps.setInt(1, ret);
             ps.setString(2, type.getLabel());
             if (type.getParent() == null) {
                 ps.setInt(3, 0);
@@ -135,7 +134,7 @@ public class TypeDAO extends DAO<Type>{
             System.err.println("TypeDAO create: " + e.getMessage());
         }
 
-        type.updateValues();
+        return ret;
     }
 
     public void delete(Type type){
