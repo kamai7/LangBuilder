@@ -2,6 +2,7 @@ package model.DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,8 +11,8 @@ import java.util.ArrayList;
 
 abstract class DAO<T> {
     private static final String DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
-    private static final String URL = "jdbc:mysql://localhost:3306/LangEngine?allowMultiQueries=true";
-    private static final String USERNAME = "admin";
+    private static final String URL = "jdbc:mysql://localhost:3306/LangBuilder?allowMultiQueries=true";
+    private static final String USERNAME = "langbuilder";
     private static final String PASSWORD = "123456";
 
     DAO() {}
@@ -86,5 +87,35 @@ abstract class DAO<T> {
         }
 
         return ret;
+    }
+
+    /**
+     * Returns the next available ID for a specified table and column.
+     * @param tableName the name of the table to check for the next ID.
+     * @param columnName the name of the column to check for the next ID.
+     * @return the next available ID, starting from 0.
+     */
+    protected int nextId(String tableName, String columnName) {
+        String query = "SELECT " + columnName + " FROM " + tableName + " ORDER BY " + columnName + " ASC";
+
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+             ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int last = rs.getInt(columnName);
+                while (rs.next()) {
+                    int current = rs.getInt(columnName);
+                    if (current != last + 1) {
+                        return last + 1;
+                    }
+                    last = current;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("DAO nextId: " + e.getMessage());
+        }
+
+        return 0;
     }
 }
