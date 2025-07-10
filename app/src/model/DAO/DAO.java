@@ -5,22 +5,23 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 
-public abstract class DAO<T> {
+abstract class DAO<T> {
+    private final String url = "jdbc:mysql://localhost:3306/LangEngine";
+    private final String username = "admin";
+    private final String password = "123456";
 
+    DAO() {}
 
-    private String url = "jdbc:mysql://localhost:3306/LangEngine";
-    private String username = "admin";
-    private String password = "123456";
+    public abstract ArrayList<T> findAll();
+    public abstract T findById(int id);
+    public abstract void create(T obj);
+    public abstract void update(T obj);
+    public abstract void delete(T obj);
 
-    DAO() {
-    }
-
-    public abstract HashSet<T> findAll();
-
-    Connection getConnection() {
+    protected Connection getConnection() {
         Connection c = null;
         try {
             c = DriverManager.getConnection(url, username, password);
@@ -30,15 +31,13 @@ public abstract class DAO<T> {
         return c;
     }
 
-    void close(Connection c) {
+    protected void close(Connection c) {
         try {
             c.close();
         } catch (SQLException e) {
             System.err.println("closeConnection: " + e.getMessage());
         }
     }
-
-    public abstract int findId(T word);
 
     public int getRowsCount(String tableName){
         int ret = 0;
@@ -59,5 +58,4 @@ public abstract class DAO<T> {
 
         return ret;
     }
-
 }
