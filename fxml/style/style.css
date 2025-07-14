@@ -111,13 +111,20 @@
 
 .tab-pane .tab{
     -fx-background-color: transparent;
-    -fx-border-color: #505050;
-    -fx-border-width: 2px 2px 0px 2px;
-    -fx-border-radius: 10px 10px 0px 0px;
     -fx-background-radius: 10px 10px 0px 0px;
-    -fx-margin: 20px
+    -fx-margin: 20px 40px 20px 40px;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: rgb(217, 217, 217); /* Changer la couleur ici */
 }
 
 .tab-pane .tab-header-background{
-    -fx-background-color: #141414
+    -fx-background-color: transparent;
+}
+
+.tab-pane .tab:selected{
+    -fx-background-color: #141414;
+    -fx-font-fill: #ffffff;
+    -fx-font-weight: bold;
 }
