@@ -268,7 +268,7 @@
                                        <children>
                                           <HBox styleClass="section1">
                                              <children>
-                                                <Label maxWidth="1.7976931348623157E308" styleClass="text-color1" text="Words" textFill="#aeaeae" HBox.hgrow="ALWAYS">
+                                                <Label maxWidth="1.7976931348623157E308" styleClass="text-color1" text="Letters" textFill="#aeaeae" HBox.hgrow="ALWAYS">
                                                    <font>
                                                       <Font name="Inter Regular" size="15.0" />
                                                    </font>
@@ -430,7 +430,7 @@
                                        <children>
                                           <HBox styleClass="section1">
                                              <children>
-                                                <Label maxWidth="1.7976931348623157E308" styleClass="text-color1" text="Words" textFill="#aeaeae" HBox.hgrow="ALWAYS">
+                                                <Label maxWidth="1.7976931348623157E308" styleClass="text-color1" text="Types" textFill="#aeaeae" HBox.hgrow="ALWAYS">
                                                    <font>
                                                       <Font name="Inter Regular" size="15.0" />
                                                    </font>
