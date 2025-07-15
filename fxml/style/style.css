@@ -103,7 +103,7 @@
     -fx-background-color: #727272;
 }
 
-.hidden-button{
+.button{
     -fx-background-color: transparent;
     -fx-border-color: transparent;
     -fx-padding: 0;
@@ -112,7 +112,8 @@
 .tab-pane .tab{
     -fx-background-color: transparent;
     -fx-background-radius: 10px 10px 0px 0px;
-    -fx-margin: 20px 40px 20px 40px;
+    -fx-margin: 20px;
+    -fx-padding: 0px 10px 0px 10px;
 }
 
 .tab-pane .tab .tab-label {
@@ -125,6 +126,16 @@
 
 .tab-pane .tab:selected{
     -fx-background-color: #141414;
-    -fx-font-fill: #ffffff;
+    -fx-font-fill: #ffe291;
     -fx-font-weight: bold;
+}
+
+.separator .line{
+    -fx-border-color: #ffffff13;
+    -fx-border-width: 1px;
+    
+}
+
+.header{
+    -fx-background-color: #141414;
 }
