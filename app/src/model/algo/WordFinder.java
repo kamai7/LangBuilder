@@ -9,7 +9,7 @@ class WordGenerator {
     Word word;
     HashSet<Word> find;
     HashSet<Word> links;
-    HashSet<Word> radicals;
+    HashSet<Word> roots;
 
     public WordGenerator(Word word) {
 
@@ -20,6 +20,6 @@ class WordGenerator {
         this.word = word;
         find = new HashSet<>();
         links = new HashSet<>(word.getLinks());
-        radicals = new HashSet<>(word.getRadicals());
+        roots = new HashSet<>(word.getRoots());
     }
 }
