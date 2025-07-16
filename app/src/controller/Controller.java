@@ -43,11 +43,6 @@ public class Controller {
         System.out.println(Colors.info("Settings button clicked"));
     }
 
-    @FXML
-    private void about() {
-        System.out.println(Colors.info("About button clicked"));
-    }
-
     public <T extends Node> void setContent(T content) {
         this.content.getChildren().clear();
         this.content.getChildren().add(content);

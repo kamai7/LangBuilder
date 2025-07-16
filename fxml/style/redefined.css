@@ -104,3 +104,10 @@
 .scroll-pane .corner {
     -fx-background-color: transparent;
 }
+
+/*textfield*/
+
+.text-field{
+    -fx-background-color: transparent;
+    -fx-text-fill: #e9e9e9;
+}

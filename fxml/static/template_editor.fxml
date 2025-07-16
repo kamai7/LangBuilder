@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -29,7 +30,7 @@
                <children>
                   <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@icons/logo.png" />
+                        <Image url="@../icons/logo.png" />
                      </image></ImageView>
                   <HBox alignment="CENTER">
                      <children>
@@ -38,7 +39,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Label text="Builder" textFill="#dea2ff">
+                        <Label text="Builder" textFill="#f369ff">
                            <font>
                               <Font name="Inter Regular" size="18.0" />
                            </font>
@@ -65,7 +66,7 @@
                                  <graphic>
                                     <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@icons/settings.png" />
+                                          <Image url="@../icons/settings.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -89,7 +90,7 @@
                                  <graphic>
                                     <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@icons/import.png" />
+                                          <Image url="@../icons/import.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -98,7 +99,7 @@
                                  <graphic>
                                     <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@icons/export.png" />
+                                          <Image url="@../icons/export.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -107,7 +108,7 @@
                                  <graphic>
                                     <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@icons/save.png" />
+                                          <Image url="@../icons/save.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -142,7 +143,7 @@
                                     </TextField>
                                     <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
-                                          <Image url="@icons/search.png" />
+                                          <Image url="@../icons/search.png" />
                                        </image>
                                     </ImageView>
                                  </children>
@@ -166,7 +167,7 @@
                                                 </Label>
                                                 <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                                                    <image>
-                                                      <Image url="@icons/minus.png" />
+                                                      <Image url="@../icons/minus.png" />
                                                    </image>
                                                 </ImageView>
                                              </children>
@@ -192,7 +193,7 @@
                                                 </Label>
                                                 <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                                                    <image>
-                                                      <Image url="@icons/minus.png" />
+                                                      <Image url="@../icons/minus.png" />
                                                    </image>
                                                 </ImageView>
                                              </children>
@@ -218,7 +219,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -242,7 +243,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -266,7 +267,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -304,7 +305,7 @@
                                     </TextField>
                                     <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
-                                          <Image url="@icons/search.png" />
+                                          <Image url="@../icons/search.png" />
                                        </image>
                                     </ImageView>
                                  </children>
@@ -330,7 +331,7 @@
                                                    <graphic>
                                                       <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                                                          <image>
-                                                            <Image url="@icons/minus.png" />
+                                                            <Image url="@../icons/minus.png" />
                                                          </image>
                                                       </ImageView>
                                                    </graphic>
@@ -360,7 +361,7 @@
                                                    <graphic>
                                                       <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                                                          <image>
-                                                            <Image url="@icons/minus.png" />
+                                                            <Image url="@../icons/minus.png" />
                                                          </image>
                                                       </ImageView>
                                                    </graphic>
@@ -388,7 +389,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -412,7 +413,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -436,7 +437,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -474,7 +475,7 @@
                                     </TextField>
                                     <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true" smooth="false">
                                        <image>
-                                          <Image url="@icons/search.png" />
+                                          <Image url="@../icons/search.png" />
                                        </image>
                                     </ImageView>
                                  </children>
@@ -498,7 +499,7 @@
                                                 </Label>
                                                 <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                                                    <image>
-                                                      <Image url="@icons/minus.png" />
+                                                      <Image url="@../icons/minus.png" />
                                                    </image>
                                                 </ImageView>
                                              </children>
@@ -524,7 +525,7 @@
                                                 </Label>
                                                 <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
                                                    <image>
-                                                      <Image url="@icons/minus.png" />
+                                                      <Image url="@../icons/minus.png" />
                                                    </image>
                                                 </ImageView>
                                              </children>
@@ -550,7 +551,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -574,7 +575,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -598,7 +599,7 @@
                                                                <graphic>
                                                                   <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@icons/edit.png" />
+                                                                        <Image url="@../icons/edit.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
@@ -627,83 +628,132 @@
             </TabPane>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <GridPane alignment="CENTER" hgap="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" vgap="10.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createLetter" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                           <graphic>
-                              <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" spacing="5.0" style="-fx-border-color: #f262ff;" styleClass="home-choice">
+                  <BorderPane HBox.hgrow="ALWAYS">
+                     <center>
+                        <ScrollPane fitToWidth="true">
+                           <BorderPane.margin>
+                              <Insets bottom="10.0" top="10.0" />
+                           </BorderPane.margin>
+                           <content>
+                              <VBox spacing="20.0">
                                  <children>
-                                    <ImageView fitHeight="52.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons/letters.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label styleClass="text-color1" text="Create Letter" textAlignment="CENTER" textFill="WHITE" underline="true">
-                                       <font>
-                                          <Font name="Inter Regular" size="14.0" />
-                                       </font>
-                                    </Label>
+                                    <Separator prefWidth="200.0" />
+                                    <VBox fillWidth="false" spacing="10.0">
+                                       <children>
+                                          <Label text="Main Settings">
+                                             <styleClass>
+                                                <String fx:value="text-color1" />
+                                                <String fx:value="subtitle" />
+                                             </styleClass>
+                                          </Label>
+                                          <GridPane hgap="20.0" minWidth="300.0" vgap="10.0" VBox.vgrow="ALWAYS">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label maxHeight="1.7976931348623157E308" styleClass="text-color1" text="Character" />
+                                                <Label maxHeight="1.7976931348623157E308" styleClass="text-color1" text="Ascii format" GridPane.rowIndex="1" />
+                                                <TextField minHeight="27.0" styleClass="bordered-textfield" GridPane.columnIndex="1" />
+                                                <TextField minHeight="27.0" styleClass="bordered-textfield" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets left="20.0" right="20.0" />
+                                             </VBox.margin>
+                                             <padding>
+                                                <Insets top="10.0" />
+                                             </padding>
+                                          </GridPane>
+                                       </children>
+                                    </VBox>
                                  </children>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
-                                 </padding>
                               </VBox>
-                           </graphic>
-                        </Button>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createWord" GridPane.columnIndex="1">
-                           <graphic>
-                              <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0" style="-fx-border-color: #62b8ff;" styleClass="home-choice">
-                                 <children>
-                                    <ImageView fitHeight="52.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons/create_word.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label styleClass="text-color1" text="Create Word" textAlignment="CENTER" textFill="WHITE" underline="true">
-                                       <font>
-                                          <Font name="Inter Regular" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
-                                 </padding>
-                              </VBox>
-                           </graphic>
-                        </Button>
-                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createType" GridPane.columnIndex="2">
-                           <graphic>
-                              <VBox alignment="CENTER" spacing="5.0" style="-fx-border-color: #ffb662;" styleClass="home-choice">
-                                 <children>
-                                    <ImageView fitHeight="52.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons/type.png" />
-                                       </image>
-                                    </ImageView>
-                                    <Label styleClass="text-color1" text="Create Type" textAlignment="CENTER" textFill="WHITE" underline="true">
-                                       <font>
-                                          <Font name="Inter Regular" size="14.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
-                                 </padding>
-                              </VBox>
-                           </graphic>
-                        </Button>
-                     </children>
-                  </GridPane>
+                           </content>
+                        </ScrollPane>
+                     </center>
+                     <bottom>
+                        <HBox fillHeight="false" spacing="20.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#apply" style="-fx-border-color: #00A900;" styleClass="editor-footer-buttons">
+                                 <graphic>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label minWidth="50.0" text="Apply" textFill="#00a900" />
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/apply.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                 </graphic>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#cancel" styleClass="editor-footer-buttons" textFill="#d10000">
+                                 <graphic>
+                                    <HBox alignment="CENTER_LEFT" spacing="5.0">
+                                       <children>
+                                          <Label minWidth="50.0" styleClass="text-color1" text="Cancel" />
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/cross.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                 </graphic>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#delete" style="-fx-border-color: #A10000;" styleClass="editor-footer-buttons">
+                                 <graphic>
+                                    <HBox alignment="CENTER_LEFT">
+                                       <children>
+                                          <Label minWidth="50.0" text="Delete" textFill="#d10000" underline="true" />
+                                          <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/delete.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </HBox>
+                                 </graphic>
+                              </Button>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets left="20.0" right="20.0" />
+                           </BorderPane.margin>
+                        </HBox>
+                     </bottom>
+                     <top>
+                        <HBox alignment="CENTER_LEFT" fillHeight="false" spacing="5.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Label fx:id="headerName" text="Letter: ">
+                                 <styleClass>
+                                    <String fx:value="title" />
+                                    <String fx:value="text-color1" />
+                                 </styleClass>
+                              </Label>
+                              <Label fx:id="headerObject" graphicTextGap="0.0" style="-fx-text-fill: radial-gradient(focus-distance 0%, center 60% 100%, radius 80%, rgb(255, 0, 234), rgb(255, 187, 0));" text="∂">
+                                 <styleClass>
+                                    <String fx:value="title" />
+                                    <String fx:value="text-rainbow" />
+                                 </styleClass>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </top>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets left="70.0" right="70.0" />
+                     </HBox.margin>
+                  </BorderPane>
                </children>
             </HBox>
          </items>

@@ -48,3 +48,32 @@
 .header{
     -fx-background-color: #141414;
 }
+
+.title{
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.text-rainbow{
+    -fx-font-size: 32px;
+}
+
+.editor-footer-buttons{
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+    -fx-padding: 5px 10px 5px 10px;
+    -fx-background-radius: 10px;
+    -fx-background-color: #141414;
+}
+
+.subtitle{
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.bordered-textfield{
+    -fx-border-color: #72727260;
+    -fx-background-color: #72727220;
+    -fx-border-width: 1px;
+    -fx-border-radius: 2px;
+}

@@ -23,6 +23,8 @@ public class View extends Stage {
         GridPane contentNode = content.get();
         navHeader.getController().setContent(contentNode);
 
+        content.getController().getView().addListener((observable, oldValue, newValue) -> navHeader.getController().setContent(newValue));
+
         main = new AnchorPane(navHeaderNode);
         AnchorPane.setTopAnchor(navHeaderNode, 0.0);
         AnchorPane.setLeftAnchor(navHeaderNode, 0.0);
