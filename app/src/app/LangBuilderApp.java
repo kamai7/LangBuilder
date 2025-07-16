@@ -1,6 +1,5 @@
 package app;
 
-import controller.Controller;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import view.View;
@@ -13,8 +12,7 @@ public class LangBuilderApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        View vue = new View();
-        Controller adminNavigationControl = new Controller(vue);
+        new View();
     }
 
 }
