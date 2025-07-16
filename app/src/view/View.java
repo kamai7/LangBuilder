@@ -34,7 +34,8 @@ public class View extends Stage {
         main.setPrefWidth(1280.0);
 
         scene = new Scene(main, 1280, 720);
-        scene.getStylesheets().addAll("/fxml/style/style.css", "/fxml/style/redefined.css");
+        scene.getStylesheets().add("/fxml/style/redefined.css");
+        scene.getStylesheets().add("/fxml/style/style.css");
         this.setScene(scene);
         this.getIcons().add(new Image("/fxml/icons/logo.png"));
         this.show();

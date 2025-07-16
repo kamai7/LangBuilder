@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditorController">
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditorController"  HBox.hgrow="ALWAYS">
    <center>
       <ScrollPane fitToWidth="true" fx:id="content">
          <BorderPane.margin>
@@ -100,4 +100,8 @@
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
+   <HBox.margin>
+      <Insets left="70.0" right="70.0" />
+   </HBox.margin>
+
 </BorderPane>
