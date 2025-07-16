@@ -1,4 +1,4 @@
-package model.DAO;
+package model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import model.persistance.Letter;
 import model.persistance.Type;
@@ -15,30 +14,6 @@ import model.persistance.Word;
 import model.util.Colors;
 
 public class WordDAO extends DAO<Word> {
-    public static void main(String[] args) {
-        WordDAO wordDAO = new WordDAO();
-        LetterDAO letterDAO = new LetterDAO();
-        
-        Letter A = letterDAO.findById(0);
-        Letter B = letterDAO.findById(1);
-        Letter C = letterDAO.findById(2);
-
-        for (Word w : wordDAO.findAll()) {
-            wordDAO.delete(w);
-        }
-        
-        Word word = new Word(
-            new ArrayList<>(List.of(A, B, C)),
-            0.5, 0.5, 0.5
-        );
-
-        System.out.println("Creating word: " + word.getLetters());
-
-        wordDAO.create(word);
-
-        System.out.println(wordDAO.findAll());
-    }
-
     @Override
     public ArrayList<Word> findAll() {
         ArrayList<Word> ret = new ArrayList<>();

@@ -1,4 +1,4 @@
-package model.DAO;
+package model.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,39 +12,46 @@ import model.util.Colors;
 public class TypeDAO extends DAO<Type>{
     
     @Override
-    public ArrayList<Type> findAll(){
+    public ArrayList<Type> findAll() {
         ArrayList<Type> ret = new ArrayList<>();
+        String query = "SELECT * FROM Type ORDER BY position";
 
-        return ret;
-    }
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
 
-    public Type findByLabel(String label){
-        Type ret = null;
-        String query = "SELECT typeId FROM Type WHERE label = ?";
+            while (rs.next()) {
+                Type parent = null;
+                int parentId = rs.getInt("parentId");
+                if (!rs.wasNull()) {
+                    parent = findShallow(parentId);
+                }
 
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
-            ps.setString(1, label);
-            ResultSet rs = ps.executeQuery();
+                Word root = null;
+                int rootId = rs.getInt("rootId");
+                if (!rs.wasNull()) {
+                    root = new WordDAO().findById(rootId);
+                }
 
-            if (rs.next()){
-                ret = findById(rs.getInt("typeId"));
+                Type type = new Type(rs.getString("label"), parent, root, rs.getInt("position"));
+                type.setId(rs.getInt("typeId"));
+                ret.add(type);
             }
-
-        }catch (Exception e){
-            System.err.println(Colors.error("TypeDAO findId: ", e.getMessage()));
+        } catch (Exception e) {
+            System.err.println(Colors.error("TypeDAO findAll: ", e.getMessage()));
         }
 
         return ret;
     }
 
     @Override
-    public Type findById(int id){
+    public Type findById(int id) {
         Type ret = null;
         String query = "SELECT * FROM Type WHERE typeId = ?";
 
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
@@ -64,28 +71,52 @@ public class TypeDAO extends DAO<Type>{
                 ret = new Type(rs.getString("label"), parent, root, rs.getInt("position"));
                 ret.setId(id);
             }
-
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println(Colors.error("TypeDAO findById: ", e.getMessage()));
         }
 
         return ret;
     }
+    
+    public Type findByLabel(String label){
+        Type ret = null;
+        String query = "SELECT typeId FROM Type WHERE label = ?";
 
-    private Type findShallow(int id){
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            
+            ps.setString(1, label);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                ret = findById(rs.getInt("typeId"));
+            }
+        } catch (Exception e) {
+            System.err.println(Colors.error("TypeDAO findId: ", e.getMessage()));
+        }
+
+        return ret;
+    }
+
+    /**
+     * Finds a Type by its ID without loading its parent or root.
+     * @param id The ID of the Type to find.
+     * @return A Type object with only the label set, or null if not found.
+     */
+    private Type findShallow(int id) {
         Type ret = null;
         String query = "SELECT * FROM Type WHERE typeId = ?";
 
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()){
                 ret = new Type(rs.getString("label"));
             }
-
-        }catch (Exception e){
+        } catch (Exception e) {
             System.err.println(Colors.error("TypeDAO findById: ", e.getMessage()));
         }
 
@@ -93,12 +124,11 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public void update(Type type){
-        int lines = 0;
+    public void update(Type type) {
         String query = "UPDATE Type SET label = ?, parentId = ?, rootId = ?, position = ? WHERE typeId = ?";
 
         try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement(query)){
+             PreparedStatement ps = c.prepareStatement(query)) {
 
             ps.setString(1, type.getLabel());
 
@@ -116,16 +146,18 @@ public class TypeDAO extends DAO<Type>{
 
             ps.setInt(4, type.getPosition());
             ps.setInt(5, type.getId());
-            lines = ps.executeUpdate();
+            
+            int lines = ps.executeUpdate();
             System.out.println(lines + " rows updated");
-        }catch (SQLException e){
+        }
+        catch (SQLException e) {
             System.err.println(Colors.error("TypeDAO update: ", e.getMessage()));
         }
     }
 
     @Override
-    public int create(Type type){
-        String query = "INSERT INTO Type VALUES (?, ?, ?, ?, ?)";
+    public int create(Type type) {
+        String query = "INSERT INTO Type (typeId, label, parentId, rootId, position) VALUES (?, ?, ?, ?, ?)";
         int retId = -1;
 
         try (Connection c = getConnection();
@@ -162,16 +194,17 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public void delete(Type type){
+    public void delete(Type type) {
         String query = "DELETE FROM Type WHERE typeId = ?";
-        int rows = 0;
 
-        try(Connection c = getConnection();
-            PreparedStatement ps = c.prepareStatement(query)){
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            
             ps.setInt(1, type.getId());
-            rows = ps.executeUpdate();
+            
+            int rows = ps.executeUpdate();
             System.out.println(rows + " rows deleted");
-        }catch (SQLException e){
+        } catch (SQLException e) {
             System.err.println(Colors.error("TypeDAO delete: ", e.getMessage()));
         }
     }

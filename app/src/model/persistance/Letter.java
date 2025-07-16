@@ -1,7 +1,6 @@
 package model.persistance;
 
 import java.util.Objects;
-
 import model.util.Colors;
 
 public class Letter {
@@ -58,6 +57,8 @@ public class Letter {
         }
     }
 */
+
+    @Override
     public String toString() {
         return character + " -> " + characterAscii + " (" + id + ")";
     }
@@ -66,5 +67,14 @@ public class Letter {
     public int hashCode() {
         return Objects.hash(id);
     }
-    
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Letter)) return false;
+        Letter other = (Letter) obj;
+        return id == other.id &&
+               Objects.equals(character, other.character) &&
+               Objects.equals(characterAscii, other.characterAscii);
+    }
 }
