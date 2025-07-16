@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import model.persistance.Letter;
+import model.util.Colors;
 
 public  class LetterDAO extends DAO<Letter> {
 
@@ -29,7 +30,7 @@ public  class LetterDAO extends DAO<Letter> {
             }
 
         }catch(SQLException e){
-            System.err.println("LetterDAO findAll: " + e.getMessage());
+            System.err.println(Colors.error("LetterDAO findAll: ", e.getMessage()));
         }
     
         return ret;
@@ -52,7 +53,7 @@ public  class LetterDAO extends DAO<Letter> {
             }
 
         }catch(SQLException e){
-            System.err.println("LetterDAO findById: " + e.getMessage());
+            System.err.println(Colors.error("LetterDAO findById: ", e.getMessage()));
         }
     
         return ret;
@@ -69,7 +70,7 @@ public  class LetterDAO extends DAO<Letter> {
             ps.executeUpdate();
 
         }catch(SQLException e){
-            System.err.println("LetterDAO delete: " + e.getMessage());
+            System.err.println(Colors.error("LetterDAO delete: ", e.getMessage()));
         }
     }
 
@@ -86,7 +87,7 @@ public  class LetterDAO extends DAO<Letter> {
             ps.executeUpdate();
 
         }catch(SQLException e){
-            System.err.println("LetterDAO update: " + e.getMessage());
+            System.err.println(Colors.error("LetterDAO update: ", e.getMessage()));
         }
     }
 
@@ -104,7 +105,7 @@ public  class LetterDAO extends DAO<Letter> {
             ps.executeUpdate();
 
         } catch(SQLException e){
-            System.err.println("LetterDAO create: " + e.getMessage());
+            System.err.println(Colors.error("LetterDAO create" , e.getMessage()));
         }*/
 
         return 0;

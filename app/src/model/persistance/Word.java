@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Objects;
 
+import model.util.Colors;
+
 public class Word {
 
     private int id = -1;
@@ -29,11 +31,11 @@ public class Word {
     
     public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, HashSet<Word> links, HashSet<Word> roots, HashSet<Type> types) {
         if (letters == null || translations == null || definitions == null || links == null || roots == null || types == null) {
-            throw new IllegalArgumentException("parameters are null");
+            throw new IllegalArgumentException(Colors.error("parameters are null"));
         }
 
         if (letters.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
-            throw new IllegalArgumentException("invalid parameters, no letters or out of range");
+            throw new IllegalArgumentException(Colors.error("invalid parameters, no letters or out of range"));
         }
 
         this.letters = letters;
@@ -147,7 +149,7 @@ public class Word {
 
     public void setLetters(ArrayList<Letter> letters) {
         if (letters == null || letters.isEmpty()) {
-            throw new IllegalArgumentException("letters cannot be null or empty");
+            throw new IllegalArgumentException(Colors.error("letters cannot be null or empty"));
         }
         this.letters = new ArrayList<>(letters);
         this.lettersAscii = new ArrayList<>();
@@ -158,35 +160,35 @@ public class Word {
 
     public void setTranslations(ArrayList<String> translations) {
         if (translations == null) {
-            throw new IllegalArgumentException("translations cannot be null");
+            throw new IllegalArgumentException(Colors.error("translations cannot be null"));
         }
         this.translations = translations;
     }
 
     public void setDefinitions(ArrayList<String> definitions) {
         if (definitions == null) {
-            throw new IllegalArgumentException("definitions cannot be null");
+            throw new IllegalArgumentException(Colors.error("definitions cannot be null"));
         }
         this.definitions = definitions;
     }
 
     public void setEmotional(double emotional) {
         if (emotional < 0 || emotional > 1) {
-            throw new IllegalArgumentException("emotional must be between 0 and 1");
+            throw new IllegalArgumentException(Colors.error("emotional must be between 0 and 1"));
         }
         this.emotional = emotional;
     }
 
     public void setFormality(double formality) {
         if (formality < 0 || formality > 1) {
-            throw new IllegalArgumentException("formality must be between 0 and 1");
+            throw new IllegalArgumentException(Colors.error("formality must be between 0 and 1"));
         }
         this.formality = formality;
     }
 
     public void setVulgarity(double vulgarity) {
         if (vulgarity < 0 || vulgarity > 1) {
-            throw new IllegalArgumentException("vulgarity must be between 0 and 1");
+            throw new IllegalArgumentException(Colors.error("vulgarity must be between 0 and 1"));
         }
         this.vulgarity = vulgarity;
     }
@@ -197,21 +199,21 @@ public class Word {
 
     public void setRoots(HashSet<Word> roots) {
         if (roots == null) {
-            throw new IllegalArgumentException("roots cannot be null");
+            throw new IllegalArgumentException(Colors.error("roots cannot be null"));
         }
         this.roots = roots;
     }
 
     public void setLinks(HashSet<Word> links) {
         if (links == null) {
-            throw new IllegalArgumentException("links cannot be null");
+            throw new IllegalArgumentException(Colors.error("links cannot be null"));
         }
         this.links = links;
     }
 
     public void setTypes(HashSet<Type> types) {
         if (types == null) {
-            throw new IllegalArgumentException("types cannot be null");
+            throw new IllegalArgumentException(Colors.error("types cannot be null"));
         }
         this.types = types;
     }

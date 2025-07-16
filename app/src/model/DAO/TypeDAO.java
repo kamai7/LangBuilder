@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.persistance.Type;
 import model.persistance.Word;
+import model.util.Colors;
 
 public class TypeDAO extends DAO<Type>{
     
@@ -31,7 +32,7 @@ public class TypeDAO extends DAO<Type>{
             }
 
         }catch (Exception e){
-            System.err.println("TypeDAO findId: " + e.getMessage());
+            System.err.println(Colors.error("TypeDAO findId: ", e.getMessage()));
         }
 
         return ret;
@@ -65,7 +66,7 @@ public class TypeDAO extends DAO<Type>{
             }
 
         }catch (Exception e){
-            System.err.println("TypeDAO findById: " + e.getMessage());
+            System.err.println(Colors.error("TypeDAO findById: ", e.getMessage()));
         }
 
         return ret;
@@ -85,7 +86,7 @@ public class TypeDAO extends DAO<Type>{
             }
 
         }catch (Exception e){
-            System.err.println("TypeDAO findById: " + e.getMessage());
+            System.err.println(Colors.error("TypeDAO findById: ", e.getMessage()));
         }
 
         return ret;
@@ -118,7 +119,7 @@ public class TypeDAO extends DAO<Type>{
             lines = ps.executeUpdate();
             System.out.println(lines + " rows updated");
         }catch (SQLException e){
-            System.err.println("TypeDAO update: " + e.getMessage());
+            System.err.println(Colors.error("TypeDAO update: ", e.getMessage()));
         }
     }
 
@@ -154,7 +155,7 @@ public class TypeDAO extends DAO<Type>{
             retId = id;
         }
         catch (SQLException e) {
-            System.err.println("TypeDAO create: " + e.getMessage());
+            System.err.println(Colors.error("TypeDAO create: ", e.getMessage()));
         }
 
         return retId;
@@ -171,7 +172,7 @@ public class TypeDAO extends DAO<Type>{
             rows = ps.executeUpdate();
             System.out.println(rows + " rows deleted");
         }catch (SQLException e){
-            System.err.println("TypeDAO delete: " + e.getMessage());
+            System.err.println(Colors.error("TypeDAO delete: ", e.getMessage()));
         }
     }
 }

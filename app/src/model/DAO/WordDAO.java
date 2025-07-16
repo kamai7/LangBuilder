@@ -12,6 +12,7 @@ import java.util.Set;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
+import model.util.Colors;
 
 public class WordDAO extends DAO<Word> {
     public static void main(String[] args) {
@@ -52,7 +53,7 @@ public class WordDAO extends DAO<Word> {
             }
 
         } catch(SQLException e) {
-            System.err.println("WordDAO findAll: " + e.getMessage());
+            System.err.println(Colors.error("WordDAO findAll: ", e.getMessage()));
         }
 
         return ret;
@@ -82,7 +83,7 @@ public class WordDAO extends DAO<Word> {
                 ret.setId(id);
             }
         } catch(SQLException e) {
-            System.err.println("WordDAO findShallow: " + e.getMessage());
+            System.err.println(Colors.error("WordDAO findShallow: ", e.getMessage()));
         }
 
         return ret;
@@ -170,7 +171,7 @@ public class WordDAO extends DAO<Word> {
                 ret.setId(id);
             }
         } catch(SQLException e) {
-            System.err.println("WordDAO findById: " + e.getMessage());
+            System.err.println(Colors.error("WordDAO findById: ", e.getMessage()));
         }
     
         return ret;
@@ -201,7 +202,7 @@ public class WordDAO extends DAO<Word> {
                 }
             }
         } catch(SQLException e) {
-            System.err.println("WordDAO findByLetters: " + e.getMessage());
+            System.err.println(Colors.error("WordDAO findByLetters: ", e.getMessage()));
         }
 
         if (find == null || find.isEmpty()) {
@@ -223,7 +224,7 @@ public class WordDAO extends DAO<Word> {
             ps.setInt(4, word.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println("WordDAO updateParameters: invalid parameters\n" + e.getMessage());
+            System.err.println(Colors.error("WordDAO updateParameters: invalid parameters\n", e.getMessage()));
         }
     }
 
@@ -237,7 +238,7 @@ public class WordDAO extends DAO<Word> {
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
             } catch(SQLException e) {
-                System.err.println("WordDAO updateLetters: invalid id\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateLetters: invalid id\n", e.getMessage()));
             }
 
             try (PreparedStatement ps = c.prepareStatement(queryAdd)) {
@@ -249,11 +250,11 @@ public class WordDAO extends DAO<Word> {
                 }
                 rows += ps.executeBatch().length;
             } catch(SQLException e) {
-                System.err.println("WordDAO updateLetters: invalid letters\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateLetters: invalid letters\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         } catch(SQLException e) {
-            System.err.println("WordDAO updateLetters: invalid parameters\n" + e.getMessage());
+            System.err.println(Colors.error("WordDAO updateLetters: invalid parameters\n", e.getMessage()));
         }
     }
 
@@ -267,7 +268,7 @@ public class WordDAO extends DAO<Word> {
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
             }catch(SQLException e){
-                System.err.println("WordDAO updateDefinitions: invalid id\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateDefinitions: invalid id\n", e.getMessage()));
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
@@ -278,11 +279,11 @@ public class WordDAO extends DAO<Word> {
                 }
                 rows += ps.executeBatch().length;
             }catch(SQLException e){
-                System.err.println("WordDAO updateDefinitions: invalid definitions\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateDefinitions: invalid definitions\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         }catch (SQLException e){
-            System.err.println("WordDAO updateDefinitions: invalid parameters\n" + e.getMessage());
+            System.err.println(Colors.error("WordDAO updateDefinitions: invalid parameters\n", e.getMessage()));
         }
     }
 
@@ -296,7 +297,7 @@ public class WordDAO extends DAO<Word> {
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
             }catch(SQLException e){
-                System.err.println("WordDAO updateTranslations: invalid id\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateTranslations: invalid id\n", e.getMessage()));
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
@@ -307,11 +308,11 @@ public class WordDAO extends DAO<Word> {
                 }
                 rows += ps.executeBatch().length;
             }catch(SQLException e){
-                System.err.println("WordDAO updateTranslations: invalid translations\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateTranslations: invalid translations\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         }catch (SQLException e){
-            System.err.println("WordDAO updateTranslations: invalid parameters\n" + e.getMessage());
+            System.err.println(Colors.error("WordDAO updateTranslations: invalid parameters\n", e.getMessage()));
         }
     }
 
@@ -325,7 +326,7 @@ public class WordDAO extends DAO<Word> {
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
             }catch(SQLException e){
-                System.err.println("WordDAO updateRoots: invalid id\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateRoots: invalid id\n", e.getMessage()));
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
@@ -336,11 +337,11 @@ public class WordDAO extends DAO<Word> {
                 }
                 rows += ps.executeBatch().length;
             }catch(SQLException e){
-                System.err.println("WordDAO updateRoots: invalid roots\n" + e.getMessage());
+                System.err.println(Colors.error("WordDAO updateRoots: invalid roots\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         }catch (SQLException e){
-            System.err.println("WordDAO updateRoots: invalid parameters\n" + e.getMessage());
+            System.err.println(Colors.error("WordDAO updateRoots: invalid parameters\n", e.getMessage()));
         }
     }
 
@@ -388,7 +389,7 @@ public class WordDAO extends DAO<Word> {
                 }
                 rows += psDelete.executeBatch().length;
             } catch (SQLException e) {
-                System.err.println("WordDAO updatelinks remove links: " + e.getMessage());
+                System.err.println(Colors.error("WordDAO updatelinks remove links: " , e.getMessage()));
             }
 
             // Ajout des nouveaux liens (dans les deux sens)
@@ -406,13 +407,13 @@ public class WordDAO extends DAO<Word> {
                 }
                 rows += psInsert.executeBatch().length;
             } catch (SQLException e) {
-                System.err.println("WordDAO updatelinks add links: " + e.getMessage());
+                System.err.println(Colors.error("WordDAO updatelinks add links: ", e.getMessage()));
             }
 
             c.commit();
             System.out.println(rows + " rows updated");
         } catch (SQLException e) {
-            System.err.println("WordDAO Transaction failed: " + e.getMessage());
+            System.err.println(Colors.error("WordDAO Transaction failed: ", e.getMessage()));
         }
     }
 
@@ -460,7 +461,7 @@ public class WordDAO extends DAO<Word> {
             }
         }
         catch (SQLException e) {
-            System.err.println("WordDAO delete: invalid parameters\n" + e.getMessage());
+            System.err.println(Colors.error("WordDAO delete: invalid parameters\n", e.getMessage()));
         }
 
         System.out.println(rows + " rows deleted");
@@ -548,7 +549,7 @@ public class WordDAO extends DAO<Word> {
             retId = wordId;
         }
         catch (SQLException e) {
-            System.err.println("WordDAO create: invalid parameters (" + e.getMessage() + ")");
+            System.err.println(Colors.error("WordDAO create: invalid parameters", e.getMessage()));
         }
 
         System.out.println(rows + " rows inserted");

@@ -2,6 +2,8 @@ package model.persistance;
 
 import java.util.Objects;
 
+import model.util.Colors;
+
 public class Letter {
 
     private int id = -1;
@@ -11,7 +13,7 @@ public class Letter {
     public Letter(String character, String characterAscii) {
 
         if (character == null || characterAscii == null) {
-            throw new IllegalArgumentException("both parameters cannot be null");
+            throw new IllegalArgumentException(Colors.error("both parameters cannot be null"));
         }
 
         this.character = character;

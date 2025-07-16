@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import model.util.Colors;
+
 
 abstract class DAO<T> {
     private static final String DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
@@ -58,7 +60,7 @@ abstract class DAO<T> {
         try {
             Class.forName(DRIVER_CLASS_NAME);
         } catch (ClassNotFoundException e) {
-            System.err.println("getConnection(): " + DRIVER_CLASS_NAME + " not found");
+            System.err.println(Colors.error("DAO getConnection(): " + DRIVER_CLASS_NAME + " not found"));
             return null;
         }
 
@@ -83,7 +85,7 @@ abstract class DAO<T> {
                 ret = rs.getInt(1);
             }
         } catch(SQLException e) {
-            System.err.println("DAO.getRowsCount( + '" + tableName + "'): " + e.getMessage());
+            System.err.println(Colors.error("DAO getRowsCount( + '" + tableName + "'): ", e.getMessage()));
         }
 
         return ret;
@@ -113,7 +115,7 @@ abstract class DAO<T> {
                 }
             }
         } catch (SQLException e) {
-            System.err.println("DAO nextId: " + e.getMessage());
+            System.err.println(Colors.error("DAO nextId: ", e.getMessage()));
         }
 
         return 0;

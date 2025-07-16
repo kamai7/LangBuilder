@@ -4,6 +4,7 @@ import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import model.util.Colors;
 
 public class FXMLHandler<T extends Node, U> {
 
@@ -14,21 +15,25 @@ public class FXMLHandler<T extends Node, U> {
     public FXMLHandler(String path) {
 
         if (path == null) {
-            throw new IllegalArgumentException("path cannot be null");
+            throw new IllegalArgumentException(Colors.error("FXMLHandler FXMLHandler: path cannot be null"));
         }
 
         if(path.trim().length() == 0) {
-            throw new IllegalArgumentException("path cannot be empty");
+            throw new IllegalArgumentException(Colors.error("FXMLHandler FXMLHandler: path cannot be empty"));
         }
 
         URL url = getClass().getResource(path);
+
+        if (url == null) {
+            throw new IllegalArgumentException(Colors.error("FXMLHandler FXMLHandler: path not found: " + path));
+        }
 
         try{
             this.loader = new FXMLLoader(url);
             element = this.loader.load();
             controller = this.loader.getController();
         } catch (Exception e) {
-            throw new RuntimeException("Could not load FXML file: " + url + " -> Error: " + e.getMessage());
+            System.err.println(Colors.error("FXMLHandler FXMLHandler: Could not load FXML file: " + url, e.getMessage()));
         }
     }
 

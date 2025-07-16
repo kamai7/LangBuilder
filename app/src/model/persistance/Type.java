@@ -2,6 +2,8 @@ package model.persistance;
 
 import java.util.Objects;
 
+import model.util.Colors;
+
 public class Type {
     
     private int id = -1;
@@ -13,13 +15,13 @@ public class Type {
     public Type(String label, Type parent, Word root, int position) {
 
         if (label == null) {
-            throw new IllegalArgumentException("parameters cannot be null");
+            throw new IllegalArgumentException(Colors.error("parameters cannot be null"));
         }
         if (label.trim().length() == 0) {
-            throw new IllegalArgumentException("label cannot be empty");
+            throw new IllegalArgumentException(Colors.error("label cannot be empty"));
         }
         if (root != null && (position < 0 || position > 2)) {
-            throw new IllegalArgumentException("position must be between 0 and 2");
+            throw new IllegalArgumentException(Colors.error("position must be between 0 and 2"));
         }
 
         this.id = -1;
@@ -31,10 +33,10 @@ public class Type {
 
     public Type(String label) {
         if (label == null) {
-            throw new IllegalArgumentException("parameters cannot be null");
+            throw new IllegalArgumentException(Colors.error("parameters cannot be null"));
         }
         if (label.trim().length() == 0) {
-            throw new IllegalArgumentException("label cannot be empty");
+            throw new IllegalArgumentException(Colors.error("label cannot be empty"));
         }
 
         this.id = -1;
@@ -47,10 +49,10 @@ public class Type {
 
     public void setLabel(String label) {
         if (label == null) {
-            throw new IllegalArgumentException("label cannot be null");
+            throw new IllegalArgumentException(Colors.error("label cannot be null"));
         }
         if (label.trim().length() == 0) {
-            throw new IllegalArgumentException("label cannot be empty");
+            throw new IllegalArgumentException(Colors.error("label cannot be empty"));
         }
         this.label = label;
     }
@@ -77,7 +79,7 @@ public class Type {
 
     public void setPosition(int position) {
         if (position < 0 || position > 2) {
-            throw new IllegalArgumentException("position must be between 0 and 2");
+            throw new IllegalArgumentException(Colors.error("position must be between 0 and 2"));
         }
         this.position = position;
     }
