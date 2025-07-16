@@ -72,14 +72,14 @@ public class WordDAO extends DAO<Word> {
                        "SELECT * FROM Definition WHERE dWordId = ?;" +
                        "SELECT * FROM Translation WHERE tWordId = ?;" +
                        "SELECT * FROM UsedRoots WHERE roWordId = ?;" +
-                       "SELECT * FROM Link WHERE lWordId = ?;" +
+                       "SELECT * FROM Link WHERE lWordId = ? OR linkedWordId = ?;" +
                        "SELECT * FROM WordsTypes WHERE tyWordId = ?;";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
             
             // Set the parameters for the prepared statement
-            for (int i = 1; i <= 7; i++) {
+            for (int i = 1; i <= 8; i++) {
                 ps.setInt(i, id);
             }
 
@@ -374,11 +374,6 @@ public class WordDAO extends DAO<Word> {
                     psInsert.setInt(1, word.getId());
                     psInsert.setInt(2, linkId);
                     psInsert.addBatch();
-
-                    // Insertion lien inverse
-                    psInsert.setInt(1, linkId);
-                    psInsert.setInt(2, word.getId());
-                    psInsert.addBatch();
                 }
                 rows += psInsert.executeBatch().length;
             } catch (SQLException e) {
@@ -508,10 +503,6 @@ public class WordDAO extends DAO<Word> {
                 for(Word l : word.getLinks()){
                     ps.setInt(1, wordId);
                     ps.setInt(2, l.getId());
-                    ps.addBatch();
-
-                    ps.setInt(1, l.getId());
-                    ps.setInt(2, word.getId());
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
