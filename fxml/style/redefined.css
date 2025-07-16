@@ -111,3 +111,11 @@
     -fx-background-color: transparent;
     -fx-text-fill: #e9e9e9;
 }
+
+.combo-box{
+    -fx-background-color: transparent;
+    -fx-border-color: #ffffff13;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-text-fill: #e9e9e9;
+}
