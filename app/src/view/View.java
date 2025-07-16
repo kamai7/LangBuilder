@@ -3,6 +3,7 @@ package view;
 import controller.Controller;
 import controller.HomeController;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -33,6 +34,7 @@ public class View extends Stage {
         scene = new Scene(main, 1280, 720);
         scene.getStylesheets().addAll("/fxml/style/style.css", "/fxml/style/redefined.css");
         this.setScene(scene);
+        this.getIcons().add(new Image("/fxml/icons/logo.png"));
         this.show();
     }
 
