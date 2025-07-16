@@ -1,33 +1,37 @@
 package view;
 
 import controller.Controller;
+import controller.HomeController;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class View extends Stage {
 
     private AnchorPane main;
-    private FXMLHandler<AnchorPane,Controller> content;
-    private Controller controller;
+    private FXMLHandler<AnchorPane,Controller> navHeader;
+    private FXMLHandler<GridPane,HomeController> content;
     private Scene scene;
     
     public View() {
-        content = new FXMLHandler<>("/fxml/static/header_nav.fxml");
-        controller = content.getController();
-        AnchorPane contentNode = content.get();
-        controller.setContent(contentNode);
+        navHeader = new FXMLHandler<>("/fxml/static/header_nav.fxml");
+        AnchorPane navHeaderNode = navHeader.get();
 
-        main = new AnchorPane(contentNode);
-        AnchorPane.setTopAnchor(contentNode, 0.0);
-        AnchorPane.setLeftAnchor(contentNode, 0.0);
-        AnchorPane.setRightAnchor(contentNode, 0.0);
-        AnchorPane.setBottomAnchor(contentNode, 0.0);
+        content = new FXMLHandler<>("/fxml/static/home_page.fxml");
+        GridPane contentNode = content.get();
+        navHeader.getController().setContent(contentNode);
+
+        main = new AnchorPane(navHeaderNode);
+        AnchorPane.setTopAnchor(navHeaderNode, 0.0);
+        AnchorPane.setLeftAnchor(navHeaderNode, 0.0);
+        AnchorPane.setRightAnchor(navHeaderNode, 0.0);
+        AnchorPane.setBottomAnchor(navHeaderNode, 0.0);
         main.setPrefHeight(720.0);
         main.setPrefWidth(1280.0);
 
         scene = new Scene(main, 1280, 720);
-        scene.getStylesheets().add("/fxml/style/style.css");
+        scene.getStylesheets().addAll("/fxml/style/style.css", "/fxml/style/redefined.css");
         this.setScene(scene);
         this.show();
     }
