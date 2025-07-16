@@ -549,7 +549,7 @@
                   </Tab>
               </tabs>
             </TabPane>
-            <HBox fx:id="content" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:id="content" />
          </items>
       </SplitPane>
    </children>

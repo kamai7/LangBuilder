@@ -18,10 +18,17 @@
 
 
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditorController">
+   <center>
+      <ScrollPane fitToWidth="true" fx:id="content">
+         <BorderPane.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </BorderPane.margin>
+      </ScrollPane>
+   </center>
    <bottom>
       <HBox fillHeight="false" spacing="20.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" onAction="#apply" style="-fx-border-color: #00A900;" styleClass="editor-footer-buttons">
+            <Button mnemonicParsing="false" onAction="#apply" style="-fx-border-color: #00A900;" styleClass="editor-footer-buttons" >
                <graphic>
                   <HBox alignment="CENTER_LEFT">
                      <children>
@@ -35,7 +42,7 @@
                   </HBox>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" onAction="#cancel" styleClass="editor-footer-buttons" textFill="#d10000">
+            <Button mnemonicParsing="false" onAction="#cancel" styleClass="editor-footer-buttons" textFill="#d10000" >
                <graphic>
                   <HBox alignment="CENTER_LEFT" spacing="5.0">
                      <children>
@@ -49,7 +56,7 @@
                   </HBox>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" onAction="#delete" style="-fx-border-color: #A10000;" styleClass="editor-footer-buttons">
+            <Button mnemonicParsing="false" onAction="#delete" style="-fx-border-color: #A10000;" styleClass="editor-footer-buttons" >
                <graphic>
                   <HBox alignment="CENTER_LEFT">
                      <children>
@@ -93,11 +100,4 @@
    <padding>
       <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
    </padding>
-   <center>
-      <ScrollPane fitToWidth="true" fx:id="content">
-         <BorderPane.margin>
-            <Insets bottom="10.0" top="10.0" />
-         </BorderPane.margin>
-      </ScrollPane>
-   </center>
 </BorderPane>
