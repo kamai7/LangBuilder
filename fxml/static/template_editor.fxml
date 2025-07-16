@@ -640,72 +640,113 @@
                               <VBox spacing="20.0">
                                  <children>
                                     <Separator prefWidth="200.0" />
-                                    <HBox alignment="CENTER_LEFT" spacing="20.0">
+                                    <VBox spacing="10.0">
                                        <VBox.margin>
                                           <Insets left="20.0" right="20.0" />
                                        </VBox.margin>
                                        <children>
-                                          <Label text="Word:">
-                                             <styleClass>
-                                                <String fx:value="text-color1" />
-                                                <String fx:value="subtitle" />
-                                             </styleClass>
-                                          </Label>
-                                          <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container" HBox.hgrow="ALWAYS">
+                                          <HBox alignment="CENTER_LEFT" spacing="20.0">
                                              <children>
-                                                <FlowPane prefWrapLength="0.0" HBox.hgrow="ALWAYS">
+                                                <Label minWidth="60.0" text="Word:">
+                                                   <styleClass>
+                                                      <String fx:value="text-color1" />
+                                                      <String fx:value="subtitle" />
+                                                   </styleClass>
+                                                </Label>
+                                                <VBox HBox.hgrow="ALWAYS">
                                                    <children>
-                                                      <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
+                                                      <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
                                                          <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <ComboBox />
-                                                            <Button mnemonicParsing="false">
+                                                            <FlowPane prefWrapLength="0.0" HBox.hgrow="ALWAYS">
+                                                               <children>
+                                                                  <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
+                                                                     <children>
+                                                                        <CheckBox mnemonicParsing="false" />
+                                                                        <ComboBox />
+                                                                        <Button mnemonicParsing="false">
+                                                                           <graphic>
+                                                                              <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                                                                 <image>
+                                                                                    <Image url="@../icons/cross.png" />
+                                                                                 </image>
+                                                                              </ImageView>
+                                                                           </graphic>
+                                                                        </Button>
+                                                                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                                                     </children>
+                                                                  </HBox>
+                                                                  <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
+                                                                     <children>
+                                                                        <CheckBox mnemonicParsing="false" />
+                                                                        <ComboBox />
+                                                                        <Button mnemonicParsing="false">
+                                                                           <graphic>
+                                                                              <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                                                                 <image>
+                                                                                    <Image url="@../icons/cross.png" />
+                                                                                 </image>
+                                                                              </ImageView>
+                                                                           </graphic>
+                                                                        </Button>
+                                                                        <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                                                     </children>
+                                                                  </HBox>
+                                                               </children>
+                                                            </FlowPane>
+                                                            <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="editor-add">
                                                                <graphic>
-                                                                  <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                                                  <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                                                                      <image>
-                                                                        <Image url="@../icons/cross.png" />
+                                                                        <Image url="@../icons/add.png" />
                                                                      </image>
                                                                   </ImageView>
                                                                </graphic>
+                                                               <font>
+                                                                  <Font size="1.0" />
+                                                               </font>
                                                             </Button>
-                                                            <Separator orientation="VERTICAL" prefHeight="200.0" />
                                                          </children>
                                                       </HBox>
-                                                      <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
+                                                      <HBox spacing="20.0">
                                                          <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <ComboBox />
-                                                            <Button mnemonicParsing="false">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../icons/cross.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                            <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                                            <Label styleClass="text-color1" text="Label">
+                                                               <font>
+                                                                  <Font size="14.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <Label text="Label">
+                                                               <styleClass>
+                                                                  <String fx:value="text-color1" />
+                                                                  <String fx:value="text-transparent" />
+                                                               </styleClass>
+                                                               <font>
+                                                                  <Font size="15.0" />
+                                                               </font>
+                                                            </Label>
                                                          </children>
+                                                         <padding>
+                                                            <Insets left="10.0" />
+                                                         </padding>
                                                       </HBox>
                                                    </children>
-                                                </FlowPane>
-                                                <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="editor-add">
-                                                   <graphic>
-                                                      <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                                                         <image>
-                                                            <Image url="@../icons/add.png" />
-                                                         </image>
-                                                      </ImageView>
-                                                   </graphic>
-                                                   <font>
-                                                      <Font size="1.0" />
-                                                   </font>
-                                                </Button>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                          <HBox spacing="20.0">
+                                             <children>
+                                                <Label minWidth="60.0" text="Type:">
+                                                   <styleClass>
+                                                      <String fx:value="text-color1" />
+                                                      <String fx:value="subtitle" />
+                                                   </styleClass>
+                                                </Label>
+                                                <ComboBox prefWidth="150.0" />
                                              </children>
                                           </HBox>
                                        </children>
-                                    </HBox>
+                                    </VBox>
                                     <Separator prefWidth="200.0" />
+                                    <HBox />
                                     <GridPane>
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
