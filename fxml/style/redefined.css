@@ -119,3 +119,13 @@
     -fx-border-radius: 10px;
     -fx-text-fill: #e9e9e9;
 }
+
+.color-picker{
+    -fx-background-color: #141414;
+    -fx-padding: 2px;
+    -fx-text-fill: #e9e9e9;
+}
+
+.color-picker-label{
+    -fx-text-fill: #929292;
+}

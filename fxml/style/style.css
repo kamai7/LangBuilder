@@ -91,7 +91,7 @@
     -fx-background-radius: 12px;
     -fx-padding: 5px, 10px, 5px, 8px;
     -fx-border-radius: 12px;
-    -fx-border-width: 2px;
+    -fx-border-width: px;
     -fx-border-color: #ffffff13;
 }
 
@@ -106,4 +106,15 @@
     -fx-background-radius: 10px;
     -fx-background-color: radial-gradient(focus-distance 0%, center 100% 100%, radius 100%, rgba(255, 0, 234, 0.6), rgb(255, 187, 0, 0.6));
     -fx-opacity: 0.8;
+}
+
+.selection-button{
+    -fx-padding : 5px 8px 5px 8px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-width: 2px;
+    -fx-border-color: #ffffff13;
+    -fx-text-fill: #ffffffe7;
+    -fx-cursor: hand;
 }
