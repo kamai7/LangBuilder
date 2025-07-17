@@ -30,7 +30,7 @@ public class HomeController {
 
     @FXML
     private void createType() {
-        System.out.println(Colors.info("Create type button clicked"));
+        view.set(EditorManagement.openTypeEditor().get());
     }
 
     public ObjectProperty<? extends Node> getView() {

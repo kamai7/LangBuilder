@@ -110,6 +110,15 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
+                              <Button mnemonicParsing="false" onAction="#home">
+                                 <graphic>
+                                    <ImageView fitHeight="26.0" fitWidth="26.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../icons/home.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
                            </children>
                         </HBox>
                      </children>
@@ -549,7 +558,7 @@
                   </Tab>
               </tabs>
             </TabPane>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:id="content" />
+            <HBox fx:id="content" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" />
          </items>
       </SplitPane>
    </children>

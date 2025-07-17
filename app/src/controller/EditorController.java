@@ -37,8 +37,8 @@ public class EditorController {
         System.out.println(Colors.info("Delete button clicked"));
     }
 
-    public void setHeaderObject(String letter) {
-        this.headerObject.setText(letter);
+    public void setHeaderObject(String object) {
+        this.headerObject.setText(object);
     }
 
     public void setHeaderName(String name) {

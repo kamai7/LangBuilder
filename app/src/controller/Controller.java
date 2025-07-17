@@ -3,10 +3,14 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import model.util.Colors;
+import view.FXMLHandler;
 
 public class Controller {
+
+    private FXMLHandler<GridPane,HomeController> contentCode;
 
     @FXML
     private TextField searchWord, searchType, searchLetter;
@@ -21,6 +25,11 @@ public class Controller {
         searchWord.textProperty().addListener((observable, oldValue, newValue) -> updateSearchWord());
         searchType.textProperty().addListener((observable, oldValue, newValue) -> updateSearchType());
         searchLetter.textProperty().addListener((observable, oldValue, newValue) -> updateSearchLetter());
+
+        contentCode = new FXMLHandler<>("/fxml/static/home_page.fxml");
+        setContent(contentCode.get());
+        
+        contentCode.getController().getView().addListener((observable, oldValue, newValue) -> setContent(newValue));
     }
 
     @FXML
@@ -36,6 +45,14 @@ public class Controller {
     @FXML
     private void export() {
         System.out.println(Colors.info("Export button clicked"));
+    }
+
+    @FXML
+    private void home() {
+        FXMLHandler<GridPane, HomeController> home = new FXMLHandler<>("/fxml/static/home_page.fxml");
+        this.contentCode = home;
+        setContent(contentCode.get());
+        contentCode.getController().getView().addListener((observable, oldValue, newValue) -> setContent(newValue));
     }
 
     @FXML
