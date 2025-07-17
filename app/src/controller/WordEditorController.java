@@ -83,13 +83,13 @@ public class WordEditorController {
         });
         vulgarityValue.textProperty().addListener(event -> {
             try {
-                float value = Integer.parseInt(vulgarityValue.getText());
+                float value = Float.parseFloat(vulgarityValue.getText());
                 vulgaritySlider.setValue(value);
             } catch (NumberFormatException e) {}
         });
         formalityValue.textProperty().addListener(event -> {
             try {
-                float value = Integer.parseInt(formalityValue.getText());
+                float value = Float.parseFloat(formalityValue.getText());
                 formalitySlider.setValue(value);
             } catch (NumberFormatException e) {
             }
