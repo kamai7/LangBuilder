@@ -42,7 +42,7 @@ public class EditorManagement {
         controller.setHeaderName("Word:");
         controller.setHeaderObjectStyle("-fx-text-fill:  linear-gradient(to bottom right, rgba(182, 182, 182, 1), rgba(255, 255, 255, 1));");
 
-        FXMLHandler<VBox, WordEditorController> typeEditor = new FXMLHandler<>("/fxml/static/word_editor.fxml");
+        FXMLHandler<VBox, WordEditorController> typeEditor = new FXMLHandler<>("/fxml/static/editor_word.fxml");
         controller.setContent(typeEditor.get());
 
         return editor;

@@ -4,7 +4,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Slider?>
@@ -19,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox spacing="20.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.WordEditorController">
    <children>
       <Separator prefWidth="200.0" />
       <Label text="Main ">
@@ -41,75 +40,87 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container" GridPane.columnIndex="1">
+            <VBox GridPane.columnIndex="1">
                <children>
-                  <FlowPane fx:id="lettersPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS">
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
                      <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
+                        <FlowPane fx:id="lettersPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <CheckBox mnemonicParsing="false" />
-                              <Label styleClass="text-color1" text="Letter1" />
-                              <Button mnemonicParsing="false">
-                                 <graphic>
-                                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../icons/cross.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Separator orientation="VERTICAL" prefHeight="200.0" />
+                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
+                                 <children>
+                                    <CheckBox mnemonicParsing="false" />
+                                    <Label styleClass="text-color1" text="a" />
+                                    <Button mnemonicParsing="false">
+                                       <graphic>
+                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/cross.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
+                                 <children>
+                                    <CheckBox mnemonicParsing="false" />
+                                    <Label styleClass="text-color1" text="z" />
+                                    <Button mnemonicParsing="false">
+                                       <graphic>
+                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../icons/cross.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
+                                 </children>
+                              </HBox>
                            </children>
-                        </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
-                           <children>
-                              <CheckBox mnemonicParsing="false" />
-                              <Label styleClass="text-color1" text="Letter1" />
-                              <Button mnemonicParsing="false">
-                                 <graphic>
-                                    <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../icons/cross.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
-                              <Separator orientation="VERTICAL" prefHeight="200.0" />
-                           </children>
-                        </HBox>
+                        </FlowPane>
+                        <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addLetter" styleClass="editor-add">
+                           <graphic>
+                              <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icons/add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <font>
+                              <Font size="1.0" />
+                           </font>
+                        </Button>
                      </children>
-                  </FlowPane>
-                  <Button fx:id="addLetterButton" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="editor-add">
-                     <graphic>
-                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../icons/add.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                     <font>
-                        <Font size="1.0" />
-                     </font>
-                  </Button>
+                  </HBox>
+                  <HBox spacing="10.0">
+                     <children>
+                        <Label fx:id="generatedWordLabel" text="word" textFill="WHITE" />
+                        <Label fx:id="generatedWordAsciiLabel" style="-fx-opacity: 0.6;" text="Word ascii" textFill="WHITE" />
+                     </children>
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </HBox>
                </children>
-            </HBox>
+            </VBox>
             <Label text="Letters">
                <styleClass>
                   <String fx:value="text-color1" />
-                  <String fx:value="subtitle" />
+                  <String fx:value="small-title" />
                </styleClass>
             </Label>
             <Label text="Type" GridPane.rowIndex="1">
                <styleClass>
                   <String fx:value="text-color1" />
-                  <String fx:value="subtitle" />
+                  <String fx:value="small-title" />
                </styleClass>
             </Label>
-            <ComboBox fx:id="typeComboBox" prefWidth="150.0" promptText="None" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label layoutX="10.0" layoutY="65.0" text="Is Usable" GridPane.rowIndex="2">
                <styleClass>
                   <String fx:value="text-color1" />
-                  <String fx:value="subtitle" />
+                  <String fx:value="small-title" />
                </styleClass>
             </Label>
             <CheckBox fx:id="usableCheckBox" mnemonicParsing="false" selected="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
@@ -117,6 +128,20 @@
                   <Insets left="5.0" />
                </GridPane.margin>
             </CheckBox>
+            <HBox fx:id="chooseTypeButtonContainer" alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#chooseType" styleClass="selection-button" text="Choose a type" />
+                  <Button mnemonicParsing="false" onAction="#deleteType">
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/cross.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
          </children>
       </GridPane>
       <Separator prefWidth="200.0" />
@@ -127,7 +152,7 @@
                   <String fx:value="subtitle" />
                   <String fx:value="text-color1" />
                </styleClass></Label>
-            <Button fx:id="generateButton" mnemonicParsing="false" styleClass="generate-button" text="Generate">
+            <Button mnemonicParsing="false" onAction="#generate" styleClass="generate-button" text="Generate">
                <graphic>
                   <ImageView fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -237,7 +262,7 @@
                               </HBox>
                            </children>
                         </FlowPane>
-                        <Button fx:id="addRootButton" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="editor-add">
+                        <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addRoot" styleClass="editor-add">
                            <font>
                               <Font size="1.0" />
                            </font>
@@ -297,7 +322,7 @@
                               </HBox>
                            </children>
                         </FlowPane>
-                        <Button fx:id="addLinkButton" graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" styleClass="editor-add">
+                        <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addLink" styleClass="editor-add">
                            <font>
                               <Font size="1.0" />
                            </font>
@@ -333,16 +358,6 @@
             <Insets left="20.0" right="20.0" />
          </padding>
          <children>
-            <Label text="Definitions">
-               <styleClass>
-                  <String fx:value="text-color1" />
-                  <String fx:value="small-title" />
-               </styleClass>
-               <VBox.margin>
-                  <Insets bottom="5.0" />
-               </VBox.margin>
-            </Label>
-            <TextArea prefHeight="150.0" scrollTop="200.0" wrapText="true" />
             <Label layoutX="30.0" layoutY="10.0" text="Translations">
                <VBox.margin>
                   <Insets bottom="5.0" top="20.0" />
@@ -352,7 +367,17 @@
                   <String fx:value="small-title" />
                </styleClass>
             </Label>
-            <TextArea layoutX="30.0" layoutY="37.0" prefHeight="100.0" wrapText="true" />
+            <TextArea fx:id="translationsArea" maxWidth="500.0" prefHeight="50.0" wrapText="true" />
+            <Label text="Definitions">
+               <styleClass>
+                  <String fx:value="text-color1" />
+                  <String fx:value="small-title" />
+               </styleClass>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
+            </Label>
+            <TextArea fx:id="definitionsArea" maxWidth="500.0" prefHeight="100.0" scrollTop="200.0" wrapText="true" />
          </children>
       </VBox>
    </children>

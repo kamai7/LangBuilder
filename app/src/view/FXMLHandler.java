@@ -33,7 +33,7 @@ public class FXMLHandler<T extends Node, U> {
             element = this.loader.load();
             controller = this.loader.getController();
         } catch (Exception e) {
-            System.err.println(Colors.error("FXMLHandler FXMLHandler: Could not load FXML file: " + url, e.getMessage()));
+            System.err.println(Colors.error("FXMLHandler FXMLHandler: Could not load FXML file: " + url, e.getMessage() + "\n" + e.getStackTrace()));
         }
     }
 

@@ -16,7 +16,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
 <VBox spacing="20.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TypeEditorController">
    <children>
       <Separator prefWidth="200.0" />
@@ -83,7 +82,7 @@
                                  <graphic>
                                     <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../../icons/cross.png" />
+                                          <Image url="@../icons/cross.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>

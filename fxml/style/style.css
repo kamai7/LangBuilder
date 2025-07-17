@@ -112,7 +112,7 @@
     -fx-opacity: 0.8;
 }
 
-/*
+
 .selection-button{
     -fx-padding : 5px 8px 5px 8px;
     -fx-background-color: transparent;
@@ -123,7 +123,6 @@
     -fx-text-fill: #ffffffe7;
     -fx-cursor: hand;
 }
-*/
 
 .slider-label{
     -fx-text-fill: #c0c0c0;
