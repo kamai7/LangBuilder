@@ -133,3 +133,14 @@
 .color-picker-label{
     -fx-text-fill: #929292;
 }
+
+.text-area{
+    -fx-background-color: #ffffff13;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #c0c0c0;
+}
+
+.text-area .content{
+    -fx-background-color: #141414;
+    -fx-background-radius: 8px;
+}

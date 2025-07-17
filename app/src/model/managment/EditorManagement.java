@@ -2,6 +2,7 @@ package model.managment;
 
 import controller.EditorController;
 import controller.LetterEditorController;
+import controller.WordEditorController;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import view.FXMLHandler;
@@ -34,4 +35,16 @@ public class EditorManagement {
         return editor;
     }
 
+    public static FXMLHandler<BorderPane, EditorController> openWordEditor(){
+        FXMLHandler<BorderPane, EditorController> editor = new FXMLHandler<>("/fxml/static/editor.fxml");
+        EditorController controller = editor.getController();
+        controller.setHeaderObject("∂∫∑");
+        controller.setHeaderName("Word:");
+        controller.setHeaderObjectStyle("-fx-text-fill:  linear-gradient(to bottom right, rgba(182, 182, 182, 1), rgba(255, 255, 255, 1));");
+
+        FXMLHandler<VBox, WordEditorController> typeEditor = new FXMLHandler<>("/fxml/static/word_editor.fxml");
+        controller.setContent(typeEditor.get());
+
+        return editor;
+    }
 }

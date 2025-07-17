@@ -20,7 +20,7 @@ public class HomeController {
 
     @FXML
     private void createWord() {
-        System.out.println(Colors.info("Create word button clicked"));
+        view.set(EditorManagement.openWordEditor().get());
     }
 
     @FXML
