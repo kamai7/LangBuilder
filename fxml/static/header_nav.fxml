@@ -626,7 +626,36 @@
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" />
+                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;">
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                         <children>
+                                                            <CheckBox fx:id="lengthCheckBox12" minWidth="100.0" mnemonicParsing="false" text="Parent">
+                                                               <styleClass>
+                                                                  <String fx:value="text-color1" />
+                                                                  <String fx:value="small-title" />
+                                                               </styleClass>
+                                                            </CheckBox>
+                                                            <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                                               <children>
+                                                                  <Button mnemonicParsing="false" styleClass="selection-button" text="Select a Type" />
+                                                                  <Button mnemonicParsing="false">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icons/cross.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="20.0" right="20.0" />
+                                                   </padding></VBox>
                                              </content>
                                           </ScrollPane>
                                        </children>
