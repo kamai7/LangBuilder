@@ -1,6 +1,10 @@
 package controller;
 
 
+import java.util.ArrayList;
+
+import controller.fragments.EditorItemCheckboxController;
+import controller.fragments.EditorItemController;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -9,9 +13,15 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import model.managment.WordManagement;
 import model.util.Colors;
+import view.FXMLHandler;
 
 public class WordEditorController {
+
+    private ArrayList<FXMLHandler<HBox, EditorItemCheckboxController>> letters;
+
+    private WordManagement wordManagement;
 
     @FXML
     private HBox chooseTypeButtonContainer;
@@ -116,22 +126,40 @@ public class WordEditorController {
         rootsCheckBox.selectedProperty().addListener(event -> rootsContainer.setDisable(!rootsCheckBox.isSelected()));
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
 
+        letters = new ArrayList<>();
+
+        wordManagement = new WordManagement();
+
         System.out.println(Colors.success("WordEditorController initialized"));
     }
 
     @FXML
     private void addLetter() {
-        System.out.println(Colors.info("Add letter button clicked"));
+        FXMLHandler<HBox, EditorItemCheckboxController> letter = new FXMLHandler<>("../fxml/fragments/editor/item_checkbox.fxml");
+        EditorItemCheckboxController controller = letter.getController();
+        controller.setText("Σ");
+        lettersPane.getChildren().add(letter.get());
+        letters.add(letter);
+
+        controller.getDeleteObjectButton().setOnAction(e -> lettersPane.getChildren().remove(letter.get()));
     }
 
     @FXML
     private void addRoot() {
-        System.out.println(Colors.info("Add root button clicked"));
+        FXMLHandler<HBox, EditorItemController> root = new FXMLHandler<>("../fxml/fragments/editor/item.fxml");
+        EditorItemController controller = root.getController();
+        controller.setText("Σ");
+        rootsPane.getChildren().add(root.get());
+        controller.getDeleteObjectButton().setOnAction(e -> rootsPane.getChildren().remove(root.get()));
     }
 
     @FXML
     private void addLink() {
-        System.out.println(Colors.info("Add link button clicked"));
+        FXMLHandler<HBox, EditorItemController> link = new FXMLHandler<>("../fxml/fragments/editor/item.fxml");
+        EditorItemController controller = link.getController();
+        controller.setText("Σ");
+        linksPane.getChildren().add(link.get());
+        controller.getDeleteObjectButton().setOnAction(e -> linksPane.getChildren().remove(link.get()));
     }
 
     @FXML
@@ -148,4 +176,5 @@ public class WordEditorController {
     private void generate() {
         System.out.println(Colors.info("generate button clicked"));
     }
+
 }

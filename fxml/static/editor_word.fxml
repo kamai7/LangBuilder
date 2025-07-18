@@ -45,42 +45,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
                      <children>
-                        <FlowPane fx:id="lettersPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
-                                 <children>
-                                    <CheckBox mnemonicParsing="false" />
-                                    <Label styleClass="text-color1" text="a" />
-                                    <Button mnemonicParsing="false">
-                                       <graphic>
-                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../icons/cross.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
-                                 <children>
-                                    <CheckBox mnemonicParsing="false" />
-                                    <Label styleClass="text-color1" text="z" />
-                                    <Button mnemonicParsing="false">
-                                       <graphic>
-                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../icons/cross.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                 </children>
-                              </HBox>
-                           </children>
-                        </FlowPane>
+                        <FlowPane fx:id="lettersPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS" />
                         <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addLetter" styleClass="editor-add">
                            <graphic>
                               <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
@@ -241,40 +206,7 @@
                   </CheckBox>
                   <HBox fx:id="rootsContainer" alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
                      <children>
-                        <FlowPane fx:id="rootsPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
-                                 <children>
-                                    <Label styleClass="text-color1" text="Root1" />
-                                    <Button mnemonicParsing="false">
-                                       <graphic>
-                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../icons/cross.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
-                                 <children>
-                                    <Label styleClass="text-color1" text="Root2" />
-                                    <Button mnemonicParsing="false">
-                                       <graphic>
-                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../icons/cross.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                 </children>
-                              </HBox>
-                           </children>
-                        </FlowPane>
+                        <FlowPane fx:id="rootsPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS" />
                         <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addRoot" styleClass="editor-add">
                            <font>
                               <Font size="1.0" />
@@ -301,40 +233,7 @@
                   </CheckBox>
                   <HBox fx:id="linksContainer" alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
                      <children>
-                        <FlowPane fx:id="linksPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
-                                 <children>
-                                    <Label styleClass="text-color1" text="Word1" />
-                                    <Button mnemonicParsing="false">
-                                       <graphic>
-                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../icons/cross.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                 </children>
-                              </HBox>
-                              <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="0.0" spacing="5.0" styleClass="editor-item">
-                                 <children>
-                                    <Label styleClass="text-color1" text="Word2" />
-                                    <Button mnemonicParsing="false">
-                                       <graphic>
-                                          <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../icons/cross.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
-                                    <Separator orientation="VERTICAL" prefHeight="200.0" />
-                                 </children>
-                              </HBox>
-                           </children>
-                        </FlowPane>
+                        <FlowPane fx:id="linksPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS" />
                         <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addLink" styleClass="editor-add">
                            <font>
                               <Font size="1.0" />
