@@ -1,7 +1,10 @@
 package controller;
 
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -15,20 +18,143 @@ public class Controller {
     private FXMLHandler<GridPane,HomeController> contentCode;
 
     @FXML
-    private TextField searchWord, searchType, searchLetter;
+    private TextField wordSearch,
+                      typeSearch,
+                      letterSearch,
+                      wordLengthField,
+                      wordMinEmotionalityField,
+                      wordMaxEmotionalityField,
+                      wordMinVulgarityField,
+                      wordMaxVulgarityField,
+                      wordMinFormalityField,
+                      wordMaxFormalityField;
 
     @FXML
-    private HBox content;
+    private HBox content,
+                 wordLengthContainer,
+                 wordTypeContainer,
+                 wordLinkedContainer,
+                 typeParentContainer;
+
+    @FXML
+    private GridPane wordEmotionalityContainer,
+                     wordVulgarityContainer,
+                     wordFormalityContainer;
+
+    @FXML
+    private Slider wordLengthSlider,
+                   wordMinEmotionalitySlider,
+                   wordMaxEmotionalitySlider,
+                   wordMinVulgaritySlider,
+                   wordMaxVulgaritySlider,
+                   wordMinFormalitySlider,
+                   wordMaxFormalitySlider;
+
+    @FXML
+    private CheckBox wordLengthCheckBox,
+                     wordTypeCheckBox,
+                     wordLinkedCheckBox,
+                     wordEmotionalityCheckBox,
+                     wordVulgarityCheckBox,
+                     wordFormalityCheckBox,
+                     typeParentCheckBox;
     
     @FXML
     private void initialize() {
-        System.out.println(Colors.success("Controller initialized"));
+        // Add listeners to sliders
+        wordLengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            wordLengthField.setText(String.valueOf(newValue.intValue()));
+        });
+        wordMinEmotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
+            wordMinEmotionalityField.setText(rounded + "");
+        });
+        wordMaxEmotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
+            wordMaxEmotionalityField.setText(rounded + "");
+        });
+        wordMinVulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
+            wordMinVulgarityField.setText(rounded + "");
+        });
+        wordMaxVulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
+            wordMaxVulgarityField.setText(rounded + "");
+        });
+        wordMinFormalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
+            wordMinFormalityField.setText(rounded + "");
+        });
 
-        searchWord.textProperty().addListener((observable, oldValue, newValue) -> updateSearchWord());
-        searchType.textProperty().addListener((observable, oldValue, newValue) -> updateSearchType());
-        searchLetter.textProperty().addListener((observable, oldValue, newValue) -> updateSearchLetter());
+        // Add listeners to text fields
+        wordLengthField.textProperty().addListener(event -> {
+            try{
+                int value = Integer.parseInt(wordLengthField.getText());
+                wordLengthSlider.setValue(value);
+            } catch (NumberFormatException e){}
+        });
+        wordMinEmotionalityField.textProperty().addListener(event -> {
+            try {
+                float value = Float.parseFloat(wordMinEmotionalityField.getText());
+                wordMinEmotionalitySlider.setValue(value);
+            } catch (NumberFormatException e) {}
+        });
+        wordMaxEmotionalityField.textProperty().addListener(event -> {
+            try {
+                float value = Float.parseFloat(wordMaxEmotionalityField.getText());
+                wordMaxEmotionalitySlider.setValue(value);
+            } catch (NumberFormatException e) {}
+        });
+        wordMinVulgarityField.textProperty().addListener(event -> {
+            try {
+                float value = Float.parseFloat(wordMinVulgarityField.getText());
+                wordMinVulgaritySlider.setValue(value);
+            } catch (NumberFormatException e) {}
+        });
+        wordMaxVulgarityField.textProperty().addListener(event -> {
+            try {
+                float value = Float.parseFloat(wordMaxVulgarityField.getText());
+                wordMaxVulgaritySlider.setValue(value);
+            } catch (NumberFormatException e) {}
+        });
+        wordMinFormalityField.textProperty().addListener(event -> {
+            try {
+                float value = Float.parseFloat(wordMinFormalityField.getText());
+                wordMinFormalitySlider.setValue(value);
+            } catch (NumberFormatException e) {}
+        });
+        wordMaxFormalityField.textProperty().addListener(event -> {
+            try {
+                float value = Float.parseFloat(wordMaxFormalityField.getText());
+                wordMaxFormalitySlider.setValue(value);
+            } catch (NumberFormatException e) {}
+        });
+
+        //init selector checkboxes
+        wordLengthContainer.setDisable(!wordLengthCheckBox.isSelected());
+        wordTypeContainer.setDisable(!wordTypeCheckBox.isSelected());
+        wordLinkedContainer.setDisable(!wordLinkedCheckBox.isSelected());
+        wordEmotionalityContainer.setDisable(!wordEmotionalityCheckBox.isSelected());
+        wordVulgarityContainer.setDisable(!wordVulgarityCheckBox.isSelected());
+        wordFormalityContainer.setDisable(!wordFormalityCheckBox.isSelected());
+        typeParentContainer.setDisable(!typeParentCheckBox.isSelected());
+
+        wordLengthCheckBox.selectedProperty().addListener(event -> wordLengthContainer.setDisable(!wordLengthCheckBox.isSelected()));
+        wordTypeCheckBox.selectedProperty().addListener(event -> wordTypeContainer.setDisable(!wordTypeCheckBox.isSelected()));
+        wordLinkedCheckBox.selectedProperty().addListener(event -> wordLinkedContainer.setDisable(!wordLinkedCheckBox.isSelected()));
+        wordEmotionalityCheckBox.selectedProperty().addListener(event -> wordEmotionalityContainer.setDisable(!wordEmotionalityCheckBox.isSelected()));
+        wordVulgarityCheckBox.selectedProperty().addListener(event -> wordVulgarityContainer.setDisable(!wordVulgarityCheckBox.isSelected()));
+        wordFormalityCheckBox.selectedProperty().addListener(event -> wordFormalityContainer.setDisable(!wordFormalityCheckBox.isSelected()));
+        typeParentCheckBox.selectedProperty().addListener(event -> typeParentContainer.setDisable(!typeParentCheckBox.isSelected()));
+
+
+        wordSearch.textProperty().addListener((observable, oldValue, newValue) -> updatewordSearch());
+        typeSearch.textProperty().addListener((observable, oldValue, newValue) -> updatetypeSearch());
+        letterSearch.textProperty().addListener((observable, oldValue, newValue) -> updateletterSearch());
 
         initHome();
+
+        System.out.println(Colors.success("Controller initialized"));
     }
 
     @FXML
@@ -56,21 +182,51 @@ public class Controller {
         System.out.println(Colors.info("Settings button clicked"));
     }
 
+    @FXML
+    private void wordChooseType() {
+        System.out.println(Colors.info("Choose type button clicked"));
+    }
+
+    @FXML
+    private void wordDeleteType() {
+        System.out.println(Colors.info("Delete type button clicked"));
+    }
+
+    @FXML
+    private void wordChooseLinked() {
+        System.out.println(Colors.info("Choose linked button clicked"));
+    }
+
+    @FXML
+    private void wordDeleteLinked() {
+        System.out.println(Colors.info("Delete linked button clicked"));
+    }
+
+    @FXML
+    private void typeChooseParent() {
+        System.out.println(Colors.info("Choose parent button clicked"));
+    }
+
+    @FXML
+    private void typeDeleteParent() {
+        System.out.println(Colors.info("Delete parent button clicked"));
+    }
+
     public <T extends Node> void setContent(T content) {
         this.content.getChildren().clear();
         this.content.getChildren().add(content);
     }
 
-    private void updateSearchWord(){
-        System.out.println(Colors.info("Search word: ", searchWord.getText()));
+    private void updatewordSearch(){
+        System.out.println(Colors.info("Search word: ", wordSearch.getText()));
     }
 
-    private void updateSearchType(){
-        System.out.println(Colors.info("Search type: ", searchType.getText()));
+    private void updatetypeSearch(){
+        System.out.println(Colors.info("Search type: ", typeSearch.getText()));
     }
 
-    private void updateSearchLetter(){
-        System.out.println(Colors.info("Search letter: ", searchLetter.getText()));
+    private void updateletterSearch(){
+        System.out.println(Colors.info("Search letter: ", letterSearch.getText()));
     }
 
     private void initHome(){

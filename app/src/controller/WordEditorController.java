@@ -70,7 +70,6 @@ public class WordEditorController {
         // Add listeners to sliders
         lengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
             lengthValue.setText(String.valueOf(newValue.intValue()));
-            lengthSlider.setValue(newValue.intValue());
         });
         emotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
             float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;

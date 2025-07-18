@@ -145,7 +145,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" styleClass="input">
                                  <children>
-                                    <TextField fx:id="searchWord" HBox.hgrow="ALWAYS">
+                                    <TextField fx:id="wordSearch" HBox.hgrow="ALWAYS">
                                        <HBox.margin>
                                           <Insets left="5.0" />
                                        </HBox.margin>
@@ -188,32 +188,32 @@
                                                    <children>
                                                       <VBox>
                                                          <children>
-                                                            <CheckBox fx:id="lengthCheckBox" mnemonicParsing="false" text="Length">
+                                                            <CheckBox fx:id="wordLengthCheckBox" mnemonicParsing="false" text="Length">
                                                                <styleClass>
                                                                   <String fx:value="text-color1" />
                                                                   <String fx:value="small-title" />
                                                                </styleClass>
                                                             </CheckBox>
-                                                            <HBox>
+                                                            <HBox fx:id="wordLengthContainer">
                                                                <children>
-                                                                  <TextField fx:id="lengthValue" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                                                  <Slider fx:id="lengthSlider" blockIncrement="1.0" majorTickUnit="10.0" max="60.0" maxWidth="300.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" HBox.hgrow="ALWAYS" />
+                                                                  <TextField fx:id="wordLengthField" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
+                                                                  <Slider fx:id="wordLengthSlider" blockIncrement="1.0" majorTickUnit="10.0" max="60.0" maxWidth="300.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" HBox.hgrow="ALWAYS" />
                                                                </children>
                                                             </HBox>
                                                          </children>
                                                       </VBox>
                                                       <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                          <children>
-                                                            <CheckBox fx:id="lengthCheckBox1" minWidth="100.0" mnemonicParsing="false" text="Type">
+                                                            <CheckBox fx:id="wordTypeCheckBox" minWidth="100.0" mnemonicParsing="false" text="Type">
                                                                <styleClass>
                                                                   <String fx:value="text-color1" />
                                                                   <String fx:value="small-title" />
                                                                </styleClass>
                                                             </CheckBox>
-                                                            <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                                            <HBox fx:id="wordTypeContainer" alignment="CENTER_LEFT" spacing="2.0">
                                                                <children>
-                                                                  <Button mnemonicParsing="false" styleClass="selection-button" text="Select a Type" />
-                                                                  <Button mnemonicParsing="false">
+                                                                  <Button mnemonicParsing="false" onAction="#wordChooseType" styleClass="selection-button" text="Select a Type" />
+                                                                  <Button mnemonicParsing="false" onAction="#wordDeleteType">
                                                                      <graphic>
                                                                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -228,16 +228,16 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                          <children>
-                                                            <CheckBox fx:id="lengthCheckBox11" minWidth="100.0" mnemonicParsing="false" text="Linked with">
+                                                            <CheckBox fx:id="wordLinkedCheckBox" minWidth="100.0" mnemonicParsing="false" text="Linked with">
                                                                <styleClass>
                                                                   <String fx:value="text-color1" />
                                                                   <String fx:value="small-title" />
                                                                </styleClass>
                                                             </CheckBox>
-                                                            <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                                            <HBox fx:id="wordLinkedContainer" alignment="CENTER_LEFT" spacing="2.0">
                                                                <children>
-                                                                  <Button mnemonicParsing="false" styleClass="selection-button" text="Select a Word" />
-                                                                  <Button mnemonicParsing="false">
+                                                                  <Button mnemonicParsing="false" onAction="#wordChooseLinked" styleClass="selection-button" text="Select a Word" />
+                                                                  <Button mnemonicParsing="false" onAction="#wordDeleteLinked">
                                                                      <graphic>
                                                                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
@@ -252,13 +252,13 @@
                                                       </HBox>
                                                       <VBox spacing="5.0">
                                                          <children>
-                                                            <CheckBox fx:id="lengthCheckBox2" mnemonicParsing="false" text="Emotionality Range">
+                                                            <CheckBox fx:id="wordEmotionalityCheckBox" mnemonicParsing="false" text="Emotionality Range">
                                                                <styleClass>
                                                                   <String fx:value="text-color1" />
                                                                   <String fx:value="small-title" />
                                                                </styleClass>
                                                             </CheckBox>
-                                                            <GridPane hgap="20.0">
+                                                            <GridPane fx:id="wordEmotionalityContainer" hgap="20.0">
                                                               <columnConstraints>
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -269,16 +269,16 @@
                                                                <children>
                                                                   <HBox alignment="CENTER_LEFT" spacing="2.0">
                                                                      <children>
-                                                                        <Label text="Min" textFill="WHITE" />
-                                                                        <TextField fx:id="lengthValue1" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                                                        <Slider fx:id="emotionalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                                                        <Label minWidth="21.0" text="Min" textFill="WHITE" />
+                                                                        <TextField fx:id="wordMinEmotionalityField" alignment="CENTER" minWidth="30.0" prefWidth="20.0" style="-fx-padding: 2;" text="0.5" />
+                                                                        <Slider fx:id="wordMinEmotionalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
                                                                      </children>
                                                                   </HBox>
                                                                   <HBox alignment="CENTER_LEFT" spacing="2.0" GridPane.columnIndex="1">
                                                                      <children>
-                                                                        <Label text="Max" textFill="WHITE" />
-                                                                        <TextField fx:id="lengthValue2" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                                                        <Slider fx:id="emotionalitySlider1" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                                                        <Label minWidth="23.0" text="Max" textFill="WHITE" />
+                                                                        <TextField fx:id="wordMaxEmotionalityField" alignment="CENTER" minWidth="30.0" prefWidth="20.0" style="-fx-padding: 2;" text="0.5" />
+                                                                        <Slider fx:id="wordMaxEmotionalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
                                                                      </children>
                                                                   </HBox>
                                                                </children>
@@ -290,13 +290,13 @@
                                                       </VBox>
                                                       <VBox spacing="5.0">
                                                          <children>
-                                                            <CheckBox fx:id="lengthCheckBox21" mnemonicParsing="false" text="Vulgarity Range">
+                                                            <CheckBox fx:id="wordVulgarityCheckBox" mnemonicParsing="false" text="Vulgarity Range">
                                                                <styleClass>
                                                                   <String fx:value="text-color1" />
                                                                   <String fx:value="small-title" />
                                                                </styleClass>
                                                             </CheckBox>
-                                                            <GridPane hgap="20.0">
+                                                            <GridPane fx:id="wordVulgarityContainer" hgap="20.0">
                                                                <columnConstraints>
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -307,16 +307,16 @@
                                                                <children>
                                                                   <HBox alignment="CENTER_LEFT" spacing="2.0">
                                                                      <children>
-                                                                        <Label text="Min" textFill="WHITE" />
-                                                                        <TextField fx:id="lengthValue11" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                                                        <Slider fx:id="emotionalitySlider1" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                                                        <Label minWidth="21.0" text="Min" textFill="WHITE" />
+                                                                        <TextField fx:id="wordMinVulgarityField" alignment="CENTER" minWidth="30.0" prefWidth="20.0" style="-fx-padding: 2;" text="0.5" />
+                                                                        <Slider fx:id="wordMinVulgaritySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
                                                                      </children>
                                                                   </HBox>
                                                                   <HBox alignment="CENTER_LEFT" spacing="2.0" GridPane.columnIndex="1">
                                                                      <children>
-                                                                        <Label text="Max" textFill="WHITE" />
-                                                                        <TextField fx:id="lengthValue21" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                                                        <Slider fx:id="emotionalitySlider11" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                                                        <Label minWidth="23.0" text="Max" textFill="WHITE" />
+                                                                        <TextField fx:id="wordMaxVulgarityField" alignment="CENTER" minWidth="30.0" prefWidth="20.0" style="-fx-padding: 2;" text="0.5" />
+                                                                        <Slider fx:id="wordMaxVulgaritySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
                                                                      </children>
                                                                   </HBox>
                                                                </children>
@@ -328,13 +328,13 @@
                                                       </VBox>
                                                       <VBox spacing="5.0">
                                                          <children>
-                                                            <CheckBox fx:id="lengthCheckBox22" mnemonicParsing="false" text="Formality Range">
+                                                            <CheckBox fx:id="wordFormalityCheckBox" mnemonicParsing="false" text="Formality Range">
                                                                <styleClass>
                                                                   <String fx:value="text-color1" />
                                                                   <String fx:value="small-title" />
                                                                </styleClass>
                                                             </CheckBox>
-                                                            <GridPane hgap="20.0">
+                                                            <GridPane fx:id="wordFormalityContainer" hgap="20.0">
                                                                <columnConstraints>
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -345,16 +345,16 @@
                                                                <children>
                                                                   <HBox alignment="CENTER_LEFT" spacing="2.0">
                                                                      <children>
-                                                                        <Label text="Min" textFill="WHITE" />
-                                                                        <TextField fx:id="lengthValue12" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                                                        <Slider fx:id="emotionalitySlider1" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                                                        <Label minWidth="21.0" text="Min" textFill="WHITE" />
+                                                                        <TextField fx:id="wordMinFormalityField" alignment="CENTER" minWidth="30.0" prefWidth="20.0" style="-fx-padding: 2;" text="0.5" />
+                                                                        <Slider fx:id="wordMinFormalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
                                                                      </children>
                                                                   </HBox>
                                                                   <HBox alignment="CENTER_LEFT" spacing="2.0" GridPane.columnIndex="1">
                                                                      <children>
-                                                                        <Label text="Max" textFill="WHITE" />
-                                                                        <TextField fx:id="lengthValue22" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                                                        <Slider fx:id="emotionalitySlider12" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                                                        <Label minWidth="23.0" text="Max" textFill="WHITE" />
+                                                                        <TextField fx:id="wordMaxFormalityField" alignment="CENTER" minWidth="30.0" prefWidth="20.0" style="-fx-padding: 2;" text="0.5" />
+                                                                        <Slider fx:id="wordMaxFormalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
                                                                      </children>
                                                                   </HBox>
                                                                </children>
@@ -416,7 +416,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" styleClass="input">
                                  <children>
-                                    <TextField fx:id="searchLetter" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
+                                    <TextField fx:id="letterSearch" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
                                        <padding>
                                           <Insets top="3.0" />
                                        </padding>
@@ -587,7 +587,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" styleClass="input">
                                  <children>
-                                    <TextField fx:id="searchType" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
+                                    <TextField fx:id="typeSearch" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
                                        <padding>
                                           <Insets top="3.0" />
                                        </padding>
@@ -630,16 +630,16 @@
                                                    <children>
                                                       <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                          <children>
-                                                            <CheckBox fx:id="lengthCheckBox12" minWidth="100.0" mnemonicParsing="false" text="Parent">
+                                                            <CheckBox fx:id="typeParentCheckBox" minWidth="100.0" mnemonicParsing="false" text="Parent">
                                                                <styleClass>
                                                                   <String fx:value="text-color1" />
                                                                   <String fx:value="small-title" />
                                                                </styleClass>
                                                             </CheckBox>
-                                                            <HBox alignment="CENTER_LEFT" spacing="2.0">
+                                                            <HBox fx:id="typeParentContainer" alignment="CENTER_LEFT" spacing="2.0">
                                                                <children>
-                                                                  <Button mnemonicParsing="false" styleClass="selection-button" text="Select a Type" />
-                                                                  <Button mnemonicParsing="false">
+                                                                  <Button mnemonicParsing="false" onAction="#typeChooseParent" styleClass="selection-button" text="Select a Type" />
+                                                                  <Button mnemonicParsing="false" onAction="#typeDeleteParent">
                                                                      <graphic>
                                                                         <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
                                                                            <image>
