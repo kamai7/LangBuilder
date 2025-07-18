@@ -47,8 +47,15 @@ public class WordEditorController {
                       formalityValue;
 
     @FXML
+    private HBox lengthContainer,
+                 emotionalityContainer,
+                 vulgarityContainer,
+                 formalityContainer,
+                 rootsContainer,
+                 linksContainer;
+
+    @FXML
     public void initialize() {
-        System.out.println(Colors.success("WordEditorController initialized"));
 
         // Add listeners to sliders
         lengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
@@ -94,6 +101,22 @@ public class WordEditorController {
             } catch (NumberFormatException e) {
             }
         });
+
+        lengthContainer.setDisable(!lengthCheckBox.isSelected());
+        emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected());
+        vulgarityContainer.setDisable(!vulgarityCheckBox.isSelected());
+        formalityContainer.setDisable(!formalityCheckBox.isSelected());
+        rootsContainer.setDisable(!rootsCheckBox.isSelected());
+        linksContainer.setDisable(!linksCheckBox.isSelected());
+
+        lengthCheckBox.selectedProperty().addListener(event -> lengthContainer.setDisable(!lengthCheckBox.isSelected()));
+        emotionalityCheckBox.selectedProperty().addListener(event -> emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected()));
+        vulgarityCheckBox.selectedProperty().addListener(event -> vulgarityContainer.setDisable(!vulgarityCheckBox.isSelected()));
+        formalityCheckBox.selectedProperty().addListener(event -> formalityContainer.setDisable(!formalityCheckBox.isSelected()));
+        rootsCheckBox.selectedProperty().addListener(event -> rootsContainer.setDisable(!rootsCheckBox.isSelected()));
+        linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
+
+        System.out.println(Colors.success("WordEditorController initialized"));
     }
 
     @FXML
