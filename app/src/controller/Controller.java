@@ -21,7 +21,8 @@ public class Controller {
     private TextField wordSearch,
                       typeSearch,
                       letterSearch,
-                      wordLengthField,
+                      wordMinLengthField,
+                      wordMaxLengthField,
                       wordMinEmotionalityField,
                       wordMaxEmotionalityField,
                       wordMinVulgarityField,
@@ -31,18 +32,19 @@ public class Controller {
 
     @FXML
     private HBox content,
-                 wordLengthContainer,
                  wordTypeContainer,
                  wordLinkedContainer,
                  typeParentContainer;
 
     @FXML
-    private GridPane wordEmotionalityContainer,
+    private GridPane wordLengthContainer,
+                     wordEmotionalityContainer,
                      wordVulgarityContainer,
                      wordFormalityContainer;
 
     @FXML
-    private Slider wordLengthSlider,
+    private Slider wordMinLengthSlider,
+                   wordMaxLengthSlider,
                    wordMinEmotionalitySlider,
                    wordMaxEmotionalitySlider,
                    wordMinVulgaritySlider,
@@ -62,8 +64,11 @@ public class Controller {
     @FXML
     private void initialize() {
         // Add listeners to sliders
-        wordLengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            wordLengthField.setText(String.valueOf(newValue.intValue()));
+        wordMinLengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            wordMinLengthField.setText(String.valueOf(newValue.intValue()));
+        });
+        wordMaxLengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+            wordMaxLengthField.setText(String.valueOf(newValue.intValue()));
         });
         wordMinEmotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
             float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
@@ -87,15 +92,21 @@ public class Controller {
         });
 
         // Add listeners to text fields
-        wordLengthField.textProperty().addListener(event -> {
+        wordMinLengthField.textProperty().addListener(event -> {
             try{
-                int value = Integer.parseInt(wordLengthField.getText());
-                wordLengthSlider.setValue(value);
+                int value = Integer.parseInt(wordMinLengthField.getText());
+                wordMinLengthSlider.setValue(value);
             } catch (NumberFormatException e){}
+        });
+        wordMaxLengthField.textProperty().addListener(event -> {
+            try {
+                int value =  Integer.parseInt(wordMaxLengthField.getText());
+                wordMaxLengthSlider.setValue(value);
+            } catch (NumberFormatException e) {}
         });
         wordMinEmotionalityField.textProperty().addListener(event -> {
             try {
-                float value = Float.parseFloat(wordMinEmotionalityField.getText());
+                int value = Integer.parseInt(wordMinEmotionalityField.getText());
                 wordMinEmotionalitySlider.setValue(value);
             } catch (NumberFormatException e) {}
         });
