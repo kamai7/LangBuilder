@@ -28,6 +28,7 @@ public class WordEditorController {
 
     @FXML
     private FlowPane lettersPane,
+                     typesPane,
                      rootsPane,
                      linksPane;
 
@@ -162,8 +163,8 @@ public class WordEditorController {
     }
 
     @FXML
-    private void chooseType() {
-        System.out.println(Colors.info("Choose type button clicked"));
+    private void addType() {
+        System.out.println(Colors.info("add type button clicked"));
     }
 
     @FXML

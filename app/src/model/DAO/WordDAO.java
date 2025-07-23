@@ -15,9 +15,20 @@ import model.util.Colors;
 
 public class WordDAO extends DAO<Word> {
     @Override
-    public ArrayList<Word> findAll() {
-        ArrayList<Word> ret = new ArrayList<>();
-        String query = "SELECT wordId FROM Word";
+    public Set<Word> findAll(int limit) {
+        Set<Word> ret = new HashSet<>();
+
+        if(limit < -1){
+            throw new IllegalArgumentException("Limit must be greater than -1.");
+        }
+
+        String query;
+
+        if (limit == -1){
+            query = "SELECT wordId FROM Word";
+        }else{
+            query = "SELECT wordId FROM Word LIMIT " + limit;
+        }
 
         try (Connection c = getConnection();
              Statement st = c.createStatement();
@@ -32,6 +43,11 @@ public class WordDAO extends DAO<Word> {
         }
 
         return ret;
+    }
+
+    @Override
+    public Set<Word> findAll() {
+        return findAll(-1);
     }
 
     /**

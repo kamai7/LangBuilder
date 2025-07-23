@@ -77,7 +77,7 @@
                   <String fx:value="small-title" />
                </styleClass>
             </Label>
-            <Label text="Type" GridPane.rowIndex="1">
+            <Label text="Types" GridPane.rowIndex="1">
                <styleClass>
                   <String fx:value="text-color1" />
                   <String fx:value="small-title" />
@@ -94,14 +94,17 @@
                   <Insets left="5.0" />
                </GridPane.margin>
             </CheckBox>
-            <HBox fx:id="chooseTypeButtonContainer" alignment="CENTER_LEFT" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <HBox alignment="CENTER_LEFT" maxWidth="800.0" spacing="10.0" styleClass="editor-container" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <children>
-                  <Button mnemonicParsing="false" onAction="#chooseType" styleClass="selection-button" text="Choose a type" />
-                  <Button mnemonicParsing="false" onAction="#deleteType">
+                  <FlowPane fx:id="typesPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS" />
+                  <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addType" styleClass="editor-add">
+                     <font>
+                        <Font size="1.0" />
+                     </font>
                      <graphic>
-                        <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../icons/cross.png" />
+                              <Image url="@../icons/add.png" />
                            </image>
                         </ImageView>
                      </graphic>

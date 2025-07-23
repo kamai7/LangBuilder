@@ -2,9 +2,9 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
-import controller.fragments.NavItem2FieldsController;
-import controller.fragments.NavItem3FieldsController;
+import controller.fragments.NavItemController;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,17 +19,18 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.managment.EditorManagement;
-import model.managment.Management;
+import model.managment.NavManagement;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
 import model.util.Colors;
+import model.util.Controls;
 import view.FXMLHandler;
 
 public class Controller {
 
     private FXMLHandler<GridPane,HomeController> contentCode;
-    private Management management;
+    private NavManagement management;
 
     @FXML
     private TextField wordSearch,
@@ -208,24 +209,24 @@ public class Controller {
         typeSortComboBox.setValue("default (types)");
 
         //create management object
-        management = new Management();
+        management = new NavManagement();
 
         //init nav lists
-        ArrayList<Word> words = management.getWords();
+        Set<Word> words = management.getWords();
         for(Word word: words){
-            FXMLHandler<BorderPane, NavItem3FieldsController> item = management.convertWordToFXMLHandler(word);
+            FXMLHandler<BorderPane, NavItemController> item = Controls.convertWordToFXMLHandler(word);
             wordContainer.getChildren().add(item.get());
         }
 
-        ArrayList<Type> types = management.getTypes();
+        Set<Type> types = management.getTypes();
         for(Type type: types) {
-            FXMLHandler<BorderPane, NavItem2FieldsController> item = management.convertTypeToFXMLHandler(type);
+            FXMLHandler<BorderPane, NavItemController> item = Controls.convertTypeToFXMLHandler(type);
             typeContainer.getChildren().add(item.get());
         }
 
-        ArrayList<Letter> letters = management.getLetters();
+        Set<Letter> letters = management.getLetters();
         for(Letter letter: letters) {
-            FXMLHandler<BorderPane, NavItem2FieldsController> item = management.convertLetterToFXMLHandler(letter);
+            FXMLHandler<BorderPane, NavItemController> item = Controls.convertLetterToFXMLHandler(letter);
             letterContainer.getChildren().add(item.get());
         }
         
@@ -295,25 +296,25 @@ public class Controller {
     }
 
     private void updatewordSearch(){
-        ArrayList<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
+        Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
         for(Word word: filteredWords) {
-            FXMLHandler<BorderPane, NavItem3FieldsController> wordEditor = management.convertWordToFXMLHandler(word);
+            FXMLHandler<BorderPane, NavItemController> wordEditor = Controls.convertWordToFXMLHandler(word);
             wordContainer.getChildren().add(wordEditor.get());
         }
     }
 
     private void updatetypeSearch(){
-        ArrayList<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
+        Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
         for(Type type: filteredTypes) {
-            FXMLHandler<BorderPane, NavItem2FieldsController> typeEditor = management.convertTypeToFXMLHandler(type);
+            FXMLHandler<BorderPane, NavItemController> typeEditor = Controls.convertTypeToFXMLHandler(type);
             typeContainer.getChildren().add(typeEditor.get());
         }
     }
 
     private void updateletterSearch(){
-        ArrayList<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
+        Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
         for(Letter letter: filteredLetters) {
-            FXMLHandler<BorderPane, NavItem2FieldsController> letterEditor = management.convertLetterToFXMLHandler(letter);
+            FXMLHandler<BorderPane, NavItemController> letterEditor = Controls.convertLetterToFXMLHandler(letter);
             letterContainer.getChildren().add(letterEditor.get());
         }
     }
@@ -339,5 +340,4 @@ public class Controller {
             setContent(editor.get());
         });
     }
-
 }

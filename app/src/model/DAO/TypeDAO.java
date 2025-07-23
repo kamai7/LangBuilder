@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import model.persistance.Type;
 import model.persistance.Word;
 import model.util.Colors;
@@ -12,9 +14,21 @@ import model.util.Colors;
 public class TypeDAO extends DAO<Type>{
     
     @Override
-    public ArrayList<Type> findAll() {
-        ArrayList<Type> ret = new ArrayList<>();
-        String query = "SELECT * FROM Type ORDER BY position";
+    public Set<Type> findAll(int limit) {
+
+        if(limit < -1){
+            throw new IllegalArgumentException("Limit must be greater than -1.");
+        }
+
+        String query;
+
+        if (limit == -1){
+            query = "SELECT * FROM Type ORDER BY position";
+        }else{
+            query = "SELECT * FROM Type ORDER BY position LIMIT " + limit;
+        }
+
+        Set<Type> ret = new HashSet<>();
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query);
@@ -42,6 +56,11 @@ public class TypeDAO extends DAO<Type>{
         }
 
         return ret;
+    }
+
+    @Override
+    public Set<Type> findAll() {
+        return findAll(-1);
     }
 
     @Override

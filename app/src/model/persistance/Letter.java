@@ -1,5 +1,6 @@
 package model.persistance;
 
+import java.util.Arrays;
 import java.util.Objects;
 import model.util.Colors;
 
@@ -50,7 +51,8 @@ public class Letter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(character);
+        Object[] obj = {character, characterAscii};
+        return Arrays.deepHashCode(obj);
     }
 
     @Override

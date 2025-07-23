@@ -6,7 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.Set;
+
 import model.util.Colors;
 
 
@@ -20,9 +21,16 @@ abstract class DAO<T> {
 
     /**
      * Finds all objects of type T in the database.
+     * @param limit the maximum number of objects to return (-1 for no limit).
      * @return an ArrayList containing all objects of type T, or an empty list if none are found.
      */
-    public abstract ArrayList<T> findAll();
+    public abstract Set<T> findAll(int limit);
+
+    /**
+     * Finds all objects of type T in the database.
+     * @return an ArrayList containing all objects of type T, or an empty list if none are found.
+     */
+    public abstract Set<T> findAll();
 
     /**
      * Finds an object of type T by its ID.

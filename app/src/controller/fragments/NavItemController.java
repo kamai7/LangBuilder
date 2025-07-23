@@ -5,9 +5,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import model.util.Colors;
 
-public class NavItem2FieldsController {
+public class NavItemController {
     
     @FXML
     private Label objectLabel,
@@ -17,10 +18,12 @@ public class NavItem2FieldsController {
     private Button editButton;
 
     @FXML
-    private HBox container;
+    private HBox container,
+                 typesContainer;
 
     @FXML
     private CheckBox selectedCheckBox;
+
 
     @FXML
     private void initialize() {
@@ -52,6 +55,19 @@ public class NavItem2FieldsController {
 
     public boolean isSelected() {
         return selectedCheckBox.isSelected();
+    }
+
+    public void addType(String text, Color color) {
+        if (text == null) {
+            throw new IllegalArgumentException(Colors.error("text cannot be null"));
+        }
+        if (color == null) {
+            throw new IllegalArgumentException(Colors.error("color cannot be null"));
+        }
+
+        Label typeLabel = new Label(text);
+        typeLabel.setStyle("-fx-text-fill: #" + color.toString().substring(2) + ";");
+        typesContainer.getChildren().add(typeLabel);
     }
 
 }

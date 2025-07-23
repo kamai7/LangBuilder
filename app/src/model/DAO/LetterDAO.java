@@ -5,16 +5,28 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import model.persistance.Letter;
 import model.util.Colors;
 
 public  class LetterDAO extends DAO<Letter> {
 
     @Override
-    public ArrayList<Letter> findAll() {
-        ArrayList<Letter> ret = new ArrayList<>();
-        String query = "SELECT * FROM Letter";
+    public Set<Letter> findAll(int limit) {
+
+        if(limit < -1){
+            throw new IllegalArgumentException("Limit must be greater than -1.");
+        }
+
+        Set<Letter> ret = new HashSet<>();
+        String query;
+        if (limit == -1){
+            query = "SELECT * FROM Letter ORDER BY letterAscii ASC";
+        }else{
+            query = "SELECT * FROM Letter ORDER BY letterAscii ASC LIMIT " + limit;
+        }
 
         try (Connection c = getConnection();
              Statement st = c.createStatement();
@@ -30,6 +42,11 @@ public  class LetterDAO extends DAO<Letter> {
         }
     
         return ret;
+    }
+
+    @Override
+    public Set<Letter> findAll() {
+        return findAll(-1);
     }
 
     @Override
