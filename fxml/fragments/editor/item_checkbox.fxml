@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 
 
-<HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.fragments.EditorItemCheckboxController">
+<HBox alignment="CENTER_LEFT" prefHeight="0.0" spacing="5.0" styleClass="editor-item" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.fragments.EditorItemCheckboxController" fx:id="container">
    <children>
       <CheckBox mnemonicParsing="false" fx:id="checkbox" />
       <Label styleClass="text-color1" text="a" fx:id="ObjectLabel" />

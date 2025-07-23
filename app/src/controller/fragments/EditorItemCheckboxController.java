@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import model.util.Colors;
 
 public class EditorItemCheckboxController {
@@ -16,6 +17,9 @@ public class EditorItemCheckboxController {
 
     @FXML
     private Button deleteObjectButton;
+
+    @FXML
+    private HBox container;
 
     @FXML
     private void initialize() {
@@ -40,6 +44,10 @@ public class EditorItemCheckboxController {
 
     public Button getDeleteObjectButton() {
         return deleteObjectButton;
+    }
+
+    public HBox getContainer() {
+        return container;
     }
     
 }

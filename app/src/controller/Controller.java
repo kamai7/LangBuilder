@@ -1,14 +1,24 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import controller.fragments.NavItem2FieldsController;
+import controller.fragments.NavItem3FieldsController;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import model.managment.EditorManagement;
 import model.util.Colors;
 import view.FXMLHandler;
@@ -60,6 +70,20 @@ public class Controller {
                      wordVulgarityCheckBox,
                      wordFormalityCheckBox,
                      typeParentCheckBox;
+
+    @FXML
+    private ComboBox<String> wordSortComboBox,
+                             letterSortComboBox,
+                             typeSortComboBox;
+
+    @FXML
+    private VBox wordContainer,
+                 letterContainer,
+                 typeContainer;
+
+    private ObservableList<String> wordSortList,
+                                   letterSortList,
+                                   typeSortList;
     
     @FXML
     private void initialize() {
@@ -163,9 +187,51 @@ public class Controller {
         typeSearch.textProperty().addListener((observable, oldValue, newValue) -> updatetypeSearch());
         letterSearch.textProperty().addListener((observable, oldValue, newValue) -> updateletterSearch());
 
+        //init combo boxes
+        ArrayList<String> wordChoices = new ArrayList<>(Arrays.asList("default (types)", "ascending", "descending", "length", "emotionality", "vulgarity", "formality"));
+        ArrayList<String> letterChoices = new ArrayList<>(Arrays.asList("default (ascending)", "ascii", "descending", "most used"));
+        ArrayList<String> typeChoices = new ArrayList<>(Arrays.asList("default (ascending)", "descending", "parent"));
+        wordSortList = FXCollections.observableArrayList(wordChoices);
+        wordSortComboBox.setItems(wordSortList);
+        wordSortComboBox.setValue("default (types)");
+
+        letterSortList = FXCollections.observableArrayList(letterChoices);
+        letterSortComboBox.setItems(letterSortList);
+        letterSortComboBox.setValue("default (types)");
+
+        typeSortList = FXCollections.observableArrayList(typeChoices);
+        typeSortComboBox.setItems(typeSortList);
+        typeSortComboBox.setValue("default (types)");
+
         initHome();
 
         System.out.println(Colors.success("Controller initialized"));
+
+        //add navitem to containers
+
+        for (int i = 0; i < Math.random() * 10; i++) {
+            FXMLHandler<BorderPane, NavItem3FieldsController> item = new FXMLHandler<>("/fxml/fragments/nav/nav_item_3fields.fxml");
+            NavItem3FieldsController controller = item.getController();
+            controller.setObjectText("word " + i);
+            controller.setDescriptionText("Description " + i);
+            controller.setObjectTypeText("Type " + i);
+            controller.setTypeColor(Color.color(Math.random(), Math.random(), Math.random()));
+            wordContainer.getChildren().add(item.get());
+        }
+
+        for (int i = 0; i < Math.random() * 10; i++) {
+            FXMLHandler<BorderPane, NavItem2FieldsController> item = new FXMLHandler<>("/fxml/fragments/nav/nav_item_2fields.fxml");
+            item.getController().setObjectText("Letter " + i);
+            item.getController().setDescriptionText("LetterAscii " + i);
+            letterContainer.getChildren().add(item.get());
+        }
+
+        for (int i = 0; i < Math.random() * 10; i++) {
+            FXMLHandler<BorderPane, NavItem2FieldsController> item = new FXMLHandler<>("/fxml/fragments/nav/nav_item_2fields.fxml");
+            item.getController().setObjectText("Type " + i);
+            item.getController().setDescriptionText("Parent " + i);
+            typeContainer.getChildren().add(item.get());
+        }
     }
 
     @FXML

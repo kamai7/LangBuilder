@@ -4,6 +4,7 @@ import controller.Controller;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class View extends Stage {
@@ -25,10 +26,12 @@ public class View extends Stage {
         main.setPrefWidth(1280.0);
 
         scene = new Scene(main, 1280, 720);
+        Font.loadFont(getClass().getResourceAsStream("/fxml/fonts/Inter-Regular.ttf"), 12);
         scene.getStylesheets().add("/fxml/style/redefined.css");
         scene.getStylesheets().add("/fxml/style/style.css");
         this.setScene(scene);
         this.getIcons().add(new Image("/fxml/icons/logo.png"));
+
         this.show();
     }
 

@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -186,6 +187,12 @@
                                              <content>
                                                 <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0" style="-fx-background-color: transparent;">
                                                    <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                         <children>
+                                                            <Label minWidth="100.0" styleClass="text-color1" text="Sort" />
+                                                            <ComboBox fx:id="wordSortComboBox" prefWidth="150.0" />
+                                                         </children>
+                                                      </HBox>
                                                       <VBox>
                                                          <children>
                                                             <CheckBox fx:id="wordLengthCheckBox" mnemonicParsing="false" text="Length">
@@ -418,7 +425,7 @@
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
+                                                <VBox fx:id="wordContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
                                              </content>
                                              <padding>
                                                 <Insets left="20.0" right="20.0" />
@@ -481,7 +488,18 @@
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" />
+                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;">
+                                                   <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                         <children>
+                                                            <Label minWidth="100.0" styleClass="text-color1" text="Sort" />
+                                                            <ComboBox fx:id="letterSortComboBox" prefWidth="150.0" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="20.0" right="20.0" />
+                                                   </padding></VBox>
                                              </content>
                                           </ScrollPane>
                                        </children>
@@ -514,82 +532,7 @@
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
-                                                   <children>
-                                                      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="20.0" spacing="10.0" styleClass="word-list-item">
-                                                         <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE">
-                                                               <font>
-                                                                  <Font name="Inter Regular" size="12.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <Label minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="40.0" text="Type" textFill="#00ccff" HBox.hgrow="ALWAYS" />
-                                                            <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../icons/edit.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                         </children>
-                                                         <padding>
-                                                            <Insets bottom="1.0" top="1.0" />
-                                                         </padding>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="20.0" spacing="10.0" styleClass="word-list-item">
-                                                         <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE">
-                                                               <font>
-                                                                  <Font name="Inter Regular" size="12.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <Label minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="40.0" text="Type" textFill="#00ccff" HBox.hgrow="ALWAYS" />
-                                                            <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../icons/edit.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                         </children>
-                                                         <padding>
-                                                            <Insets bottom="1.0" top="1.0" />
-                                                         </padding>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="20.0" spacing="10.0" styleClass="word-list-item">
-                                                         <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE">
-                                                               <font>
-                                                                  <Font name="Inter Regular" size="12.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <Label minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="40.0" text="Type" textFill="#00ccff" HBox.hgrow="ALWAYS" />
-                                                            <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../icons/edit.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                         </children>
-                                                         <padding>
-                                                            <Insets bottom="1.0" top="1.0" />
-                                                         </padding>
-                                                      </HBox>
-                                                   </children>
-                                                </VBox>
+                                                <VBox fx:id="letterContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
                                              </content>
                                              <padding>
                                                 <Insets left="20.0" right="20.0" />
@@ -648,8 +591,14 @@
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;">
+                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0" style="-fx-background-color: transparent;">
                                                    <children>
+                                                      <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                                         <children>
+                                                            <Label minWidth="100.0" styleClass="text-color1" text="Sort" />
+                                                            <ComboBox fx:id="typeSortComboBox" prefWidth="150.0" />
+                                                         </children>
+                                                      </HBox>
                                                       <HBox alignment="CENTER_LEFT" spacing="10.0">
                                                          <children>
                                                             <CheckBox fx:id="typeParentCheckBox" minWidth="100.0" mnemonicParsing="false" text="Parent">
@@ -706,82 +655,7 @@
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
-                                                   <children>
-                                                      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="20.0" spacing="10.0" styleClass="word-list-item">
-                                                         <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE">
-                                                               <font>
-                                                                  <Font name="Inter Regular" size="12.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <Label minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="40.0" text="Type" textFill="#00ccff" HBox.hgrow="ALWAYS" />
-                                                            <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" styleClass="hidden-button">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../icons/edit.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                         </children>
-                                                         <padding>
-                                                            <Insets bottom="1.0" top="1.0" />
-                                                         </padding>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="20.0" spacing="10.0" styleClass="word-list-item">
-                                                         <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE">
-                                                               <font>
-                                                                  <Font name="Inter Regular" size="12.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <Label minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="40.0" text="Type" textFill="#00ccff" HBox.hgrow="ALWAYS" />
-                                                            <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" styleClass="hidden-button">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../icons/edit.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                         </children>
-                                                         <padding>
-                                                            <Insets bottom="1.0" top="1.0" />
-                                                         </padding>
-                                                      </HBox>
-                                                      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="20.0" spacing="10.0" styleClass="word-list-item">
-                                                         <children>
-                                                            <CheckBox mnemonicParsing="false" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE">
-                                                               <font>
-                                                                  <Font name="Inter Regular" size="12.0" />
-                                                               </font>
-                                                            </Label>
-                                                            <Label minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
-                                                            <Label maxWidth="1.7976931348623157E308" minWidth="40.0" text="Type" textFill="#00ccff" HBox.hgrow="ALWAYS" />
-                                                            <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" styleClass="hidden-button">
-                                                               <graphic>
-                                                                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                                                     <image>
-                                                                        <Image url="@../icons/edit.png" />
-                                                                     </image>
-                                                                  </ImageView>
-                                                               </graphic>
-                                                            </Button>
-                                                         </children>
-                                                         <padding>
-                                                            <Insets bottom="1.0" top="1.0" />
-                                                         </padding>
-                                                      </HBox>
-                                                   </children>
-                                                </VBox>
+                                                <VBox fx:id="typeContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
                                              </content>
                                              <padding>
                                                 <Insets left="20.0" right="20.0" />
