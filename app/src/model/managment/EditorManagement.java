@@ -1,14 +1,23 @@
 package model.managment;
 
 
+import java.util.ArrayList;
+
 import controller.EditorController;
 import controller.LetterEditorController;
 import controller.WordEditorController;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import model.persistance.Letter;
+import model.persistance.Type;
+import model.persistance.Word;
 import view.FXMLHandler;
 
 public class EditorManagement {
+
+    ArrayList<Word> words;
+    ArrayList<Letter> letters;
+    ArrayList<Type> types;
     
     public static FXMLHandler<BorderPane, EditorController> openLetterEditor(){
         FXMLHandler<BorderPane, EditorController> editor = new FXMLHandler<>("/fxml/static/editor.fxml");
@@ -47,5 +56,9 @@ public class EditorManagement {
         controller.setContent(typeEditor.get());
 
         return editor;
+    }
+
+    public void addLetter(String letter, String letterAscii) {
+        letters.add(new Letter(letter, letterAscii));
     }
 }

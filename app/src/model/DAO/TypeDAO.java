@@ -32,8 +32,8 @@ public class TypeDAO extends DAO<Type>{
                 if (!rs.wasNull()) {
                     root = new WordDAO().findById(rootId);
                 }
-
-                Type type = new Type(rs.getString("label"), parent, root, rs.getInt("position"));
+                double[] color = {rs.getDouble("colorR"), rs.getDouble("colorG"), rs.getDouble("colorB"), rs.getDouble("colorT")};
+                Type type = new Type(rs.getString("label"), parent, root, rs.getInt("position"), color);
                 type.setId(rs.getInt("typeId"));
                 ret.add(type);
             }
@@ -67,8 +67,8 @@ public class TypeDAO extends DAO<Type>{
                 if (!rs.wasNull()) {
                     root = new WordDAO().findById(rootId);
                 }
-
-                ret = new Type(rs.getString("label"), parent, root, rs.getInt("position"));
+                double[] color = {rs.getDouble("colorR"), rs.getDouble("colorG"), rs.getDouble("colorB"), rs.getDouble("colorT")};
+                ret = new Type(rs.getString("label"), parent, root, rs.getInt("position"), color);
                 ret.setId(id);
             }
         } catch (Exception e) {

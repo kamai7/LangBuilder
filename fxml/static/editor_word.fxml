@@ -43,7 +43,7 @@
          <children>
             <VBox GridPane.columnIndex="1">
                <children>
-                  <HBox alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1000.0" spacing="10.0" styleClass="editor-container">
                      <children>
                         <FlowPane fx:id="lettersPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS" />
                         <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addLetter" styleClass="editor-add">
@@ -111,18 +111,36 @@
          </children>
       </GridPane>
       <Separator prefWidth="200.0" />
-      <HBox>
+      <HBox alignment="CENTER_LEFT" spacing="5.0">
          <children>
             <Label maxWidth="1.7976931348623157E308" text="Generator" HBox.hgrow="ALWAYS">
                <styleClass>
                   <String fx:value="subtitle" />
                   <String fx:value="text-color1" />
                </styleClass></Label>
+            <Button mnemonicParsing="false" onAction="#previousGenerateButton" styleClass="skip-button">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/previous.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
             <Button mnemonicParsing="false" onAction="#generate" styleClass="generate-button" text="Generate">
                <graphic>
                   <ImageView fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../icons/generate.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#nextGenerateButton" styleClass="skip-button">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../icons/skip.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -153,7 +171,7 @@
                   <HBox fx:id="lengthContainer" alignment="CENTER_LEFT">
                      <children>
                         <TextField fx:id="lengthValue" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                        <Slider fx:id="lengthSlider" blockIncrement="1.0" majorTickUnit="10.0" max="60.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" HBox.hgrow="ALWAYS" />
+                        <Slider fx:id="lengthSlider" blockIncrement="1.0" majorTickUnit="10.0" max="60.0" maxWidth="800.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" HBox.hgrow="ALWAYS" />
                      </children>
                      <padding>
                         <Insets left="5.0" />
@@ -204,7 +222,7 @@
                         <String fx:value="small-title" />
                      </styleClass>
                   </CheckBox>
-                  <HBox fx:id="rootsContainer" alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
+                  <HBox fx:id="rootsContainer" alignment="CENTER_LEFT" maxWidth="800.0" spacing="10.0" styleClass="editor-container">
                      <children>
                         <FlowPane fx:id="rootsPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS" />
                         <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addRoot" styleClass="editor-add">
@@ -231,7 +249,7 @@
                         <String fx:value="small-title" />
                      </styleClass>
                   </CheckBox>
-                  <HBox fx:id="linksContainer" alignment="CENTER_LEFT" spacing="10.0" styleClass="editor-container">
+                  <HBox fx:id="linksContainer" alignment="CENTER_LEFT" maxWidth="800.0" spacing="10.0" styleClass="editor-container">
                      <children>
                         <FlowPane fx:id="linksPane" prefWrapLength="0.0" HBox.hgrow="ALWAYS" />
                         <Button graphicTextGap="0.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#addLink" styleClass="editor-add">
@@ -279,7 +297,7 @@
                   <String fx:value="small-title" />
                </styleClass>
             </Label>
-            <TextArea fx:id="translationsArea" maxWidth="500.0" prefHeight="50.0" wrapText="true" />
+            <TextArea fx:id="translationsArea" maxWidth="800.0" prefHeight="50.0" wrapText="true" />
             <Label text="Definitions">
                <styleClass>
                   <String fx:value="text-color1" />
@@ -289,7 +307,7 @@
                   <Insets bottom="5.0" top="20.0" />
                </VBox.margin>
             </Label>
-            <TextArea fx:id="definitionsArea" maxWidth="500.0" prefHeight="100.0" scrollTop="200.0" wrapText="true" />
+            <TextArea fx:id="definitionsArea" maxWidth="800.0" prefHeight="100.0" scrollTop="200.0" wrapText="true" />
          </children>
       </VBox>
    </children>

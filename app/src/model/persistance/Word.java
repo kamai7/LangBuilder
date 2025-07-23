@@ -1,6 +1,7 @@
 package model.persistance;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 
@@ -64,23 +65,7 @@ public class Word {
     public Word(ArrayList<Letter> letters) {
         this(letters, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
-/*
-    public void updateValues(){
-        Word reference = dao.findByLetters(letters);
 
-        this.id = reference.getId();
-
-        this.emotional = reference.getEmotional();
-        this.formality = reference.getFormality();
-        this.vulgarity = reference.getVulgarity();
-        
-        this.definitions = reference.getDefinitions();
-        this.translations = reference.getTranslations();
-        this.roots = reference.getRoots();
-        this.links = reference.getLinks();
-        this.types = reference.getTypes();
-    }
-*/
     @Override
     public String toString() {
         return "Word: " + id + " : " +
@@ -220,7 +205,8 @@ public class Word {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        Object[] letters = this.letters.toArray();
+        return Arrays.deepHashCode(letters);
     }
     
     @Override

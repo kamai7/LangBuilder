@@ -12,14 +12,14 @@ public class NavItem3FieldsController {
     
     @FXML
     private Label objectLabel,
-                  descriptionLabel,
-                  typeLabel;
+                  descriptionLabel;
 
     @FXML
     private Button editButton;
 
     @FXML
-    private HBox container;
+    private HBox container,
+                 typesContainer;
 
     @FXML
     private CheckBox selectedCheckBox;
@@ -49,26 +49,25 @@ public class NavItem3FieldsController {
         descriptionLabel.setText(description);
     }
 
-    public void setObjectTypeText(String type) {
-        if (type == null) {
-            throw new IllegalArgumentException(Colors.error("type cannot be null"));
-        }
-        typeLabel.setText(type);
-    }
-
-    public void setTypeColor(Color color) {
-        if (color == null) {
-            throw new IllegalArgumentException(Colors.error("color cannot be null"));
-        }
-        typeLabel.setStyle("-fx-text-fill: #" + color.toString().substring(2) + ";");
-    }
-
     public Button getEditButton() {
         return editButton;
     }
 
     public boolean isSelected() {
         return selectedCheckBox.isSelected();
+    }
+
+    public void addType(String text, Color color) {
+        if (text == null) {
+            throw new IllegalArgumentException(Colors.error("text cannot be null"));
+        }
+        if (color == null) {
+            throw new IllegalArgumentException(Colors.error("color cannot be null"));
+        }
+
+        Label typeLabel = new Label(text);
+        typeLabel.setStyle("-fx-text-fill: #" + color.toString().substring(2) + ";");
+        typesContainer.getChildren().add(typeLabel);
     }
 
 }

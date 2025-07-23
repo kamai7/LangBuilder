@@ -121,7 +121,6 @@
     -fx-border-width: 2px;
     -fx-border-color: #ffffff13;
     -fx-text-fill: #ffffffe7;
-    -fx-cursor: hand;
 }
 
 .slider-label{
@@ -139,5 +138,9 @@
     -fx-text-fill: #bcbcbc;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
-    -fx-cursor: hand;
+}
+
+.skip-button{
+    -fx-background-radius: 5px;
+    -fx-background-color: #ffffff13;
 }

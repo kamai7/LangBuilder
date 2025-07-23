@@ -16,7 +16,7 @@
          <children>
             <Label fx:id="objectLabel" maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE" />
             <Label fx:id="descriptionLabel" minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
-            <Label fx:id="typeLabel" maxWidth="1.7976931348623157E308" text="Type" HBox.hgrow="ALWAYS" />
+            <HBox fx:id="typesContainer" alignment="CENTER_LEFT" spacing="6.0" HBox.hgrow="ALWAYS" />
          </children>
          <padding>
             <Insets bottom="1.0" top="1.0" />

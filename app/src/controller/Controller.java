@@ -18,14 +18,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import model.managment.EditorManagement;
+import model.managment.Management;
+import model.persistance.Letter;
+import model.persistance.Type;
+import model.persistance.Word;
 import model.util.Colors;
 import view.FXMLHandler;
 
 public class Controller {
 
     private FXMLHandler<GridPane,HomeController> contentCode;
+    private Management management;
 
     @FXML
     private TextField wordSearch,
@@ -189,7 +193,7 @@ public class Controller {
 
         //init combo boxes
         ArrayList<String> wordChoices = new ArrayList<>(Arrays.asList("default (types)", "ascending", "descending", "length", "emotionality", "vulgarity", "formality"));
-        ArrayList<String> letterChoices = new ArrayList<>(Arrays.asList("default (ascending)", "ascii", "descending", "most used"));
+        ArrayList<String> letterChoices = new ArrayList<>(Arrays.asList("default (ascending)", "descending", "most used"));
         ArrayList<String> typeChoices = new ArrayList<>(Arrays.asList("default (ascending)", "descending", "parent"));
         wordSortList = FXCollections.observableArrayList(wordChoices);
         wordSortComboBox.setItems(wordSortList);
@@ -203,35 +207,31 @@ public class Controller {
         typeSortComboBox.setItems(typeSortList);
         typeSortComboBox.setValue("default (types)");
 
-        initHome();
+        //create management object
+        management = new Management();
 
-        System.out.println(Colors.success("Controller initialized"));
-
-        //add navitem to containers
-
-        for (int i = 0; i < Math.random() * 10; i++) {
-            FXMLHandler<BorderPane, NavItem3FieldsController> item = new FXMLHandler<>("/fxml/fragments/nav/nav_item_3fields.fxml");
-            NavItem3FieldsController controller = item.getController();
-            controller.setObjectText("word " + i);
-            controller.setDescriptionText("Description " + i);
-            controller.setObjectTypeText("Type " + i);
-            controller.setTypeColor(Color.color(Math.random(), Math.random(), Math.random()));
+        //init nav lists
+        ArrayList<Word> words = management.getWords();
+        for(Word word: words){
+            FXMLHandler<BorderPane, NavItem3FieldsController> item = management.convertWordToFXMLHandler(word);
             wordContainer.getChildren().add(item.get());
         }
 
-        for (int i = 0; i < Math.random() * 10; i++) {
-            FXMLHandler<BorderPane, NavItem2FieldsController> item = new FXMLHandler<>("/fxml/fragments/nav/nav_item_2fields.fxml");
-            item.getController().setObjectText("Letter " + i);
-            item.getController().setDescriptionText("LetterAscii " + i);
-            letterContainer.getChildren().add(item.get());
-        }
-
-        for (int i = 0; i < Math.random() * 10; i++) {
-            FXMLHandler<BorderPane, NavItem2FieldsController> item = new FXMLHandler<>("/fxml/fragments/nav/nav_item_2fields.fxml");
-            item.getController().setObjectText("Type " + i);
-            item.getController().setDescriptionText("Parent " + i);
+        ArrayList<Type> types = management.getTypes();
+        for(Type type: types) {
+            FXMLHandler<BorderPane, NavItem2FieldsController> item = management.convertTypeToFXMLHandler(type);
             typeContainer.getChildren().add(item.get());
         }
+
+        ArrayList<Letter> letters = management.getLetters();
+        for(Letter letter: letters) {
+            FXMLHandler<BorderPane, NavItem2FieldsController> item = management.convertLetterToFXMLHandler(letter);
+            letterContainer.getChildren().add(item.get());
+        }
+        
+        initHome();
+
+        System.out.println(Colors.success("Controller initialized"));
     }
 
     @FXML
@@ -295,15 +295,27 @@ public class Controller {
     }
 
     private void updatewordSearch(){
-        System.out.println(Colors.info("Search word: ", wordSearch.getText()));
+        ArrayList<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
+        for(Word word: filteredWords) {
+            FXMLHandler<BorderPane, NavItem3FieldsController> wordEditor = management.convertWordToFXMLHandler(word);
+            wordContainer.getChildren().add(wordEditor.get());
+        }
     }
 
     private void updatetypeSearch(){
-        System.out.println(Colors.info("Search type: ", typeSearch.getText()));
+        ArrayList<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
+        for(Type type: filteredTypes) {
+            FXMLHandler<BorderPane, NavItem2FieldsController> typeEditor = management.convertTypeToFXMLHandler(type);
+            typeContainer.getChildren().add(typeEditor.get());
+        }
     }
 
     private void updateletterSearch(){
-        System.out.println(Colors.info("Search letter: ", letterSearch.getText()));
+        ArrayList<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
+        for(Letter letter: filteredLetters) {
+            FXMLHandler<BorderPane, NavItem2FieldsController> letterEditor = management.convertLetterToFXMLHandler(letter);
+            letterContainer.getChildren().add(letterEditor.get());
+        }
     }
 
     private void initHome(){

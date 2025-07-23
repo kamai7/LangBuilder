@@ -42,21 +42,6 @@ public class Letter {
     public void setCharacterAscii(String characterAscii) {
         this.characterAscii = characterAscii;
     }
-/*
-    public void updateValues() {
-
-        LetterDAO letterDAO = new LetterDAO();
-        id = letterDAO.findId(this);
-
-        if (character == null) {
-            this.character = letterDAO.findCharacter(this);
-        }
-
-        if(characterAscii == null) {
-            this.characterAscii = letterDAO.findCharacterAscii(this);
-        }
-    }
-*/
 
     @Override
     public String toString() {
@@ -65,7 +50,7 @@ public class Letter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(character);
     }
 
     @Override

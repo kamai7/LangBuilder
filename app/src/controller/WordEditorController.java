@@ -11,12 +11,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import model.managment.WordManagement;
+import model.managment.EditorManagement;
 import model.util.Colors;
 import view.FXMLHandler;
 
@@ -24,7 +21,7 @@ public class WordEditorController {
 
     private ArrayList<FXMLHandler<HBox, EditorItemCheckboxController>> letters;
 
-    private WordManagement wordManagement;
+    private EditorManagement wordManagement;
 
     @FXML
     private HBox chooseTypeButtonContainer;
@@ -130,7 +127,7 @@ public class WordEditorController {
 
         letters = new ArrayList<>();
 
-        wordManagement = new WordManagement();
+        wordManagement = new EditorManagement();
 
         System.out.println(Colors.success("WordEditorController initialized"));
     }
@@ -177,6 +174,16 @@ public class WordEditorController {
     @FXML
     private void generate() {
         System.out.println(Colors.info("generate button clicked"));
+    }
+
+    @FXML
+    private void nextGenerateButton() {
+        System.out.println(Colors.info("next generate button clicked"));
+    }
+
+    @FXML
+    private void previousGenerateButton() {
+        System.out.println(Colors.info("previous generate button clicked"));
     }
 
 }
