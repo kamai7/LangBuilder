@@ -187,4 +187,36 @@ public class WordEditorController {
         System.out.println(Colors.info("previous generate button clicked"));
     }
 
+    public float getLength() {
+        return lengthSlider.getValue();
+    }
+
+    public float getEmotionality() {
+        return emotionalitySlider.getValue();
+    }
+
+    public float getVulgarity() {
+        return vulgaritySlider.getValue();
+    }
+
+    public float getFormality() {
+        return formalitySlider.getValue();
+    }
+
+    public void setLength(float length) {
+        lengthSlider.setValue(length);
+    }
+
+    public void setEmotionality(float emotionality) {
+        emotionalitySlider.setValue(emotionality);
+    }
+
+    public void setVulgarity(float vulgarity) {
+        vulgaritySlider.setValue(vulgarity);
+    }
+
+    public void setFormality(float formality) {
+        formalitySlider.setValue(formality);
+    }
+
 }

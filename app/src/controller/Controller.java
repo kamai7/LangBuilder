@@ -73,7 +73,8 @@ public class Controller {
                      wordEmotionalityCheckBox,
                      wordVulgarityCheckBox,
                      wordFormalityCheckBox,
-                     typeParentCheckBox;
+                     typeParentCheckBox,
+                     selectAllCheckBox;
 
     @FXML
     private ComboBox<String> wordSortComboBox,
@@ -185,6 +186,7 @@ public class Controller {
         wordVulgarityCheckBox.selectedProperty().addListener(event -> wordVulgarityContainer.setDisable(!wordVulgarityCheckBox.isSelected()));
         wordFormalityCheckBox.selectedProperty().addListener(event -> wordFormalityContainer.setDisable(!wordFormalityCheckBox.isSelected()));
         typeParentCheckBox.selectedProperty().addListener(event -> typeParentContainer.setDisable(!typeParentCheckBox.isSelected()));
+        selectAllCheckBox.selectedProperty().addListener(event -> selectAll());
 
 
         wordSearch.textProperty().addListener((observable, oldValue, newValue) -> updatewordSearch());
@@ -339,4 +341,9 @@ public class Controller {
             setContent(editor.get());
         });
     }
+
+    private void selectAll(){
+        System.out.println("Select all");
+    }
+
 }

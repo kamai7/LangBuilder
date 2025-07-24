@@ -413,11 +413,7 @@
                                                       <Font name="Inter Regular" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
-                                                   <image>
-                                                      <Image url="@../icons/minus.png" />
-                                                   </image>
-                                                </ImageView>
+                                                <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" />
                                              </children>
                                              <padding>
                                                 <Insets left="10.0" right="5.0" />
