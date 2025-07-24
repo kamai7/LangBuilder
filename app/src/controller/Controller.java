@@ -18,7 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.managment.EditorManagement;
 import model.managment.NavManagement;
 import model.persistance.Letter;
 import model.persistance.Type;
@@ -326,17 +325,17 @@ public class Controller {
 
         HomeController controller = home.getController();
         controller.getCreateLetterButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, EditorController> editor = EditorManagement.openLetterEditor();
+            FXMLHandler<BorderPane, EditorController> editor = Controls.getLetterEditor();
             setContent(editor.get());
         });
 
         controller.getCreateTypeButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, EditorController> editor = EditorManagement.openTypeEditor();
+            FXMLHandler<BorderPane, EditorController> editor = Controls.getTypeEditor();
             setContent(editor.get());
         });
 
         controller.getCreateWordButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, EditorController> editor = EditorManagement.openWordEditor();
+            FXMLHandler<BorderPane, EditorController> editor = Controls.getWordEditor();
             setContent(editor.get());
         });
     }

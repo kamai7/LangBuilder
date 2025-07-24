@@ -21,6 +21,8 @@ public class NavManagement {
     Set<Letter> letterAll;
     Set<Type> typeAll;
 
+    Object selected;
+
     public NavManagement() {
         WordDAO wordDAO = new WordDAO();
         LetterDAO letterDAO = new LetterDAO();
@@ -32,6 +34,10 @@ public class NavManagement {
         wordAll = wordDAO.findAll();
         letterAll = letterDAO.findAll();
         typeAll = typeDAO.findAll();
+    }
+
+    public void setSelected(Object selected) {
+        this.selected = selected;
     }
 
     public Set<Word> getFilteredWords(String str) {

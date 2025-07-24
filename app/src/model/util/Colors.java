@@ -1,5 +1,7 @@
 package model.util;
 
+import javafx.scene.paint.Color;
+
 public class Colors {
     public static final String RED = "\033[31m";
     public static final String RESET = "\033[0m";
@@ -44,6 +46,34 @@ public class Colors {
 
     public static String info(String message, String warning){
         return BOLD_YELLOW + message + " -> " + RESET + UNDERLINE_YELLOW + warning + RESET;
+    }
+
+    public static Color[] calcGradient(Color color){
+        double distance = 0.08;
+        double col1R = Math.min(Math.max(0.0,color.getRed() - color.getRed() * distance),1.0);
+        double col1G = Math.min(Math.max(0.0,color.getGreen() - color.getGreen() * distance),1.0);
+        double col1B = Math.min(Math.max(0.0,color.getBlue() - color.getBlue() * distance),1.0);
+        double col2R = Math.min(Math.max(0.0,color.getRed() + (color.getRed() - col1R)),1.0);
+        double col2G = Math.min(Math.max(0.0,color.getGreen() + (color.getGreen() - col1G)),1.0);
+        double col2B = Math.min(Math.max(0.0,color.getBlue() + (color.getBlue() - col1B)),1.0);
+        Color[] ret = new Color[]{new Color(col1B, col1G, col1R, color.getOpacity()), new Color(col2B, col2R, col2G, color.getOpacity())};
+        return ret;
+    }
+
+    public static Color convertRGBAToColor(int[] rgba) {
+        return new Color(rgba[0] / 255.0, rgba[1] / 255.0, rgba[2] / 255.0, rgba[3] / 255.0);
+    }
+
+    public static String colorToHex(Color color) {
+        return color.toString().substring(2);
+    }
+
+    public static String radialGradient(Color color1, Color color2) {
+        return "radial-gradient(focus-distance 0%, center 60% 100%, radius 80%, " + colorToHex(color1) + ", " + colorToHex(color2) + ")";
+    }
+
+    public static String linearGradient(Color color1, Color color2) {
+        return "linear-gradient(to bottom right, " + colorToHex(color1) + ", " + colorToHex(color2) + ")";
     }
 
 }

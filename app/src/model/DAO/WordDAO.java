@@ -80,6 +80,9 @@ public class WordDAO extends DAO<Word> {
         return ret;
     }
 
+    /*
+    also uopdate the word
+     */
     @Override
     public Word findById(int id){
         Word ret = null;
@@ -165,6 +168,27 @@ public class WordDAO extends DAO<Word> {
             System.err.println(Colors.error("WordDAO findById: ", e.getMessage()));
         }
     
+        return ret;
+    }
+
+    public Set<Word> findByTranslation(String translation){
+        Set<Word> ret = new HashSet<>();
+
+        String query = "SELECT * FROM Word JOIN Translation ON wordId = tWordId WHERE translation LIKE ?";
+
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)) {
+            
+            ps.setString(1, "%" + translation + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                ret.add(findById(rs.getInt("wordId")));
+            }
+        } catch(SQLException e) {
+            System.err.println(Colors.error("WordDAO findByTranslation: ", e.getMessage()));
+        }
+
         return ret;
     }
 
