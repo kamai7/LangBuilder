@@ -171,6 +171,11 @@ public class WordDAO extends DAO<Word> {
         return ret;
     }
 
+    @Override
+    public Set<Word> findByString(String str) {
+        return null;
+    }
+
     public Set<Word> findByTranslation(String translation){
         Set<Word> ret = new HashSet<>();
 
@@ -488,7 +493,7 @@ public class WordDAO extends DAO<Word> {
     }
 
     @Override
-    public int create(Word word) {
+    public int create(Word word) throws SQLException {
         String query = "INSERT INTO Word (wordId, emotional, formality, vulgarity, isUsable) VALUES (?, ?, ?, ?, ?)";
         String queryLetters = "INSERT INTO WordsLetters (wordLid, position, letterWId) VALUES (?, ?, ?)";
         String queryDef = "INSERT INTO Definition (dWordId, def) VALUES (?, ?)";
@@ -498,67 +503,65 @@ public class WordDAO extends DAO<Word> {
         int rows = 0;
         int retId = -1;
 
-        try(Connection c = getConnection()) {
-            c.setAutoCommit(false);
-            int wordId = nextId("Word", "wordId");
+        Connection c = getConnection();
+        c.setAutoCommit(false);
+        int wordId = nextId("Word", "wordId");
 
-            try (PreparedStatement ps = c.prepareStatement(query)) {
+        try (PreparedStatement ps = c.prepareStatement(query)) {
+            ps.setInt(1, wordId);
+            ps.setDouble(2, word.getEmotional());
+            ps.setDouble(3, word.getFormality());
+            ps.setDouble(4, word.getVulgarity());
+            ps.setBoolean(5, word.isUsable());
+            rows += ps.executeUpdate();
+        }
+
+        try (PreparedStatement ps = c.prepareStatement(queryLetters)) {
+            for (int i = 0; i < word.getLetters().size(); i++) {
                 ps.setInt(1, wordId);
-                ps.setDouble(2, word.getEmotional());
-                ps.setDouble(3, word.getFormality());
-                ps.setDouble(4, word.getVulgarity());
-                ps.setBoolean(5, word.isUsable());
-                rows += ps.executeUpdate();
+                ps.setInt(2, i+1);
+                ps.setInt(3, word.getLetters().get(i).getId());
+                ps.addBatch();
             }
-
-            try (PreparedStatement ps = c.prepareStatement(queryLetters)) {
-                for (int i = 0; i < word.getLetters().size(); i++) {
-                    ps.setInt(1, wordId);
-                    ps.setInt(2, i+1);
-                    ps.setInt(3, word.getLetters().get(i).getId());
-                    ps.addBatch();
-                }
-                rows += ps.executeBatch().length;
-            }
-
-            try (PreparedStatement ps = c.prepareStatement(queryDef)) {
-                for (String d : word.getDefinitions()) {
-                    ps.setInt(1, wordId);
-                    ps.setString(2, d);
-                    ps.addBatch();
-                }
-                rows += ps.executeBatch().length;
-            }
-
-            try (PreparedStatement ps = c.prepareStatement(queryTrans)) {
-                for (String t : word.getTranslations()) {
-                    ps.setInt(1, wordId);
-                    ps.setString(2, t);
-                    ps.addBatch();
-                }
-                rows += ps.executeBatch().length;
-            }
-
-            try (PreparedStatement ps = c.prepareStatement(queryLink)) {
-                for(Word l : word.getLinks()){
-                    ps.setInt(1, wordId);
-                    ps.setInt(2, l.getId());
-                    ps.addBatch();
-                }
-                rows += ps.executeBatch().length;
-            }
-
-            c.commit();
-
-            // Only if the commit was successful
-            word.setId(wordId);
-            retId = wordId;
+            rows += ps.executeBatch().length;
         }
-        catch (SQLException e) {
-            System.err.println(Colors.error("WordDAO create: invalid parameters", e.getMessage()));
+
+        try (PreparedStatement ps = c.prepareStatement(queryDef)) {
+            for (String d : word.getDefinitions()) {
+                ps.setInt(1, wordId);
+                ps.setString(2, d);
+                ps.addBatch();
+            }
+            rows += ps.executeBatch().length;
         }
+
+        try (PreparedStatement ps = c.prepareStatement(queryTrans)) {
+            for (String t : word.getTranslations()) {
+                ps.setInt(1, wordId);
+                ps.setString(2, t);
+                ps.addBatch();
+            }
+            rows += ps.executeBatch().length;
+        }
+
+        try (PreparedStatement ps = c.prepareStatement(queryLink)) {
+            for(Word l : word.getLinks()){
+                ps.setInt(1, wordId);
+                ps.setInt(2, l.getId());
+                ps.addBatch();
+            }
+            rows += ps.executeBatch().length;
+        }
+
+        c.commit();
+
+        // Only if the commit was successful
+        word.setId(wordId);
+        retId = wordId;
 
         System.out.println(rows + " rows inserted");
+
+        c.close();
         
         return retId;
     }

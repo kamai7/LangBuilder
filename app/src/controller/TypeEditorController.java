@@ -6,7 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.persistance.Type;
 import model.util.Colors;
 
 public class TypeEditorController {
@@ -18,6 +20,9 @@ public class TypeEditorController {
 
     @FXML
     private ColorPicker colorColorPicker;
+
+    @FXML
+    private Label headerObject;
 
     @FXML
     private Button chooseWordButton;
@@ -34,6 +39,11 @@ public class TypeEditorController {
         System.out.println(Colors.success("TypeEditorController initialized"));
     }
 
+    public void initValues(Type type){
+        this.nameTextField.setText(type.getLabel());
+        this.colorColorPicker.setValue(type.getColor());
+    }
+
     @FXML
     private void chooseWord() {
         System.out.println(Colors.info("Choose word button clicked"));
@@ -47,5 +57,28 @@ public class TypeEditorController {
     @FXML
     private void chooseParent() {
         System.out.println(Colors.info("Choose parent button clicked"));
+    }
+
+    @FXML
+    private void apply() {
+        System.out.println(Colors.info("Apply button clicked"));
+    }
+
+    @FXML
+    private void cancel() {
+        System.out.println(Colors.info("Cancel button clicked"));
+    }
+
+    @FXML
+    private void delete() {
+        System.out.println(Colors.info("Delete button clicked"));
+    }
+
+    public void setHeaderObject(String object) {
+        this.headerObject.setText(object);
+    }
+
+    public void setHeaderObjectStyle(String style) {
+        this.headerObject.setStyle(style);
     }
 }

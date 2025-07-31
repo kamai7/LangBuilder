@@ -2,6 +2,7 @@ package model.persistance;
 
 import java.util.Objects;
 
+import javafx.scene.paint.Color;
 import model.util.Colors;
 
 public class Type {
@@ -11,20 +12,15 @@ public class Type {
     private Type parent;
     private Word root;
     private int position;
-    private double[] color;
+    private Color color;
     
-    public Type(String label, Type parent, Word root, int position, double[] color) {
+    public Type(String label, Type parent, Word root, int position, Color color) {
 
         if (label == null || color == null) {
             throw new IllegalArgumentException(Colors.error("parameters cannot be null"));
         }
-        if (label.trim().length() == 0 || color.length != 4) {
+        if (label.trim().length() == 0) {
             throw new IllegalArgumentException(Colors.error("invalid parameters length"));
-        }
-        for(double d: color) {
-            if (d < 0 || d > 1) {
-                throw new IllegalArgumentException(Colors.error("color must be between 0 and 1"));
-            }
         }
         if (root != null && (position < 0 || position > 2)) {
             throw new IllegalArgumentException(Colors.error("position must be between 0 and 2"));
@@ -45,7 +41,7 @@ public class Type {
         if (label.trim().length() == 0) {
             throw new IllegalArgumentException(Colors.error("label cannot be empty"));
         }
-        this.color = new double[4];
+        this.color = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
         this.id = -1;
         this.label = label;
     }
@@ -99,21 +95,13 @@ public class Type {
         this.id = id;
     }
 
-    public double[] getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(double[] color) {
+    public void setColor(Color color) {
         if (color == null) {
             throw new IllegalArgumentException(Colors.error("color cannot be null"));
-        }
-        if (color.length != 4) {
-            throw new IllegalArgumentException(Colors.error("invalid color length"));
-        }
-        for(double d: color) {
-            if (d < 0 || d > 1) {
-                throw new IllegalArgumentException(Colors.error("color must be between 0 and 1"));
-            }
         }
         this.color = color;
     }

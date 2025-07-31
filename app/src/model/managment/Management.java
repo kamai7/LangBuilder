@@ -11,11 +11,11 @@ import model.persistance.Type;
 import model.persistance.Word;
 import model.util.Controls;
 
-public class NavManagement {
+public class Management {
     
-    Set<Word> words;
-    Set<Letter> letters;
-    Set<Type> types;
+    Set<Word> words100;
+    Set<Letter> letters100;
+    Set<Type> types100;
 
     Set<Word> wordAll;
     Set<Letter> letterAll;
@@ -23,13 +23,13 @@ public class NavManagement {
 
     Object selected;
 
-    public NavManagement() {
+    public Management() {
         WordDAO wordDAO = new WordDAO();
         LetterDAO letterDAO = new LetterDAO();
         TypeDAO typeDAO = new TypeDAO();
-        words = wordDAO.findAll(100);
-        letters = letterDAO.findAll(100);
-        types = typeDAO.findAll(100);
+        words100 = wordDAO.findAll(100);
+        letters100 = letterDAO.findAll(100);
+        types100 = typeDAO.findAll(100);
 
         wordAll = wordDAO.findAll();
         letterAll = letterDAO.findAll();
@@ -45,7 +45,7 @@ public class NavManagement {
         Set<Word> ret;
 
         if(str.equals("")){
-            ret = words;
+            ret = words100;
         }else{
 
             ret = new HashSet<>();
@@ -76,26 +76,12 @@ public class NavManagement {
     }
 
     public Set<Letter> getFilteredLetters(String str) {
-
-        Set<Letter> ret;
-
-        if(str.equals("")){
-            ret = letters;
-        }else{
-
-            ret = new HashSet<>();
-
-            for (Letter letter : letterAll) {
-                if(letter.getCharacter().contains(str)) {
-                    ret.add(letter);
-                }else{
-                    if(letter.getCharacterAscii().toLowerCase().contains(str.toLowerCase())) {
-                        ret.add(letter);
-                    }
-                }
-            }
+        if (str.equals("")){
+            return letters100;
         }
-        return ret;
+
+        LetterDAO letterDAO= new LetterDAO();
+        return letterDAO.findByString(str);
     }
 
     public Set<Type> getFilteredTypes(String str) {
@@ -103,7 +89,7 @@ public class NavManagement {
         Set<Type> ret;
 
         if(str.equals("")){
-            ret = types;
+            ret = types100;
         }else{
 
             ret = new HashSet<>();
@@ -117,16 +103,37 @@ public class NavManagement {
         return ret;
     }
 
-    public Set<Word> getWords(){
-        return words;
+    public Set<Word> getWords100(){
+        return words100;
     }
 
-    public Set<Letter> getLetters(){
-        return letters;
+    public Set<Letter> getLetters100(){
+        return letters100;
     }
 
-    public Set<Type> getTypes(){
-        return types;
+    public Set<Type> getTypes100(){
+        return types100;
+    }
+
+    public void addLetter(Letter letter){
+        letterAll.add(letter);
+        if(letters100.size() < 100){
+            letters100.add(letter);
+        }
+    }
+
+    public void addWord(Word word){
+        wordAll.add(word);
+        if(words100.size() < 100){
+            words100.add(word);
+        }
+    }
+
+    public void addType(Type type){
+        typeAll.add(type);
+        if(types100.size() < 100){
+            types100.add(type);
+        }
     }
 
 }

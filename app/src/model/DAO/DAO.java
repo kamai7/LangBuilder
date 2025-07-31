@@ -20,6 +20,13 @@ abstract class DAO<T> {
     DAO() {}
 
     /**
+     * Finds all objects of type T in the database which contains the given string.
+     * @param str the string to search for
+     * @return an ArrayList containing all objects of type T, or an empty list if none are found
+     */
+    public abstract Set<T> findByString(String str);
+
+    /**
      * Finds all objects of type T in the database.
      * @param limit the maximum number of objects to return (-1 for no limit).
      * @return an ArrayList containing all objects of type T, or an empty list if none are found.
@@ -44,7 +51,7 @@ abstract class DAO<T> {
      * @param obj the object to create.
      * @return the ID of the newly created object, or -1 if creation failed.
      */
-    public abstract int create(T obj);
+    public abstract int create(T obj) throws SQLException;
     
     /**
      * Updates an existing object of type T in the database.

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javafx.scene.paint.Color;
 import model.persistance.Type;
 import model.persistance.Word;
 import model.util.Colors;
@@ -46,7 +47,7 @@ public class TypeDAO extends DAO<Type>{
                 if (!rs.wasNull()) {
                     root = new WordDAO().findById(rootId);
                 }
-                double[] color = {rs.getDouble("colorR"), rs.getDouble("colorG"), rs.getDouble("colorB"), rs.getDouble("colorT")};
+                Color color = Colors.convertRGBAToColor(new int[]{rs.getInt("colorR"), rs.getInt("colorG"), rs.getInt("colorB"), rs.getInt("colorT")});
                 Type type = new Type(rs.getString("label"), parent, root, rs.getInt("position"), color);
                 type.setId(rs.getInt("typeId"));
                 ret.add(type);
@@ -86,7 +87,7 @@ public class TypeDAO extends DAO<Type>{
                 if (!rs.wasNull()) {
                     root = new WordDAO().findById(rootId);
                 }
-                double[] color = {rs.getDouble("colorR"), rs.getDouble("colorG"), rs.getDouble("colorB"), rs.getDouble("colorT")};
+                Color color = Colors.convertRGBAToColor(new int[]{rs.getInt("colorR"), rs.getInt("colorG"), rs.getInt("colorB"), rs.getInt("colorT")});
                 ret = new Type(rs.getString("label"), parent, root, rs.getInt("position"), color);
                 ret.setId(id);
             }
@@ -115,6 +116,11 @@ public class TypeDAO extends DAO<Type>{
         }
 
         return ret;
+    }
+
+    @Override
+    public Set<Type> findByString(String str) {
+        return null;
     }
 
     /**
@@ -175,39 +181,38 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public int create(Type type) {
+    public int create(Type type) throws SQLException {
         String query = "INSERT INTO Type (typeId, label, parentId, rootId, position) VALUES (?, ?, ?, ?, ?)";
         int retId = -1;
 
-        try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement(query)) {
+        Connection c = getConnection();
+        PreparedStatement ps = c.prepareStatement(query);
 
-            int id = nextId("Type", "typeId");
-            ps.setInt(1, id);
-            ps.setString(2, type.getLabel());
+        int id = nextId("Type", "typeId");
+        ps.setInt(1, id);
+        ps.setString(2, type.getLabel());
 
-            if (type.getParent() == null) {
-                ps.setNull(3, java.sql.Types.INTEGER);
-            } else {
-                ps.setInt(3, type.getParent().getId());
-            }
-
-            if (type.getRoot() == null) {
-                ps.setNull(4, java.sql.Types.INTEGER);
-            } else {
-                ps.setInt(4, type.getRoot().getId());
-            }
-
-            ps.setInt(5, type.getPosition());
-            ps.executeUpdate();
-
-            // Only if the insert was successful
-            type.setId(id);
-            retId = id;
+        if (type.getParent() == null) {
+            ps.setNull(3, java.sql.Types.INTEGER);
+        } else {
+            ps.setInt(3, type.getParent().getId());
         }
-        catch (SQLException e) {
-            System.err.println(Colors.error("TypeDAO create: ", e.getMessage()));
+
+        if (type.getRoot() == null) {
+            ps.setNull(4, java.sql.Types.INTEGER);
+        } else {
+            ps.setInt(4, type.getRoot().getId());
         }
+
+        ps.setInt(5, type.getPosition());
+        ps.executeUpdate();
+
+        // Only if the insert was successful
+        type.setId(id);
+        retId = id;
+
+        ps.close();
+        c.close();
 
         return retId;
     }

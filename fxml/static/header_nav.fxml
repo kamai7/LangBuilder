@@ -413,7 +413,11 @@
                                                       <Font name="Inter Regular" size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <CheckBox fx:id="selectAllCheckBox" mnemonicParsing="false" />
+                                                <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true" styleClass="icon-small">
+                                                   <image>
+                                                      <Image url="@../icons/minus.png" />
+                                                   </image>
+                                                </ImageView>
                                              </children>
                                              <padding>
                                                 <Insets left="10.0" right="5.0" />
@@ -421,7 +425,17 @@
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
                                              <content>
-                                                <VBox fx:id="wordContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
+                                                <BorderPane>
+                                                   <center>
+                                                      <VBox fx:id="wordContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+                                                         <BorderPane.margin>
+                                                            <Insets top="10.0" />
+                                                         </BorderPane.margin></VBox>
+                                                   </center>
+                                                   <top>
+                                                      <CheckBox fx:id="wordSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" />
+                                                   </top>
+                                                </BorderPane>
                                              </content>
                                              <padding>
                                                 <Insets left="20.0" right="20.0" />
@@ -527,12 +541,23 @@
                                              </padding>
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
-                                             <content>
-                                                <VBox fx:id="letterContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
-                                             </content>
                                              <padding>
                                                 <Insets left="20.0" right="20.0" />
                                              </padding>
+                                             <content>
+                                                <BorderPane>
+                                                   <top>
+                                                      <CheckBox fx:id="letterSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" />
+                                                   </top>
+                                                   <center>
+                                                      <VBox fx:id="letterContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
+                                                         <BorderPane.margin>
+                                                            <Insets top="10.0" />
+                                                         </BorderPane.margin>
+                                                      </VBox>
+                                                   </center>
+                                                </BorderPane>
+                                             </content>
                                           </ScrollPane>
                                        </children>
                                     </VBox>
@@ -650,12 +675,19 @@
                                              </padding>
                                           </HBox>
                                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS">
-                                             <content>
-                                                <VBox fx:id="typeContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" />
-                                             </content>
                                              <padding>
                                                 <Insets left="20.0" right="20.0" />
                                              </padding>
+                                             <content>
+                                                <BorderPane>
+                                                   <top>
+                                                      <CheckBox fx:id="typeSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" />
+                                                   </top>
+                                                   <center>
+                                                      <VBox fx:id="typeContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER" />
+                                                   </center>
+                                                </BorderPane>
+                                             </content>
                                           </ScrollPane>
                                        </children>
                                     </VBox>

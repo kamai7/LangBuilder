@@ -72,6 +72,32 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
+    public Set<Letter> findByString(String str){
+        
+        String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ?";
+        Set<Letter> ret = new HashSet<>();
+
+        try(Connection c = getConnection();
+            PreparedStatement ps = c.prepareStatement(query)){
+
+            ps.setString(1, "%" + str + "%");
+            ps.setString(2, "%" + str + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+                Letter letter = new Letter(rs.getString("letter"), rs.getString("letterAscii"));
+                letter.setId(rs.getInt("letterId"));
+                ret.add(letter);
+            }
+        }
+        catch(SQLException e) {
+            System.err.println(Colors.error("LetterDAO findByString: ", e.getMessage()));
+        }
+
+        return ret;
+    }
+
+    @Override
     public void delete(Letter letter) {
         String query = "DELETE FROM Letter WHERE letterId = ?";
 
@@ -104,27 +130,26 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
-    public int create(Letter letter) {
+    public int create(Letter letter) throws SQLException {
         int retId = -1; 
         String query = "INSERT INTO Letter (letterId, letter, letterAscii) VALUES (?, ?, ?)";
 
-        try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement(query)) {
+        Connection c = getConnection();
+        PreparedStatement ps = c.prepareStatement(query);
 
-            int id = nextId("Letter", "letterId");
+        int id = nextId("Letter", "letterId");
 
-            ps.setInt(1, getRowsCount("Letter") + 1);
-            ps.setString(2, letter.getCharacter());
-            ps.setString(3, letter.getCharacterAscii());
-            ps.executeUpdate();
+        ps.setInt(1, getRowsCount("Letter") + 1);
+        ps.setString(2, letter.getCharacter());
+        ps.setString(3, letter.getCharacterAscii());
+        ps.executeUpdate();
 
-            // Only if the insert was successful
-            letter.setId(id);
-            retId = id;
-        }
-        catch (SQLException e) {
-            System.err.println(Colors.error("LetterDAO create: " , e.getMessage()));
-        }
+        // Only if the insert was successful
+        letter.setId(id);
+        retId = id;
+
+        ps.close();
+        c.close();
 
         return retId;
     }

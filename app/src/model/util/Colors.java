@@ -65,7 +65,7 @@ public class Colors {
     }
 
     public static String colorToHex(Color color) {
-        return color.toString().substring(2);
+        return "#" + color.toString().substring(2);
     }
 
     public static String radialGradient(Color color1, Color color2) {

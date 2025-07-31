@@ -18,7 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.managment.NavManagement;
+import model.managment.Management;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
@@ -29,7 +29,7 @@ import view.FXMLHandler;
 public class Controller {
 
     private FXMLHandler<GridPane,HomeController> contentCode;
-    private NavManagement management;
+    private Management management;
 
     @FXML
     private TextField wordSearch,
@@ -74,7 +74,9 @@ public class Controller {
                      wordVulgarityCheckBox,
                      wordFormalityCheckBox,
                      typeParentCheckBox,
-                     selectAllCheckBox;
+                     wordSelectAllCheckBox,
+                     letterSelectAllCheckBox,
+                     typeSelectAllCheckBox;
 
     @FXML
     private ComboBox<String> wordSortComboBox,
@@ -186,7 +188,9 @@ public class Controller {
         wordVulgarityCheckBox.selectedProperty().addListener(event -> wordVulgarityContainer.setDisable(!wordVulgarityCheckBox.isSelected()));
         wordFormalityCheckBox.selectedProperty().addListener(event -> wordFormalityContainer.setDisable(!wordFormalityCheckBox.isSelected()));
         typeParentCheckBox.selectedProperty().addListener(event -> typeParentContainer.setDisable(!typeParentCheckBox.isSelected()));
-        selectAllCheckBox.selectedProperty().addListener(event -> selectAll());
+        wordSelectAllCheckBox.selectedProperty().addListener(event -> wordSelectAll());
+        letterSelectAllCheckBox.selectedProperty().addListener(event -> letterSelectAll());
+        typeSelectAllCheckBox.selectedProperty().addListener(event -> typeSelectAll());
 
 
         wordSearch.textProperty().addListener((observable, oldValue, newValue) -> updatewordSearch());
@@ -210,22 +214,22 @@ public class Controller {
         typeSortComboBox.setValue("default (types)");
 
         //create management object
-        management = new NavManagement();
+        management = new Management();
 
         //init nav lists
-        Set<Word> words = management.getWords();
+        Set<Word> words = management.getWords100();
         for(Word word: words){
             FXMLHandler<BorderPane, NavItemController> item = Controls.convertWordToFXMLHandler(word);
             wordContainer.getChildren().add(item.get());
         }
 
-        Set<Type> types = management.getTypes();
+        Set<Type> types = management.getTypes100();
         for(Type type: types) {
             FXMLHandler<BorderPane, NavItemController> item = Controls.convertTypeToFXMLHandler(type);
             typeContainer.getChildren().add(item.get());
         }
 
-        Set<Letter> letters = management.getLetters();
+        Set<Letter> letters = management.getLetters100();
         for(Letter letter: letters) {
             FXMLHandler<BorderPane, NavItemController> item = Controls.convertLetterToFXMLHandler(letter);
             letterContainer.getChildren().add(item.get());
@@ -297,6 +301,7 @@ public class Controller {
     }
 
     private void updatewordSearch(){
+        letterContainer.getChildren().clear();
         Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
         for(Word word: filteredWords) {
             FXMLHandler<BorderPane, NavItemController> wordEditor = Controls.convertWordToFXMLHandler(word);
@@ -305,6 +310,7 @@ public class Controller {
     }
 
     private void updatetypeSearch(){
+        letterContainer.getChildren().clear();
         Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
         for(Type type: filteredTypes) {
             FXMLHandler<BorderPane, NavItemController> typeEditor = Controls.convertTypeToFXMLHandler(type);
@@ -313,6 +319,7 @@ public class Controller {
     }
 
     private void updateletterSearch(){
+        letterContainer.getChildren().clear();
         Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
         for(Letter letter: filteredLetters) {
             FXMLHandler<BorderPane, NavItemController> letterEditor = Controls.convertLetterToFXMLHandler(letter);
@@ -327,23 +334,37 @@ public class Controller {
 
         HomeController controller = home.getController();
         controller.getCreateLetterButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, EditorController> editor = Controls.getLetterEditor();
+            FXMLHandler<BorderPane, LetterEditorController> editor = Controls.getLetterEditor();
             setContent(editor.get());
+            LetterEditorController editorController = editor.getController();
+            editorController.getManagement().getLetter().addListener((observable, oldValue, newValue) -> {
+                management.addLetter(newValue);
+                updateletterSearch();
+                setContent(home.get());
+            });
         });
 
         controller.getCreateTypeButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, EditorController> editor = Controls.getTypeEditor();
+            FXMLHandler<BorderPane, TypeEditorController> editor = Controls.getTypeEditor();
             setContent(editor.get());
         });
 
         controller.getCreateWordButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, EditorController> editor = Controls.getWordEditor();
+            FXMLHandler<BorderPane, WordEditorController> editor = Controls.getWordEditor();
             setContent(editor.get());
         });
     }
 
-    private void selectAll(){
-        System.out.println("Select all");
+    private void wordSelectAll(){
+        System.out.println("Select all words");
+    }
+
+    private void letterSelectAll(){
+        System.out.println("Select all letters");
+    }
+
+    private void typeSelectAll(){
+        System.out.println("Select all types");
     }
 
 }

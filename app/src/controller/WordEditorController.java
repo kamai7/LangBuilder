@@ -7,21 +7,22 @@ import controller.fragments.EditorItemCheckboxController;
 import controller.fragments.EditorItemController;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import model.managment.EditorManagement;
 import model.util.Colors;
 import view.FXMLHandler;
 
 public class WordEditorController {
 
     private ArrayList<FXMLHandler<HBox, EditorItemCheckboxController>> letters;
-
-    private EditorManagement wordManagement;
 
     @FXML
     private HBox chooseTypeButtonContainer;
@@ -31,6 +32,11 @@ public class WordEditorController {
                      typesPane,
                      rootsPane,
                      linksPane;
+
+    @FXML
+    private Label headerObject,
+                  generatedWordLabel,
+                  generatedWordAsciiLabel;
 
     @FXML
     private CheckBox usableCheckBox,
@@ -55,7 +61,8 @@ public class WordEditorController {
     private TextField lengthValue,
                       emotionalityValue,
                       vulgarityValue,
-                      formalityValue;
+                      formalityValue,
+                      addLetterField;
 
     @FXML
     private HBox lengthContainer,
@@ -128,20 +135,23 @@ public class WordEditorController {
 
         letters = new ArrayList<>();
 
-        wordManagement = new EditorManagement();
-
         System.out.println(Colors.success("WordEditorController initialized"));
     }
 
     @FXML
-    private void addLetter() {
-        FXMLHandler<HBox, EditorItemCheckboxController> letter = new FXMLHandler<>("../fxml/fragments/editor/item_checkbox.fxml");
-        EditorItemCheckboxController controller = letter.getController();
-        controller.setText("Σ");
-        lettersPane.getChildren().add(letter.get());
-        letters.add(letter);
-
-        controller.getDeleteObjectButton().setOnAction(e -> lettersPane.getChildren().remove(letter.get()));
+    private void addLetter(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            if(addLetterField.getText().length() > 0) {
+                FXMLHandler<HBox, EditorItemCheckboxController> letter = new FXMLHandler<>("../fxml/fragments/editor/item_checkbox.fxml");
+                EditorItemCheckboxController controller = letter.getController();
+                controller.setText(addLetterField.getText());
+                lettersPane.getChildren().add(lettersPane.getChildren().size() - 1,letter.get());
+                controller.getDeleteObjectButton().setOnAction(e -> lettersPane.getChildren().remove(letter.get()));
+                addLetterField.setText("");
+            }else{
+                System.out.println(Colors.error("Letter field is empty"));
+            }
+        }
     }
 
     @FXML
@@ -187,35 +197,58 @@ public class WordEditorController {
         System.out.println(Colors.info("previous generate button clicked"));
     }
 
-    public float getLength() {
+    @FXML
+    private void apply() {
+        System.out.println(Colors.info("Apply button clicked"));
+    }
+
+    @FXML
+    private void cancel() {
+        System.out.println(Colors.info("Cancel button clicked"));
+    }
+
+    @FXML
+    private void delete() {
+        System.out.println(Colors.info("Delete button clicked"));
+    }
+
+    public void setHeaderObject(String object) {
+        this.headerObject.setText(object);
+    }
+
+    public void setHeaderObjectStyle(String style) {
+        this.headerObject.setStyle(style);
+    }
+
+    public double getLength() {
         return lengthSlider.getValue();
     }
 
-    public float getEmotionality() {
+    public double getEmotionality() {
         return emotionalitySlider.getValue();
     }
 
-    public float getVulgarity() {
+    public double getVulgarity() {
         return vulgaritySlider.getValue();
     }
 
-    public float getFormality() {
+    public double getFormality() {
         return formalitySlider.getValue();
     }
 
-    public void setLength(float length) {
+    public void setLength(double length) {
         lengthSlider.setValue(length);
     }
 
-    public void setEmotionality(float emotionality) {
+    public void setEmotionality(double emotionality) {
         emotionalitySlider.setValue(emotionality);
     }
 
-    public void setVulgarity(float vulgarity) {
+    public void setVulgarity(double vulgarity) {
         vulgaritySlider.setValue(vulgarity);
     }
 
-    public void setFormality(float formality) {
+    public void setFormality(double formality) {
         formalitySlider.setValue(formality);
     }
 
