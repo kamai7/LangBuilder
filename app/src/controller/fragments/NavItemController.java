@@ -1,5 +1,7 @@
 package controller.fragments;
 
+import java.util.Arrays;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -57,6 +59,10 @@ public class NavItemController {
         return selectedCheckBox.isSelected();
     }
 
+    public CheckBox getSelectCheckbox() {
+        return selectedCheckBox;
+    }
+
     public void addType(String text, Color color) {
         if (text == null) {
             throw new IllegalArgumentException(Colors.error("text cannot be null"));
@@ -68,6 +74,12 @@ public class NavItemController {
         Label typeLabel = new Label(text);
         typeLabel.setStyle("-fx-text-fill: #" + color.toString().substring(2) + ";");
         typesContainer.getChildren().add(typeLabel);
+    }
+
+    @Override
+    public int hashCode() {
+        Object[] obj = {objectLabel.getText(), descriptionLabel.getText()};
+        return Arrays.deepHashCode(obj);
     }
 
 }

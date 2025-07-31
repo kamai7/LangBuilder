@@ -21,6 +21,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -433,7 +434,33 @@
                                                          </BorderPane.margin></VBox>
                                                    </center>
                                                    <top>
-                                                      <CheckBox fx:id="wordSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" />
+                                                      <StackPane>
+                                                         <children>
+                                                            <CheckBox fx:id="wordSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" StackPane.alignment="CENTER_LEFT" />
+                                                            <HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0" StackPane.alignment="CENTER_RIGHT">
+                                                               <children>
+                                                                  <Button mnemonicParsing="false" onAction="#wordEditAll">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icons/edit.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" onAction="#wordDeleteAll">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icons/delete.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </StackPane>
                                                    </top>
                                                 </BorderPane>
                                              </content>
@@ -546,9 +573,6 @@
                                              </padding>
                                              <content>
                                                 <BorderPane>
-                                                   <top>
-                                                      <CheckBox fx:id="letterSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" />
-                                                   </top>
                                                    <center>
                                                       <VBox fx:id="letterContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER">
                                                          <BorderPane.margin>
@@ -556,6 +580,35 @@
                                                          </BorderPane.margin>
                                                       </VBox>
                                                    </center>
+                                                   <top>
+                                                      <StackPane BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <CheckBox fx:id="letterSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" StackPane.alignment="CENTER_LEFT" />
+                                                            <HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0" StackPane.alignment="CENTER_RIGHT">
+                                                               <children>
+                                                                  <Button mnemonicParsing="false" onAction="#letterEditAll">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icons/edit.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" onAction="#letterDeleteAll">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icons/delete.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </StackPane>
+                                                   </top>
                                                 </BorderPane>
                                              </content>
                                           </ScrollPane>
@@ -680,12 +733,38 @@
                                              </padding>
                                              <content>
                                                 <BorderPane>
-                                                   <top>
-                                                      <CheckBox fx:id="typeSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" />
-                                                   </top>
                                                    <center>
                                                       <VBox fx:id="typeContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" BorderPane.alignment="CENTER" />
                                                    </center>
+                                                   <top>
+                                                      <StackPane BorderPane.alignment="CENTER">
+                                                         <children>
+                                                            <CheckBox fx:id="typeSelectAllCheckBox" mnemonicParsing="false" styleClass="text-color1" text="Select All" StackPane.alignment="CENTER_LEFT" />
+                                                            <HBox fillHeight="false" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0" StackPane.alignment="CENTER_RIGHT">
+                                                               <children>
+                                                                  <Button mnemonicParsing="false" onAction="#typeEditAll">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icons/edit.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                                  <Button mnemonicParsing="false" onAction="#typeDeleteAll">
+                                                                     <graphic>
+                                                                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                                                           <image>
+                                                                              <Image url="@../icons/delete.png" />
+                                                                           </image>
+                                                                        </ImageView>
+                                                                     </graphic>
+                                                                  </Button>
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </StackPane>
+                                                   </top>
                                                 </BorderPane>
                                              </content>
                                           </ScrollPane>
@@ -699,7 +778,7 @@
                   </Tab>
               </tabs>
             </TabPane>
-            <HBox fx:id="content" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" />
+            <HBox fx:id="content" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" />
          </items>
       </SplitPane>
    </children>

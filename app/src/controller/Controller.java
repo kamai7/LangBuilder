@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import controller.fragments.NavItemController;
@@ -91,6 +92,10 @@ public class Controller {
     private ObservableList<String> wordSortList,
                                    letterSortList,
                                    typeSortList;
+
+    private Set<FXMLHandler<BorderPane, NavItemController>> wordNavItems,
+                                                            letterNavItems,
+                                                            typeNavItems;
     
     @FXML
     private void initialize() {
@@ -216,23 +221,30 @@ public class Controller {
         //create management object
         management = new Management();
 
+        wordNavItems = new HashSet<>();
+        typeNavItems = new HashSet<>();
+        letterNavItems = new HashSet<>();
+
         //init nav lists
         Set<Word> words = management.getWords100();
         for(Word word: words){
             FXMLHandler<BorderPane, NavItemController> item = Controls.convertWordToFXMLHandler(word);
             wordContainer.getChildren().add(item.get());
+            wordNavItems.add(item);
         }
 
         Set<Type> types = management.getTypes100();
         for(Type type: types) {
             FXMLHandler<BorderPane, NavItemController> item = Controls.convertTypeToFXMLHandler(type);
             typeContainer.getChildren().add(item.get());
+            typeNavItems.add(item);
         }
 
         Set<Letter> letters = management.getLetters100();
         for(Letter letter: letters) {
             FXMLHandler<BorderPane, NavItemController> item = Controls.convertLetterToFXMLHandler(letter);
             letterContainer.getChildren().add(item.get());
+            letterNavItems.add(item);
         }
         
         initHome();
@@ -295,35 +307,71 @@ public class Controller {
         System.out.println(Colors.info("Delete parent button clicked"));
     }
 
+    @FXML
+    private void wordEditAll() {
+        System.out.println(Colors.info("Edit all button clicked"));
+    }
+
+    @FXML
+    private void letterEditAll() {
+        System.out.println(Colors.info("Edit all button clicked"));
+    }
+
+    @FXML
+    private void typeEditAll() {
+        System.out.println(Colors.info("Edit all button clicked"));
+    }
+
+    @FXML
+    private void wordDeleteAll() {
+        System.out.println(Colors.info("Delete all button clicked"));
+    }
+
+    @FXML
+    private void letterDeleteAll() {
+        System.out.println(Colors.info("Delete all button clicked"));
+    }
+
+    @FXML
+    private void typeDeleteAll() {
+        System.out.println(Colors.info("Delete all button clicked"));
+    }
+
     public <T extends Node> void setContent(T content) {
         this.content.getChildren().clear();
         this.content.getChildren().add(content);
     }
 
     private void updatewordSearch(){
-        letterContainer.getChildren().clear();
+        wordContainer.getChildren().clear();
+        wordNavItems.clear();
         Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
         for(Word word: filteredWords) {
             FXMLHandler<BorderPane, NavItemController> wordEditor = Controls.convertWordToFXMLHandler(word);
             wordContainer.getChildren().add(wordEditor.get());
+            wordNavItems.add(wordEditor);
         }
     }
 
     private void updatetypeSearch(){
-        letterContainer.getChildren().clear();
+        typeContainer.getChildren().clear();
+        typeNavItems.clear();
         Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
         for(Type type: filteredTypes) {
             FXMLHandler<BorderPane, NavItemController> typeEditor = Controls.convertTypeToFXMLHandler(type);
             typeContainer.getChildren().add(typeEditor.get());
+            typeNavItems.add(typeEditor);
         }
     }
 
     private void updateletterSearch(){
         letterContainer.getChildren().clear();
+        typeNavItems.clear();
         Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
         for(Letter letter: filteredLetters) {
             FXMLHandler<BorderPane, NavItemController> letterEditor = Controls.convertLetterToFXMLHandler(letter);
             letterContainer.getChildren().add(letterEditor.get());
+            letterNavItems.add(letterEditor);
         }
     }
 
@@ -356,15 +404,24 @@ public class Controller {
     }
 
     private void wordSelectAll(){
-        System.out.println("Select all words");
+        boolean allSelected = wordSelectAllCheckBox.isSelected();
+        for(FXMLHandler<BorderPane, NavItemController> item: wordNavItems){
+            item.getController().getSelectCheckbox().setSelected(allSelected);
+        }
     }
 
     private void letterSelectAll(){
-        System.out.println("Select all letters");
+        boolean allSelected = letterSelectAllCheckBox.isSelected();
+        for(FXMLHandler<BorderPane, NavItemController> item: letterNavItems){
+            item.getController().getSelectCheckbox().setSelected(allSelected);
+        }
     }
 
     private void typeSelectAll(){
-        System.out.println("Select all types");
+        boolean allSelected = typeSelectAllCheckBox.isSelected();
+        for(FXMLHandler<BorderPane, NavItemController> item: typeNavItems){
+            item.getController().getSelectCheckbox().setSelected(allSelected);
+        }
     }
 
 }

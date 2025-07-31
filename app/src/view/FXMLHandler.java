@@ -45,4 +45,9 @@ public class FXMLHandler<T extends Node, U> {
         return controller;
     }
 
+    @Override
+    public int hashCode(){
+        return this.getController().hashCode();
+    }
+
 }
