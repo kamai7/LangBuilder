@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashSet;
 import java.util.Set;
 
 import javafx.scene.paint.Color;
 import model.persistance.Type;
 import model.persistance.Word;
-import model.util.Colors;
+import utils.Colors;
 
 public class TypeDAO extends DAO<Type>{
     
@@ -181,44 +182,48 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public int create(Type type) throws SQLException {
+    public int create(Type type) throws SQLIntegrityConstraintViolationException{
         String query = "INSERT INTO Type (typeId, label, parentId, rootId, position) VALUES (?, ?, ?, ?, ?)";
         int retId = -1;
 
-        Connection c = getConnection();
-        PreparedStatement ps = c.prepareStatement(query);
+        try (Connection c = getConnection();
+             PreparedStatement ps = c.prepareStatement(query)){
 
-        int id = nextId("Type", "typeId");
-        ps.setInt(1, id);
-        ps.setString(2, type.getLabel());
+            int id = nextId("Type", "typeId");
+            ps.setInt(1, id);
+            ps.setString(2, type.getLabel());
 
-        if (type.getParent() == null) {
-            ps.setNull(3, java.sql.Types.INTEGER);
-        } else {
-            ps.setInt(3, type.getParent().getId());
+            if (type.getParent() == null) {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(3, type.getParent().getId());
+            }
+
+            if (type.getRoot() == null) {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(4, type.getRoot().getId());
+            }
+
+            ps.setInt(5, type.getPosition());
+            ps.executeUpdate();
+
+            // Only if the insert was successful
+            type.setId(id);
+            retId = id;
         }
-
-        if (type.getRoot() == null) {
-            ps.setNull(4, java.sql.Types.INTEGER);
-        } else {
-            ps.setInt(4, type.getRoot().getId());
+        catch (SQLException e) {
+            System.err.println(Colors.error("TypeDAO create: ", e.getMessage()));
+            if (e instanceof SQLIntegrityConstraintViolationException) {
+                throw (SQLIntegrityConstraintViolationException) e;
+            }
         }
-
-        ps.setInt(5, type.getPosition());
-        ps.executeUpdate();
-
-        // Only if the insert was successful
-        type.setId(id);
-        retId = id;
-
-        ps.close();
-        c.close();
 
         return retId;
     }
 
     @Override
-    public void delete(Type type) {
+    public void delete(Type type) throws SQLIntegrityConstraintViolationException{
         String query = "DELETE FROM Type WHERE typeId = ?";
 
         try (Connection c = getConnection();
@@ -230,6 +235,9 @@ public class TypeDAO extends DAO<Type>{
             System.out.println(rows + " rows deleted");
         } catch (SQLException e) {
             System.err.println(Colors.error("TypeDAO delete: ", e.getMessage()));
+            if (e instanceof SQLIntegrityConstraintViolationException) {
+                throw (SQLIntegrityConstraintViolationException) e;
+            }
         }
     }
 }

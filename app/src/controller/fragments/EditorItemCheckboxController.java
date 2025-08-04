@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
-import model.util.Colors;
 
 public class EditorItemCheckboxController {
 
@@ -23,7 +22,6 @@ public class EditorItemCheckboxController {
 
     @FXML
     private void initialize() {
-        System.out.println(Colors.success("EditorItemCheckboxController initialized"));
     }
 
     public void setText(String object) {

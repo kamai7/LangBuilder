@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import controller.fragments.NavItemController;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,8 +22,9 @@ import model.managment.Management;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
-import model.util.Colors;
-import model.util.Controls;
+import utils.Colors;
+import utils.EditorUtils;
+import utils.FragmentUtils;
 import view.FXMLHandler;
 
 public class Controller {
@@ -99,83 +99,16 @@ public class Controller {
     
     @FXML
     private void initialize() {
-        // Add listeners to sliders
-        wordMinLengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            wordMinLengthField.setText(String.valueOf(newValue.intValue()));
-        });
-        wordMaxLengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            wordMaxLengthField.setText(String.valueOf(newValue.intValue()));
-        });
-        wordMinEmotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            wordMinEmotionalityField.setText(rounded + "");
-        });
-        wordMaxEmotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            wordMaxEmotionalityField.setText(rounded + "");
-        });
-        wordMinVulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            wordMinVulgarityField.setText(rounded + "");
-        });
-        wordMaxVulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            wordMaxVulgarityField.setText(rounded + "");
-        });
-        wordMinFormalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            wordMinFormalityField.setText(rounded + "");
-        });
 
-        // Add listeners to text fields
-        wordMinLengthField.textProperty().addListener(event -> {
-            try{
-                int value = Integer.parseInt(wordMinLengthField.getText());
-                wordMinLengthSlider.setValue(value);
-            } catch (NumberFormatException e){}
-        });
-        wordMaxLengthField.textProperty().addListener(event -> {
-            try {
-                int value =  Integer.parseInt(wordMaxLengthField.getText());
-                wordMaxLengthSlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        wordMinEmotionalityField.textProperty().addListener(event -> {
-            try {
-                int value = Integer.parseInt(wordMinEmotionalityField.getText());
-                wordMinEmotionalitySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        wordMaxEmotionalityField.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(wordMaxEmotionalityField.getText());
-                wordMaxEmotionalitySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        wordMinVulgarityField.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(wordMinVulgarityField.getText());
-                wordMinVulgaritySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        wordMaxVulgarityField.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(wordMaxVulgarityField.getText());
-                wordMaxVulgaritySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        wordMinFormalityField.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(wordMinFormalityField.getText());
-                wordMinFormalitySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        wordMaxFormalityField.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(wordMaxFormalityField.getText());
-                wordMaxFormalitySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
+        //init sliders
+        FragmentUtils.initSlider(wordMinLengthSlider, wordMinLengthField, 1);
+        FragmentUtils.initSlider(wordMaxLengthSlider, wordMaxLengthField, 1);
+        FragmentUtils.initSlider(wordMinEmotionalitySlider, wordMinEmotionalityField, 0.05);
+        FragmentUtils.initSlider(wordMaxEmotionalitySlider, wordMaxEmotionalityField, 0.05);
+        FragmentUtils.initSlider(wordMinVulgaritySlider, wordMinVulgarityField, 0.05);
+        FragmentUtils.initSlider(wordMaxVulgaritySlider, wordMaxVulgarityField, 0.05);
+        FragmentUtils.initSlider(wordMinFormalitySlider, wordMinFormalityField, 0.05);
+        FragmentUtils.initSlider(wordMaxFormalitySlider, wordMaxFormalityField, 0.05);
 
         //init selector checkboxes
         wordLengthContainer.setDisable(!wordLengthCheckBox.isSelected());
@@ -228,21 +161,21 @@ public class Controller {
         //init nav lists
         Set<Word> words = management.getWords100();
         for(Word word: words){
-            FXMLHandler<BorderPane, NavItemController> item = Controls.convertWordToFXMLHandler(word);
+            FXMLHandler<BorderPane, NavItemController> item = FragmentUtils.convertNavFragment(word);
             wordContainer.getChildren().add(item.get());
             wordNavItems.add(item);
         }
 
         Set<Type> types = management.getTypes100();
         for(Type type: types) {
-            FXMLHandler<BorderPane, NavItemController> item = Controls.convertTypeToFXMLHandler(type);
+            FXMLHandler<BorderPane, NavItemController> item = FragmentUtils.convertNavFragment(type);
             typeContainer.getChildren().add(item.get());
             typeNavItems.add(item);
         }
 
         Set<Letter> letters = management.getLetters100();
         for(Letter letter: letters) {
-            FXMLHandler<BorderPane, NavItemController> item = Controls.convertLetterToFXMLHandler(letter);
+            FXMLHandler<BorderPane, NavItemController> item = FragmentUtils.convertNavFragment(letter);
             letterContainer.getChildren().add(item.get());
             letterNavItems.add(item);
         }
@@ -347,7 +280,7 @@ public class Controller {
         wordNavItems.clear();
         Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
         for(Word word: filteredWords) {
-            FXMLHandler<BorderPane, NavItemController> wordEditor = Controls.convertWordToFXMLHandler(word);
+            FXMLHandler<BorderPane, NavItemController> wordEditor = FragmentUtils.convertNavFragment(word);
             wordContainer.getChildren().add(wordEditor.get());
             wordNavItems.add(wordEditor);
         }
@@ -358,7 +291,7 @@ public class Controller {
         typeNavItems.clear();
         Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
         for(Type type: filteredTypes) {
-            FXMLHandler<BorderPane, NavItemController> typeEditor = Controls.convertTypeToFXMLHandler(type);
+            FXMLHandler<BorderPane, NavItemController> typeEditor = FragmentUtils.convertNavFragment(type);
             typeContainer.getChildren().add(typeEditor.get());
             typeNavItems.add(typeEditor);
         }
@@ -369,7 +302,7 @@ public class Controller {
         typeNavItems.clear();
         Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
         for(Letter letter: filteredLetters) {
-            FXMLHandler<BorderPane, NavItemController> letterEditor = Controls.convertLetterToFXMLHandler(letter);
+            FXMLHandler<BorderPane, NavItemController> letterEditor = FragmentUtils.convertNavFragment(letter);
             letterContainer.getChildren().add(letterEditor.get());
             letterNavItems.add(letterEditor);
         }
@@ -382,7 +315,7 @@ public class Controller {
 
         HomeController controller = home.getController();
         controller.getCreateLetterButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, LetterEditorController> editor = Controls.getLetterEditor();
+            FXMLHandler<BorderPane, LetterEditorController> editor = EditorUtils.getLetterEditor();
             setContent(editor.get());
             LetterEditorController editorController = editor.getController();
             editorController.getManagement().getLetter().addListener((observable, oldValue, newValue) -> {
@@ -393,12 +326,12 @@ public class Controller {
         });
 
         controller.getCreateTypeButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, TypeEditorController> editor = Controls.getTypeEditor();
+            FXMLHandler<BorderPane, TypeEditorController> editor = EditorUtils.getTypeEditor();
             setContent(editor.get());
         });
 
         controller.getCreateWordButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, WordEditorController> editor = Controls.getWordEditor();
+            FXMLHandler<BorderPane, WordEditorController> editor = EditorUtils.getWordEditor();
             setContent(editor.get());
         });
     }

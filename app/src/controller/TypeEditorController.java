@@ -1,17 +1,23 @@
 package controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import model.managment.TypeManagement;
 import model.persistance.Type;
-import model.util.Colors;
+import utils.Colors;
 
 public class TypeEditorController {
+
+    private TypeManagement management;
 
     private ObservableList<String> positionWords;
     
@@ -35,6 +41,8 @@ public class TypeEditorController {
 
         positionWords = FXCollections.observableArrayList("start", "middle", "end");
         positionWordComboBox.setItems(positionWords);
+
+        management = new TypeManagement();
 
         System.out.println(Colors.success("TypeEditorController initialized"));
     }
@@ -60,9 +68,24 @@ public class TypeEditorController {
     }
 
     @FXML
-    private void apply() {
-        System.out.println(Colors.info("Apply button clicked"));
-    }
+    private void apply() {/*
+        try{
+            management.createType(nameTextField.getText(), colorColorPicker.getValue());
+        }catch(IllegalArgumentException e){
+
+            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
+            alert.setTitle("Arguments error");
+            alert.setContentText(e.getMessage());
+            alert.show();
+
+        }catch(SQLIntegrityConstraintViolationException e){
+
+            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
+            alert.setTitle("Clone error");
+            alert.setContentText("this letter already exists");
+            alert.show();
+        }*/
+    } 
 
     @FXML
     private void cancel() {

@@ -10,7 +10,7 @@ import model.dao.WordDAO;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
-import model.util.Colors;
+import utils.Colors;
 
 class WordGenerator {
 

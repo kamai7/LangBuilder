@@ -4,7 +4,7 @@ import java.net.URL;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import model.util.Colors;
+import utils.Colors;
 
 public class FXMLHandler<T extends Node, U> {
 

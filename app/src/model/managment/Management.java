@@ -9,7 +9,7 @@ import model.dao.WordDAO;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
-import model.util.Controls;
+import utils.PersistenceUtils;
 
 public class Management {
     
@@ -51,14 +51,14 @@ public class Management {
             ret = new HashSet<>();
             for (Word word : wordAll) {
                 boolean found = false;
-                String wordInString = Controls.wordToString(word);
+                String wordInString = PersistenceUtils.wordToString(word);
 
                 if(wordInString.contains(str.toLowerCase())) {
                     ret.add(word);
                     found = true;
                 }
                 if(!found){
-                    String wordInStringAscii = Controls.wordAsciiToString(word);
+                    String wordInStringAscii = PersistenceUtils.wordAsciiToString(word);
 
                     if(wordInStringAscii.toLowerCase().contains(str.toLowerCase())) {
                         ret.add(word);

@@ -3,7 +3,6 @@ package controller.fragments;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import model.util.Colors;
 
 public class EditorItemController {
 
@@ -15,7 +14,6 @@ public class EditorItemController {
     
     @FXML
     public void initialize() {
-        System.out.println(Colors.success("EditorItemController initialized"));
     }
     
     @FXML

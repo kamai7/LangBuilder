@@ -2,7 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import model.util.Colors;
+import utils.Colors;
 
 public class HomeController {
 

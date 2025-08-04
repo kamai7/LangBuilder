@@ -3,7 +3,7 @@ package model.persistance;
 import java.util.Objects;
 
 import javafx.scene.paint.Color;
-import model.util.Colors;
+import utils.Colors;
 
 public class Type {
     

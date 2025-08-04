@@ -1,21 +1,32 @@
 package model.managment;
 
-import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import model.dao.LetterDAO;
 import model.persistance.Letter;
+import utils.Colors;
 
 public class LetterManagement {
 
-    public ObjectProperty<Letter> letter;
+    private ObjectProperty<Letter> letter;
+    private LetterDAO letterDAO;
 
     public LetterManagement() {
         this.letter = new SimpleObjectProperty<>();
+        this.letterDAO = new LetterDAO();
     }
 
-    public void addLetter(String letter, String letterAscii) throws IllegalArgumentException, SQLException{
+    public LetterManagement(Letter letter) {
+        if (letter == null){
+            throw new IllegalArgumentException(Colors.error("LetterManagement.LetterManagement:", "letter cannot be null"));
+        }
+        this.letter = new SimpleObjectProperty<>(letter);
+        this.letterDAO = new LetterDAO();
+    }
+
+    public void createLetter(String letter, String letterAscii) throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
 
         if(letter.trim().length() == 0){
             throw new IllegalArgumentException("Letter cannot be empty");
@@ -25,10 +36,18 @@ public class LetterManagement {
             throw new IllegalArgumentException("Ascii cannot be empty");
         }
 
-        LetterDAO letterDAO = new LetterDAO();
         letterDAO.create(new Letter(letter, letterAscii));
 
         this.letter.set(new Letter(letter, letterAscii));
+    }
+
+    public void deleteLetter() throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
+        if(letter.get() == null){
+            throw new IllegalArgumentException(Colors.error("LetterManagement.deleteLetter:", "letter cannot be null"));
+        }
+
+        letterDAO.delete(letter.get());
+        this.letter.set(null);
     }
 
     public ObjectProperty<Letter> getLetter() {

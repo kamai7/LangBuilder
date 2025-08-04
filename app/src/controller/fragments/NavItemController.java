@@ -8,7 +8,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import model.util.Colors;
+import utils.Colors;
 
 public class NavItemController {
     
@@ -29,7 +29,6 @@ public class NavItemController {
 
     @FXML
     private void initialize() {
-        System.out.println(Colors.success("NavItem3FieldsController initialized"));
     }
 
     @FXML

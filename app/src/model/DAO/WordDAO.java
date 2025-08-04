@@ -4,14 +4,16 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
-import model.util.Colors;
+import utils.Colors;
 
 public class WordDAO extends DAO<Word> {
     @Override
@@ -433,7 +435,7 @@ public class WordDAO extends DAO<Word> {
     }
 
     @Override
-    public void delete(Word word){
+    public void delete(Word word) throws SQLIntegrityConstraintViolationException{
         String query = "DELETE FROM Word WHERE wordId = ?";
         String queryLetters = "DELETE FROM WordsLetters WHERE wordLId = ?";
         String queryDef = "DELETE FROM Definition WHERE dWordId = ?";
@@ -449,6 +451,7 @@ public class WordDAO extends DAO<Word> {
                 ps.setInt(2, word.getId());
                 rows += ps.executeUpdate();
             }
+
             
             try (PreparedStatement ps = c.prepareStatement(queryDef)) {
                 ps.setInt(1, word.getId());
@@ -477,6 +480,9 @@ public class WordDAO extends DAO<Word> {
         }
         catch (SQLException e) {
             System.err.println(Colors.error("WordDAO delete: invalid parameters\n", e.getMessage()));
+            if (e instanceof SQLIntegrityConstraintViolationException) {
+                throw (SQLIntegrityConstraintViolationException) e;
+            }
         }
 
         System.out.println(rows + " rows deleted");
@@ -493,7 +499,7 @@ public class WordDAO extends DAO<Word> {
     }
 
     @Override
-    public int create(Word word) throws SQLException {
+    public int create(Word word) throws SQLIntegrityConstraintViolationException{
         String query = "INSERT INTO Word (wordId, emotional, formality, vulgarity, isUsable) VALUES (?, ?, ?, ?, ?)";
         String queryLetters = "INSERT INTO WordsLetters (wordLid, position, letterWId) VALUES (?, ?, ?)";
         String queryDef = "INSERT INTO Definition (dWordId, def) VALUES (?, ?)";
@@ -503,66 +509,70 @@ public class WordDAO extends DAO<Word> {
         int rows = 0;
         int retId = -1;
 
-        Connection c = getConnection();
-        c.setAutoCommit(false);
-        int wordId = nextId("Word", "wordId");
+        try(Connection c = getConnection()) {
+            c.setAutoCommit(false);
+            int wordId = nextId("Word", "wordId");
 
-        try (PreparedStatement ps = c.prepareStatement(query)) {
-            ps.setInt(1, wordId);
-            ps.setDouble(2, word.getEmotional());
-            ps.setDouble(3, word.getFormality());
-            ps.setDouble(4, word.getVulgarity());
-            ps.setBoolean(5, word.isUsable());
-            rows += ps.executeUpdate();
-        }
+            try (PreparedStatement ps = c.prepareStatement(query)) {
 
-        try (PreparedStatement ps = c.prepareStatement(queryLetters)) {
-            for (int i = 0; i < word.getLetters().size(); i++) {
                 ps.setInt(1, wordId);
-                ps.setInt(2, i+1);
-                ps.setInt(3, word.getLetters().get(i).getId());
-                ps.addBatch();
+                ps.setDouble(2, word.getEmotional());
+                ps.setDouble(3, word.getFormality());
+                ps.setDouble(4, word.getVulgarity());
+                ps.setBoolean(5, word.isUsable());
+                rows += ps.executeUpdate();
             }
-            rows += ps.executeBatch().length;
-        }
 
-        try (PreparedStatement ps = c.prepareStatement(queryDef)) {
-            for (String d : word.getDefinitions()) {
-                ps.setInt(1, wordId);
-                ps.setString(2, d);
-                ps.addBatch();
+            try (PreparedStatement ps = c.prepareStatement(queryLetters)) {
+                for (int i = 0; i < word.getLetters().size(); i++) {
+                    ps.setInt(1, wordId);
+                    ps.setInt(2, i+1);
+                    ps.setInt(3, word.getLetters().get(i).getId());
+                    ps.addBatch();
+                }
+                rows += ps.executeBatch().length;
             }
-            rows += ps.executeBatch().length;
-        }
 
-        try (PreparedStatement ps = c.prepareStatement(queryTrans)) {
-            for (String t : word.getTranslations()) {
-                ps.setInt(1, wordId);
-                ps.setString(2, t);
-                ps.addBatch();
+            try (PreparedStatement ps = c.prepareStatement(queryDef)) {
+                for (String d : word.getDefinitions()) {
+                    ps.setInt(1, wordId);
+                    ps.setString(2, d);
+                    ps.addBatch();
+                }
+                rows += ps.executeBatch().length;
             }
-            rows += ps.executeBatch().length;
-        }
-
-        try (PreparedStatement ps = c.prepareStatement(queryLink)) {
-            for(Word l : word.getLinks()){
-                ps.setInt(1, wordId);
-                ps.setInt(2, l.getId());
-                ps.addBatch();
+            try (PreparedStatement ps = c.prepareStatement(queryTrans)) {
+                for (String t : word.getTranslations()) {
+                    ps.setInt(1, wordId);
+                    ps.setString(2, t);
+                    ps.addBatch();
+                }
+                rows += ps.executeBatch().length;
             }
-            rows += ps.executeBatch().length;
+
+            try (PreparedStatement ps = c.prepareStatement(queryLink)) {
+                for(Word l : word.getLinks()){
+                    ps.setInt(1, wordId);
+                    ps.setInt(2, l.getId());
+                    ps.addBatch();
+                }
+                rows += ps.executeBatch().length;
+            }
+            c.commit();
+
+            // Only if the commit was successful
+            word.setId(wordId);
+            retId = wordId;
         }
-
-        c.commit();
-
-        // Only if the commit was successful
-        word.setId(wordId);
-        retId = wordId;
+        catch (SQLException e) {
+            System.err.println(Colors.error("WordDAO create: invalid parameters", e.getMessage()));
+            if (e instanceof SQLIntegrityConstraintViolationException) {
+                throw (SQLIntegrityConstraintViolationException) e;
+            }
+        }
 
         System.out.println(rows + " rows inserted");
 
-        c.close();
-        
         return retId;
     }
 }

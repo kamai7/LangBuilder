@@ -1,6 +1,6 @@
 package controller;
 
-import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import model.managment.LetterManagement;
 import model.persistance.Letter;
-import model.util.Colors;
+import utils.Colors;
 
 public class LetterEditorController {
 
@@ -47,13 +47,13 @@ public class LetterEditorController {
     @FXML
     private void apply() {
         try{
-            management.addLetter(letter.getText(), ascii.getText());
+            management.createLetter(letter.getText(), ascii.getText());
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
             alert.setTitle("Arguments error");
             alert.setContentText(e.getMessage());
             alert.show();
-        }catch(SQLException e){
+        }catch(SQLIntegrityConstraintViolationException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
             alert.setTitle("Clone error");
             alert.setContentText("this letter already exists");
@@ -68,7 +68,16 @@ public class LetterEditorController {
 
     @FXML
     private void delete() {
-        System.out.println(Colors.info("Delete button clicked"));
+        try{
+            management.deleteLetter();
+        }catch(IllegalArgumentException e){
+            return;
+        }catch(SQLIntegrityConstraintViolationException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
+            alert.setTitle("In use error");
+            alert.setContentText("this letter is used by several words");
+            alert.show();
+        }
     }
 
     public void setHeaderObject(String object) {

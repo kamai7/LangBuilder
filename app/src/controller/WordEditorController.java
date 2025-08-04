@@ -17,7 +17,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import model.util.Colors;
+import utils.Colors;
+import utils.FragmentUtils;
 import view.FXMLHandler;
 
 public class WordEditorController {
@@ -76,48 +77,10 @@ public class WordEditorController {
     public void initialize() {
 
         // Add listeners to sliders
-        lengthSlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            lengthValue.setText(String.valueOf(newValue.intValue()));
-        });
-        emotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            emotionalityValue.setText(rounded + "");
-        });
-        vulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            vulgarityValue.setText(rounded + "");
-        });
-        formalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
-            float rounded = Math.round(newValue.doubleValue() * 20.0) / 20.0f;
-            formalityValue.setText(rounded + "");
-        });
-
-        // Add listeners to text fields
-        lengthValue.textProperty().addListener(event -> {
-            try{
-                int value = Integer.parseInt(lengthValue.getText());
-                lengthSlider.setValue(value);
-            } catch (NumberFormatException e){}
-        });
-        emotionalityValue.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(emotionalityValue.getText());
-                emotionalitySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        vulgarityValue.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(vulgarityValue.getText());
-                vulgaritySlider.setValue(value);
-            } catch (NumberFormatException e) {}
-        });
-        formalityValue.textProperty().addListener(event -> {
-            try {
-                float value = Float.parseFloat(formalityValue.getText());
-                formalitySlider.setValue(value);
-            } catch (NumberFormatException e) {
-            }
-        });
+        FragmentUtils.initSlider(lengthSlider, lengthValue, 1);
+        FragmentUtils.initSlider(emotionalitySlider, emotionalityValue, 0.05);
+        FragmentUtils.initSlider(vulgaritySlider, vulgarityValue, 0.05);
+        FragmentUtils.initSlider(formalitySlider, formalityValue, 0.05);
 
         lengthContainer.setDisable(!lengthCheckBox.isSelected());
         emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected());

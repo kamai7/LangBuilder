@@ -2,7 +2,8 @@ package model.persistance;
 
 import java.util.Arrays;
 import java.util.Objects;
-import model.util.Colors;
+
+import utils.Colors;
 
 public class Letter {
 
