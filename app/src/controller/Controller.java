@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import controller.fragments.NavItemController;
+import controller.fragments.LetterItemController;
+import controller.fragments.TypeItemController;
+import controller.fragments.WordItemController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,13 +25,10 @@ import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
 import utils.Colors;
-import utils.EditorUtils;
 import utils.FragmentUtils;
 import view.FXMLHandler;
 
 public class Controller {
-
-    private FXMLHandler<GridPane,HomeController> contentCode;
     private Management management;
 
     @FXML
@@ -93,9 +92,9 @@ public class Controller {
                                    letterSortList,
                                    typeSortList;
 
-    private Set<FXMLHandler<BorderPane, NavItemController>> wordNavItems,
-                                                            letterNavItems,
-                                                            typeNavItems;
+    private Set<FXMLHandler<BorderPane, WordItemController>> wordNavItems;
+    private Set<FXMLHandler<BorderPane, LetterItemController>> letterNavItems;
+    private Set<FXMLHandler<BorderPane, TypeItemController>> typeNavItems;
     
     @FXML
     private void initialize() {
@@ -161,25 +160,27 @@ public class Controller {
         //init nav lists
         Set<Word> words = management.getWords100();
         for(Word word: words){
-            FXMLHandler<BorderPane, NavItemController> item = FragmentUtils.convertNavFragment(word);
+            FXMLHandler<BorderPane, WordItemController> item = new FXMLHandler<>("/fxml/fragments/nav/word_item.fxml");
             wordContainer.getChildren().add(item.get());
             wordNavItems.add(item);
+            item.getController().init(this, word);
         }
 
         Set<Type> types = management.getTypes100();
         for(Type type: types) {
-            FXMLHandler<BorderPane, NavItemController> item = FragmentUtils.convertNavFragment(type);
+            FXMLHandler<BorderPane, TypeItemController> item = new FXMLHandler<>("/fxml/fragments/nav/type_item.fxml");
             typeContainer.getChildren().add(item.get());
             typeNavItems.add(item);
+            item.getController().init(this, type);
         }
 
         Set<Letter> letters = management.getLetters100();
         for(Letter letter: letters) {
-            FXMLHandler<BorderPane, NavItemController> item = FragmentUtils.convertNavFragment(letter);
+            FXMLHandler<BorderPane, LetterItemController> item = new FXMLHandler<>("/fxml/fragments/nav/letter_item.fxml");
             letterContainer.getChildren().add(item.get());
             letterNavItems.add(item);
+            item.getController().init(this, letter);
         }
-        
         initHome();
 
         System.out.println(Colors.success("Controller initialized"));
@@ -271,6 +272,9 @@ public class Controller {
     }
 
     public <T extends Node> void setContent(T content) {
+        if (content == null) {
+            throw new IllegalArgumentException(Colors.error("Controller.setContent:", "content cannot be null"));
+        }
         this.content.getChildren().clear();
         this.content.getChildren().add(content);
     }
@@ -280,9 +284,10 @@ public class Controller {
         wordNavItems.clear();
         Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
         for(Word word: filteredWords) {
-            FXMLHandler<BorderPane, NavItemController> wordEditor = FragmentUtils.convertNavFragment(word);
+            FXMLHandler<BorderPane, WordItemController> wordEditor = new FXMLHandler<>("/fxml/fragments/nav/word_item.fxml");
             wordContainer.getChildren().add(wordEditor.get());
             wordNavItems.add(wordEditor);
+            wordEditor.getController().init(this, word);
         }
     }
 
@@ -291,9 +296,10 @@ public class Controller {
         typeNavItems.clear();
         Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
         for(Type type: filteredTypes) {
-            FXMLHandler<BorderPane, NavItemController> typeEditor = FragmentUtils.convertNavFragment(type);
+            FXMLHandler<BorderPane, TypeItemController> typeEditor = new FXMLHandler<>("/fxml/fragments/nav/type_item.fxml");
             typeContainer.getChildren().add(typeEditor.get());
             typeNavItems.add(typeEditor);
+            typeEditor.getController().init(this, type);
         }
     }
 
@@ -302,59 +308,38 @@ public class Controller {
         typeNavItems.clear();
         Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
         for(Letter letter: filteredLetters) {
-            FXMLHandler<BorderPane, NavItemController> letterEditor = FragmentUtils.convertNavFragment(letter);
+            FXMLHandler<BorderPane, LetterItemController> letterEditor = new FXMLHandler<>("/fxml/fragments/nav/letter_item.fxml");
             letterContainer.getChildren().add(letterEditor.get());
             letterNavItems.add(letterEditor);
+            letterEditor.getController().init(this, letter);
         }
-    }
-
-    private void initHome(){
-        FXMLHandler<GridPane, HomeController> home = new FXMLHandler<>("/fxml/static/home_page.fxml");
-        this.contentCode = home;
-        setContent(contentCode.get());
-
-        HomeController controller = home.getController();
-        controller.getCreateLetterButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, LetterEditorController> editor = EditorUtils.getLetterEditor();
-            setContent(editor.get());
-            LetterEditorController editorController = editor.getController();
-            editorController.getManagement().getLetter().addListener((observable, oldValue, newValue) -> {
-                management.addLetter(newValue);
-                updateletterSearch();
-                setContent(home.get());
-            });
-        });
-
-        controller.getCreateTypeButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, TypeEditorController> editor = EditorUtils.getTypeEditor();
-            setContent(editor.get());
-        });
-
-        controller.getCreateWordButton().setOnAction(e -> {
-            FXMLHandler<BorderPane, WordEditorController> editor = EditorUtils.getWordEditor();
-            setContent(editor.get());
-        });
     }
 
     private void wordSelectAll(){
         boolean allSelected = wordSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, NavItemController> item: wordNavItems){
+        for(FXMLHandler<BorderPane, WordItemController> item: wordNavItems){
             item.getController().getSelectCheckbox().setSelected(allSelected);
         }
     }
 
     private void letterSelectAll(){
         boolean allSelected = letterSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, NavItemController> item: letterNavItems){
+        for(FXMLHandler<BorderPane, LetterItemController> item: letterNavItems){
             item.getController().getSelectCheckbox().setSelected(allSelected);
         }
     }
 
     private void typeSelectAll(){
         boolean allSelected = typeSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, NavItemController> item: typeNavItems){
+        for(FXMLHandler<BorderPane, TypeItemController> item: typeNavItems){
             item.getController().getSelectCheckbox().setSelected(allSelected);
         }
+    }
+
+    public void initHome(){
+        FXMLHandler<GridPane, HomeController> home = new FXMLHandler<>("/fxml/static/home_page.fxml");
+        setContent(home.get());
+        home.getController().init(this);
     }
 
 }

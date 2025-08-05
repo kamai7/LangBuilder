@@ -12,6 +12,8 @@ import utils.Colors;
 
 public class LetterEditorController {
 
+    private Controller mainController;
+
     private LetterManagement management;
 
     @FXML
@@ -48,6 +50,7 @@ public class LetterEditorController {
     private void apply() {
         try{
             management.createLetter(letter.getText(), ascii.getText());
+            mainController.initHome();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
             alert.setTitle("Arguments error");
@@ -63,19 +66,21 @@ public class LetterEditorController {
 
     @FXML
     private void cancel() {
-        System.out.println(Colors.info("Cancel button clicked"));
+        mainController.initHome();
     }
 
     @FXML
     private void delete() {
         try{
             management.deleteLetter();
+            mainController.initHome();
         }catch(IllegalArgumentException e){
-            return;
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
             alert.setTitle("In use error");
-            alert.setContentText("this letter is used by several words");
+            alert.show();
+        }catch(SQLIntegrityConstraintViolationException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            alert.setTitle("In use error");
             alert.show();
         }
     }
@@ -86,5 +91,9 @@ public class LetterEditorController {
 
     public void setHeaderObjectStyle(String style) {
         this.headerObject.setStyle(style);
+    }
+
+    public void init(Controller mainController) {
+        this.mainController = mainController;
     }
 }

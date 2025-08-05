@@ -23,7 +23,7 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" fx:id="createLetterButton" style="-fx-border-color: #f262ff;" styleClass="home-choice" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createLetter" style="-fx-border-color: #f262ff;" styleClass="home-choice" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <graphic>
             <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" spacing="5.0">
                <children>
@@ -44,7 +44,7 @@
             </VBox>
          </graphic>
       </Button>
-      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" fx:id="createWordButton" style="-fx-border-color: #62b8ff;" styleClass="home-choice" GridPane.columnIndex="1">
+      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createWord" style="-fx-border-color: #62b8ff;" styleClass="home-choice" GridPane.columnIndex="1">
          <graphic>
             <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0">
                <children>
@@ -65,7 +65,7 @@
             </VBox>
          </graphic>
       </Button>
-      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" fx:id="createTypeButton" style="-fx-border-color: #ffb662;" styleClass="home-choice" GridPane.columnIndex="2">
+      <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#createType" style="-fx-border-color: #ffb662;" styleClass="home-choice" GridPane.columnIndex="2">
          <graphic>
             <VBox alignment="CENTER" spacing="5.0">
                <children>

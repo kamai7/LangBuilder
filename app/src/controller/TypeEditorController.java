@@ -1,11 +1,8 @@
 package controller;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -16,6 +13,8 @@ import model.persistance.Type;
 import utils.Colors;
 
 public class TypeEditorController {
+
+    private Controller mainController;
 
     private TypeManagement management;
 
@@ -71,6 +70,7 @@ public class TypeEditorController {
     private void apply() {/*
         try{
             management.createType(nameTextField.getText(), colorColorPicker.getValue());
+            mainController.initHome();
         }catch(IllegalArgumentException e){
 
             Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
@@ -89,12 +89,12 @@ public class TypeEditorController {
 
     @FXML
     private void cancel() {
-        System.out.println(Colors.info("Cancel button clicked"));
+        mainController.initHome();
     }
 
     @FXML
     private void delete() {
-        System.out.println(Colors.info("Delete button clicked"));
+        mainController.initHome();
     }
 
     public void setHeaderObject(String object) {
@@ -103,5 +103,9 @@ public class TypeEditorController {
 
     public void setHeaderObjectStyle(String style) {
         this.headerObject.setStyle(style);
+    }
+
+    public void init(Controller mainController) {
+        this.mainController = mainController;
     }
 }

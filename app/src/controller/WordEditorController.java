@@ -5,9 +5,7 @@ import java.util.ArrayList;
 
 import controller.fragments.EditorItemCheckboxController;
 import controller.fragments.EditorItemController;
-import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -22,6 +20,8 @@ import utils.FragmentUtils;
 import view.FXMLHandler;
 
 public class WordEditorController {
+
+    private Controller mainController;
 
     private ArrayList<FXMLHandler<HBox, EditorItemCheckboxController>> letters;
 
@@ -162,17 +162,17 @@ public class WordEditorController {
 
     @FXML
     private void apply() {
-        System.out.println(Colors.info("Apply button clicked"));
+        mainController.initHome();
     }
 
     @FXML
     private void cancel() {
-        System.out.println(Colors.info("Cancel button clicked"));
+        mainController.initHome();
     }
 
     @FXML
     private void delete() {
-        System.out.println(Colors.info("Delete button clicked"));
+        mainController.initHome();
     }
 
     public void setHeaderObject(String object) {
@@ -213,6 +213,10 @@ public class WordEditorController {
 
     public void setFormality(double formality) {
         formalitySlider.setValue(formality);
+    }
+
+    public void init(Controller mainController) {
+        this.mainController = mainController;
     }
 
 }
