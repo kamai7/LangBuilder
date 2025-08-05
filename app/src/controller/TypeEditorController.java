@@ -8,6 +8,7 @@ import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import model.managment.TypeManagement;
 import model.persistance.Type;
 import utils.Colors;
@@ -44,11 +45,6 @@ public class TypeEditorController {
         management = new TypeManagement();
 
         System.out.println(Colors.success("TypeEditorController initialized"));
-    }
-
-    public void initValues(Type type){
-        this.nameTextField.setText(type.getLabel());
-        this.colorColorPicker.setValue(type.getColor());
     }
 
     @FXML
@@ -97,15 +93,17 @@ public class TypeEditorController {
         mainController.initHome();
     }
 
-    public void setHeaderObject(String object) {
-        this.headerObject.setText(object);
-    }
-
-    public void setHeaderObjectStyle(String style) {
-        this.headerObject.setStyle(style);
-    }
-
-    public void init(Controller mainController) {
+    public void init(Controller mainController, Type type) {
+        if (mainController == null) {
+            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
+        }
         this.mainController = mainController;
+
+        if (type == null){
+            this.headerObject.setText("Verb");
+            Color color = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
+            Color[] colors = Colors.calcGradient(color);
+            this.headerObject.setStyle("-fx-text-fill:"  + Colors.linearGradient(colors[0], colors[1]));
+        }
     }
 }

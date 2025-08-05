@@ -12,32 +12,23 @@ import model.persistance.Word;
 import utils.PersistenceUtils;
 
 public class Management {
-    
-    Set<Word> words100;
-    Set<Letter> letters100;
-    Set<Type> types100;
+
+    LetterDAO letterDAO;
+    WordDAO wordDAO;
+    TypeDAO typeDAO;
 
     Set<Word> wordAll;
     Set<Letter> letterAll;
     Set<Type> typeAll;
 
-    Object selected;
-
     public Management() {
-        WordDAO wordDAO = new WordDAO();
-        LetterDAO letterDAO = new LetterDAO();
-        TypeDAO typeDAO = new TypeDAO();
-        words100 = wordDAO.findAll(100);
-        letters100 = letterDAO.findAll(100);
-        types100 = typeDAO.findAll(100);
+        wordDAO = new WordDAO();
+        letterDAO = new LetterDAO();
+        typeDAO = new TypeDAO();
 
         wordAll = wordDAO.findAll();
         letterAll = letterDAO.findAll();
         typeAll = typeDAO.findAll();
-    }
-
-    public void setSelected(Object selected) {
-        this.selected = selected;
     }
 
     public Set<Word> getFilteredWords(String str) {
@@ -45,7 +36,7 @@ public class Management {
         Set<Word> ret;
 
         if(str.equals("")){
-            ret = words100;
+            ret = wordDAO.findAll(100);
         }else{
 
             ret = new HashSet<>();
@@ -77,10 +68,8 @@ public class Management {
 
     public Set<Letter> getFilteredLetters(String str) {
         if (str.equals("")){
-            return letters100;
+            return letterDAO.findAll(100);
         }
-
-        LetterDAO letterDAO= new LetterDAO();
         return letterDAO.findByString(str);
     }
 
@@ -89,7 +78,7 @@ public class Management {
         Set<Type> ret;
 
         if(str.equals("")){
-            ret = types100;
+            ret = typeDAO.findAll(100);
         }else{
 
             ret = new HashSet<>();
@@ -101,39 +90,6 @@ public class Management {
             }
         }
         return ret;
-    }
-
-    public Set<Word> getWords100(){
-        return words100;
-    }
-
-    public Set<Letter> getLetters100(){
-        return letters100;
-    }
-
-    public Set<Type> getTypes100(){
-        return types100;
-    }
-
-    public void addLetter(Letter letter){
-        letterAll.add(letter);
-        if(letters100.size() < 100){
-            letters100.add(letter);
-        }
-    }
-
-    public void addWord(Word word){
-        wordAll.add(word);
-        if(words100.size() < 100){
-            words100.add(word);
-        }
-    }
-
-    public void addType(Type type){
-        typeAll.add(type);
-        if(types100.size() < 100){
-            types100.add(type);
-        }
     }
 
 }

@@ -3,8 +3,8 @@ package controller;
 
 import java.util.ArrayList;
 
-import controller.fragments.EditorItemCheckboxController;
-import controller.fragments.EditorItemController;
+import controller.fragments.WordFieldController;
+import controller.fragments.WordLetterController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -15,6 +15,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import model.persistance.Word;
 import utils.Colors;
 import utils.FragmentUtils;
 import view.FXMLHandler;
@@ -23,7 +25,10 @@ public class WordEditorController {
 
     private Controller mainController;
 
-    private ArrayList<FXMLHandler<HBox, EditorItemCheckboxController>> letters;
+    private ArrayList<FXMLHandler<HBox, WordLetterController>> letters;
+    private ArrayList<FXMLHandler<HBox, WordFieldController>> roots;
+    private ArrayList<FXMLHandler<HBox, WordFieldController>> links;
+    private ArrayList<FXMLHandler<HBox, WordFieldController>> types;
 
     @FXML
     private HBox chooseTypeButtonContainer;
@@ -97,6 +102,9 @@ public class WordEditorController {
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
 
         letters = new ArrayList<>();
+        roots = new ArrayList<>();
+        links = new ArrayList<>();
+        types = new ArrayList<>();
 
         System.out.println(Colors.success("WordEditorController initialized"));
     }
@@ -105,12 +113,13 @@ public class WordEditorController {
     private void addLetter(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             if(addLetterField.getText().length() > 0) {
-                FXMLHandler<HBox, EditorItemCheckboxController> letter = new FXMLHandler<>("../fxml/fragments/editor/item_checkbox.fxml");
-                EditorItemCheckboxController controller = letter.getController();
-                controller.setText(addLetterField.getText());
+                FXMLHandler<HBox, WordLetterController> letter = new FXMLHandler<>("../fxml/fragments/editor/word_letter.fxml");
+                WordLetterController wordLetterController = letter.getController();
                 lettersPane.getChildren().add(lettersPane.getChildren().size() - 1,letter.get());
-                controller.getDeleteObjectButton().setOnAction(e -> lettersPane.getChildren().remove(letter.get()));
+                wordLetterController.init(addLetterField.getText());
+                wordLetterController.getDeleteButton().setOnAction(event1 -> {lettersPane.getChildren().remove(letter.get()); letters.remove(letter);});
                 addLetterField.setText("");
+                letters.add(letter);
             }else{
                 System.out.println(Colors.error("Letter field is empty"));
             }
@@ -119,30 +128,31 @@ public class WordEditorController {
 
     @FXML
     private void addRoot() {
-        FXMLHandler<HBox, EditorItemController> root = new FXMLHandler<>("../fxml/fragments/editor/item.fxml");
-        EditorItemController controller = root.getController();
-        controller.setText("Σ");
+        FXMLHandler<HBox, WordFieldController> root = new FXMLHandler<>("../fxml/fragments/editor/word_field.fxml");
         rootsPane.getChildren().add(root.get());
-        controller.getDeleteObjectButton().setOnAction(e -> rootsPane.getChildren().remove(root.get()));
+        WordFieldController wordFieldController = root.getController();
+        wordFieldController.init("Σ");
+        wordFieldController.getDeleteButton().setOnAction(event -> {rootsPane.getChildren().remove(root.get()); roots.remove(root);});
+        roots.add(root);
+
     }
 
     @FXML
     private void addLink() {
-        FXMLHandler<HBox, EditorItemController> link = new FXMLHandler<>("../fxml/fragments/editor/item.fxml");
-        EditorItemController controller = link.getController();
-        controller.setText("Σ");
+        FXMLHandler<HBox, WordFieldController> link = new FXMLHandler<>("../fxml/fragments/editor/word_field.fxml");
         linksPane.getChildren().add(link.get());
-        controller.getDeleteObjectButton().setOnAction(e -> linksPane.getChildren().remove(link.get()));
+        link.getController().getDeleteButton().setOnAction(event -> {linksPane.getChildren().remove(link.get()); links.remove(link);});
+        link.getController().init("Σ");
+        links.add(link);
     }
 
     @FXML
     private void addType() {
-        System.out.println(Colors.info("add type button clicked"));
-    }
-
-    @FXML
-    private void deleteType() {
-        System.out.println(Colors.info("Delete type button clicked"));
+        FXMLHandler<HBox, WordFieldController> type = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
+        typesPane.getChildren().add(type.get());
+        type.getController().getDeleteButton().setOnAction(event -> {typesPane.getChildren().remove(type.get()); types.remove(type);});
+        type.getController().init("verb");
+        types.add(type);
     }
 
     @FXML
@@ -173,14 +183,6 @@ public class WordEditorController {
     @FXML
     private void delete() {
         mainController.initHome();
-    }
-
-    public void setHeaderObject(String object) {
-        this.headerObject.setText(object);
-    }
-
-    public void setHeaderObjectStyle(String style) {
-        this.headerObject.setStyle(style);
     }
 
     public double getLength() {
@@ -215,8 +217,17 @@ public class WordEditorController {
         formalitySlider.setValue(formality);
     }
 
-    public void init(Controller mainController) {
+    public void init(Controller mainController, Word word) {
+        if (mainController == null) {
+            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
+        }
         this.mainController = mainController;
+        if (word == null){
+            this.headerObject.setText("∱'⇔∩");
+            Color color2 = Colors.convertRGBAToColor(new int[]{153, 0, 255, 255});
+            Color color1 = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
+            this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
+        }
     }
 
 }

@@ -3,20 +3,21 @@ package controller.fragments;
 import java.util.Arrays;
 
 import controller.Controller;
+import controller.TypeEditorController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-import model.managment.LetterManagement;
-import model.persistance.Letter;
+import model.persistance.Type;
 import utils.Colors;
+import utils.PersistenceUtils;
 import view.FXMLHandler;
 
-public class LetterItemController {
+public class NavTypeController {
 
     private Controller mainController;
 
-    private LetterManagement management;
+    private Type object;
     
     @FXML
     private Label objectLabel,
@@ -37,31 +38,19 @@ public class LetterItemController {
 
     @FXML
     private void edit() {
-        //mainController.edit();
+        FXMLHandler<BorderPane, TypeEditorController> editor = new FXMLHandler<>("/fxml/static/editor_type.fxml");
+        mainController.setContent(editor.get());
+        editor.getController().init(mainController, object);
     }
 
-    public void init(Controller mainController, Letter letter) {
-        if (mainController == null || letter == null) {
+    public void init(Controller mainController, Type type) {
+        if (mainController == null || type == null) {
             throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController and object cannot be null"));
         }
         this.mainController = mainController;
-        this.management = new LetterManagement(letter);
-        setObjectText(letter.getCharacter());
-        setDescriptionText(letter.getCharacterAscii());
-    }
-
-    public void setObjectText(String text) {
-        if (text == null) {
-            throw new IllegalArgumentException(Colors.error("text cannot be null"));
-        }
-        objectLabel.setText(text);
-    }
-
-    public void setDescriptionText(String description) {
-        if (description == null) {
-            throw new IllegalArgumentException(Colors.error("description cannot be null"));
-        }
-        descriptionLabel.setText(description);
+        this.object = type;
+        objectLabel.setText(type.getLabel());
+        descriptionLabel.setText(PersistenceUtils.wordToString(type.getRoot()));
     }
 
     public boolean isSelected() {

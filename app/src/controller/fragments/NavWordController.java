@@ -3,23 +3,25 @@ package controller.fragments;
 import java.util.Arrays;
 
 import controller.Controller;
+import controller.WordEditorController;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import model.managment.WordManagement;
 import model.persistance.Type;
 import model.persistance.Word;
 import utils.Colors;
 import utils.PersistenceUtils;
+import view.FXMLHandler;
 
-public class WordItemController {
+public class NavWordController {
 
     private Controller mainController;
 
-    private WordManagement management;
+    private Word object;
     
     @FXML
     private Label objectLabel,
@@ -46,7 +48,9 @@ public class WordItemController {
 
     @FXML
     private void edit() {
-        //mainController.edit();
+        FXMLHandler<BorderPane, WordEditorController> editor = new FXMLHandler<>("/fxml/static/editor_word.fxml");
+        mainController.setContent(editor.get());
+        editor.getController().init(mainController, object);
     }
 
     public void init(Controller mainController, Word word) {
@@ -54,27 +58,13 @@ public class WordItemController {
             throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController and object cannot be null"));
         }
         this.mainController = mainController;
-        this.management = new WordManagement(word);
+        this.object = word;
 
-        setObjectText(PersistenceUtils.wordToString(word));
-        setDescriptionText(PersistenceUtils.wordAsciiToString(word));
+        objectLabel.setText(PersistenceUtils.wordToString(word));
+        descriptionLabel.setText(PersistenceUtils.wordAsciiToString(word));
         for (Type type : word.getTypes()) {
             addType(type.getLabel(), type.getColor());
         }
-    }
-
-    public void setObjectText(String text) {
-        if (text == null) {
-            throw new IllegalArgumentException(Colors.error("text cannot be null"));
-        }
-        objectLabel.setText(text);
-    }
-
-    public void setDescriptionText(String description) {
-        if (description == null) {
-            throw new IllegalArgumentException(Colors.error("description cannot be null"));
-        }
-        descriptionLabel.setText(description);
     }
 
     public boolean isSelected() {

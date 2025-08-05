@@ -9,12 +9,13 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane styleClass="word-list-item" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.fragments.TypeItemController">
+<BorderPane styleClass="word-list-item" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.fragments.NavWordController">
    <center>
       <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" onMouseClicked="#contentClicked" prefHeight="20.0" spacing="10.0">
          <children>
             <Label fx:id="objectLabel" maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE" />
             <Label fx:id="descriptionLabel" minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
+            <HBox fx:id="typesContainer" alignment="CENTER_LEFT" spacing="6.0" HBox.hgrow="ALWAYS" />
          </children>
          <padding>
             <Insets bottom="1.0" top="1.0" />
@@ -28,14 +29,23 @@
       <CheckBox fx:id="selectedCheckBox" mnemonicParsing="false" BorderPane.alignment="CENTER" />
    </left>
    <right>
-      <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" onAction="#edit">
-         <graphic>
-            <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+      <HBox alignment="CENTER_LEFT" spacing="2.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="warningImage" fitHeight="24.0" fitWidth="24.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../icons/edit.png" />
+                  <Image url="@../../icons/warning.png" />
                </image>
             </ImageView>
-         </graphic>
-      </Button>
+            <Button alignment="CENTER_RIGHT" contentDisplay="CENTER" minWidth="30.0" mnemonicParsing="false" onAction="#edit">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../icons/edit.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </HBox>
    </right>
 </BorderPane>

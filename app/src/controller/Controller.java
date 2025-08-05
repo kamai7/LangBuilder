@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import controller.fragments.LetterItemController;
-import controller.fragments.TypeItemController;
-import controller.fragments.WordItemController;
+import controller.fragments.NavLetterController;
+import controller.fragments.NavTypeController;
+import controller.fragments.NavWordController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -92,9 +92,9 @@ public class Controller {
                                    letterSortList,
                                    typeSortList;
 
-    private Set<FXMLHandler<BorderPane, WordItemController>> wordNavItems;
-    private Set<FXMLHandler<BorderPane, LetterItemController>> letterNavItems;
-    private Set<FXMLHandler<BorderPane, TypeItemController>> typeNavItems;
+    private Set<FXMLHandler<BorderPane, NavWordController>> wordNavItems;
+    private Set<FXMLHandler<BorderPane, NavLetterController>> letterNavItems;
+    private Set<FXMLHandler<BorderPane, NavTypeController>> typeNavItems;
     
     @FXML
     private void initialize() {
@@ -130,9 +130,9 @@ public class Controller {
         typeSelectAllCheckBox.selectedProperty().addListener(event -> typeSelectAll());
 
 
-        wordSearch.textProperty().addListener((observable, oldValue, newValue) -> updatewordSearch());
-        typeSearch.textProperty().addListener((observable, oldValue, newValue) -> updatetypeSearch());
-        letterSearch.textProperty().addListener((observable, oldValue, newValue) -> updateletterSearch());
+        wordSearch.textProperty().addListener((observable, oldValue, newValue) -> loadWordsNav());
+        typeSearch.textProperty().addListener((observable, oldValue, newValue) -> loadTypesNav());
+        letterSearch.textProperty().addListener((observable, oldValue, newValue) -> loadLettersNav());
 
         //init combo boxes
         ArrayList<String> wordChoices = new ArrayList<>(Arrays.asList("default (types)", "ascending", "descending", "length", "emotionality", "vulgarity", "formality"));
@@ -158,29 +158,9 @@ public class Controller {
         letterNavItems = new HashSet<>();
 
         //init nav lists
-        Set<Word> words = management.getWords100();
-        for(Word word: words){
-            FXMLHandler<BorderPane, WordItemController> item = new FXMLHandler<>("/fxml/fragments/nav/word_item.fxml");
-            wordContainer.getChildren().add(item.get());
-            wordNavItems.add(item);
-            item.getController().init(this, word);
-        }
-
-        Set<Type> types = management.getTypes100();
-        for(Type type: types) {
-            FXMLHandler<BorderPane, TypeItemController> item = new FXMLHandler<>("/fxml/fragments/nav/type_item.fxml");
-            typeContainer.getChildren().add(item.get());
-            typeNavItems.add(item);
-            item.getController().init(this, type);
-        }
-
-        Set<Letter> letters = management.getLetters100();
-        for(Letter letter: letters) {
-            FXMLHandler<BorderPane, LetterItemController> item = new FXMLHandler<>("/fxml/fragments/nav/letter_item.fxml");
-            letterContainer.getChildren().add(item.get());
-            letterNavItems.add(item);
-            item.getController().init(this, letter);
-        }
+        loadLettersNav();
+        loadTypesNav();
+        loadWordsNav();
         initHome();
 
         System.out.println(Colors.success("Controller initialized"));
@@ -279,59 +259,23 @@ public class Controller {
         this.content.getChildren().add(content);
     }
 
-    private void updatewordSearch(){
-        wordContainer.getChildren().clear();
-        wordNavItems.clear();
-        Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
-        for(Word word: filteredWords) {
-            FXMLHandler<BorderPane, WordItemController> wordEditor = new FXMLHandler<>("/fxml/fragments/nav/word_item.fxml");
-            wordContainer.getChildren().add(wordEditor.get());
-            wordNavItems.add(wordEditor);
-            wordEditor.getController().init(this, word);
-        }
-    }
-
-    private void updatetypeSearch(){
-        typeContainer.getChildren().clear();
-        typeNavItems.clear();
-        Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
-        for(Type type: filteredTypes) {
-            FXMLHandler<BorderPane, TypeItemController> typeEditor = new FXMLHandler<>("/fxml/fragments/nav/type_item.fxml");
-            typeContainer.getChildren().add(typeEditor.get());
-            typeNavItems.add(typeEditor);
-            typeEditor.getController().init(this, type);
-        }
-    }
-
-    private void updateletterSearch(){
-        letterContainer.getChildren().clear();
-        typeNavItems.clear();
-        Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
-        for(Letter letter: filteredLetters) {
-            FXMLHandler<BorderPane, LetterItemController> letterEditor = new FXMLHandler<>("/fxml/fragments/nav/letter_item.fxml");
-            letterContainer.getChildren().add(letterEditor.get());
-            letterNavItems.add(letterEditor);
-            letterEditor.getController().init(this, letter);
-        }
-    }
-
     private void wordSelectAll(){
         boolean allSelected = wordSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, WordItemController> item: wordNavItems){
+        for(FXMLHandler<BorderPane, NavWordController> item: wordNavItems){
             item.getController().getSelectCheckbox().setSelected(allSelected);
         }
     }
 
     private void letterSelectAll(){
         boolean allSelected = letterSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, LetterItemController> item: letterNavItems){
+        for(FXMLHandler<BorderPane, NavLetterController> item: letterNavItems){
             item.getController().getSelectCheckbox().setSelected(allSelected);
         }
     }
 
     private void typeSelectAll(){
         boolean allSelected = typeSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, TypeItemController> item: typeNavItems){
+        for(FXMLHandler<BorderPane, NavTypeController> item: typeNavItems){
             item.getController().getSelectCheckbox().setSelected(allSelected);
         }
     }
@@ -340,6 +284,42 @@ public class Controller {
         FXMLHandler<GridPane, HomeController> home = new FXMLHandler<>("/fxml/static/home_page.fxml");
         setContent(home.get());
         home.getController().init(this);
+    }
+
+    public void loadWordsNav(){
+        wordContainer.getChildren().clear();
+        wordNavItems.clear();
+        Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
+        for(Word word: filteredWords) {
+            FXMLHandler<BorderPane, NavWordController> wordEditor = new FXMLHandler<>("/fxml/fragments/nav/word.fxml");
+            wordContainer.getChildren().add(wordEditor.get());
+            wordNavItems.add(wordEditor);
+            wordEditor.getController().init(this, word);
+        }
+    }
+
+    public void loadLettersNav(){
+        letterContainer.getChildren().clear();
+        letterNavItems.clear();
+        Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
+        for(Letter letter: filteredLetters) {
+            FXMLHandler<BorderPane, NavLetterController> letterEditor = new FXMLHandler<>("/fxml/fragments/nav/letter.fxml");
+            letterContainer.getChildren().add(letterEditor.get());
+            letterNavItems.add(letterEditor);
+            letterEditor.getController().init(this, letter);
+        }
+    }
+
+    public void loadTypesNav(){
+        typeContainer.getChildren().clear();
+        typeNavItems.clear();
+        Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
+        for(Type type: filteredTypes) {
+            FXMLHandler<BorderPane, NavTypeController> typeEditor = new FXMLHandler<>("/fxml/fragments/nav/type.fxml");
+            typeContainer.getChildren().add(typeEditor.get());
+            typeNavItems.add(typeEditor);
+            typeEditor.getController().init(this, type);
+        }
     }
 
 }

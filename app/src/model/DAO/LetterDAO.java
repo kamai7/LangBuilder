@@ -75,7 +75,7 @@ public  class LetterDAO extends DAO<Letter> {
     @Override
     public Set<Letter> findByString(String str){
         
-        String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ?";
+        String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ? LIMIT 200";
         Set<Letter> ret = new HashSet<>();
 
         try(Connection c = getConnection();

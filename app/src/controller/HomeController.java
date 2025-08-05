@@ -3,7 +3,6 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.layout.BorderPane;
 import utils.Colors;
-import utils.EditorUtils;
 import view.FXMLHandler;
 
 public class HomeController {
@@ -21,22 +20,22 @@ public class HomeController {
 
     @FXML
     private void createLetter() {
-        FXMLHandler<BorderPane, LetterEditorController> editor = EditorUtils.getLetterEditor();
+        FXMLHandler<BorderPane, LetterEditorController> editor = new FXMLHandler<>("/fxml/static/editor_letter.fxml");
         mainController.setContent(editor.get());
-        editor.getController().init(mainController);
+        editor.getController().init(mainController, null);
     }
 
     @FXML
     private void createType() {
-        FXMLHandler<BorderPane, TypeEditorController> editor = EditorUtils.getTypeEditor();
+        FXMLHandler<BorderPane, TypeEditorController> editor = new FXMLHandler<>("/fxml/static/editor_type.fxml");
         mainController.setContent(editor.get());
-        editor.getController().init(mainController);
+        editor.getController().init(mainController, null);
     }
 
     @FXML
     private void createWord() {
-        FXMLHandler<BorderPane, WordEditorController> editor = EditorUtils.getWordEditor();
+        FXMLHandler<BorderPane, WordEditorController> editor = new FXMLHandler<>( "/fxml/static/editor_word.fxml");
         mainController.setContent(editor.get());
-        editor.getController().init(mainController);
+        editor.getController().init(mainController, null);
     }
 }

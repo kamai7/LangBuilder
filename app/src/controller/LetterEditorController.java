@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import model.managment.LetterManagement;
 import model.persistance.Letter;
 import utils.Colors;
@@ -29,11 +30,6 @@ public class LetterEditorController {
         System.out.println(Colors.success("LetterEditorController initialized"));
     }
 
-    public void initValues(Letter letter) {
-        this.letter.setText(letter.getCharacter());
-        this.ascii.setText(letter.getCharacterAscii());
-    }
-
     public String getLetter() {
         return letter.getText();
     }
@@ -49,8 +45,9 @@ public class LetterEditorController {
     @FXML
     private void apply() {
         try{
-            management.createLetter(letter.getText(), ascii.getText());
+            management.editLetter(letter.getText(), ascii.getText());
             mainController.initHome();
+            mainController.loadLettersNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
             alert.setTitle("Arguments error");
@@ -85,15 +82,22 @@ public class LetterEditorController {
         }
     }
 
-    public void setHeaderObject(String object) {
-        this.headerObject.setText(object);
-    }
-
-    public void setHeaderObjectStyle(String style) {
-        this.headerObject.setStyle(style);
-    }
-
-    public void init(Controller mainController) {
+    public void init(Controller mainController, Letter letter) {
+        if (mainController == null) {
+            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
+        }
+        
         this.mainController = mainController;
+        Color color1 = Colors.convertRGBAToColor(new int[]{255, 0, 234, 255});
+        Color color2 = Colors.convertRGBAToColor(new int[]{255, 187, 0, 255});
+        this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
+
+        if (letter == null){
+            this.headerObject.setText("∱'");
+        }else{
+            this.letter.setText(letter.getCharacter());
+            this.ascii.setText(letter.getCharacterAscii());
+            this.headerObject.setText(letter.getCharacter());
+        }
     }
 }
