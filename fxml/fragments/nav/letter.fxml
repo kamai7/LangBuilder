@@ -8,13 +8,20 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane styleClass="word-list-item" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.fragments.NavLetterController">
    <center>
       <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" onMouseClicked="#contentClicked" prefHeight="20.0" spacing="10.0">
          <children>
-            <Label fx:id="objectLabel" maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE" />
-            <Label fx:id="descriptionLabel" minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE" />
+            <Label fx:id="objectLabel" maxWidth="1.7976931348623157E308" minWidth="50.0" text="Mot" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
+            <Label fx:id="descriptionLabel" minWidth="50.0" styleClass="description" text="Mot ASCII" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font></Label>
          </children>
          <padding>
             <Insets bottom="1.0" top="1.0" />

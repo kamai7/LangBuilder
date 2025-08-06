@@ -7,7 +7,7 @@ letters which will be used in yout language
 */
 create table Letter(
 	letterId int,
-	letter varchar(10) not null,
+	letter varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin not null,
 	letterAscii varchar(15) not null,
     
     -- contraintes
