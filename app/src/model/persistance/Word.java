@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 import utils.Colors;
+import utils.PersistenceUtils;
 
 public class Word {
 
@@ -205,7 +206,7 @@ public class Word {
 
     @Override
     public int hashCode() {
-        Object[] letters = this.letters.toArray();
+        Object[] letters = {this.letters, this.translations, this.definitions, this.emotional, this.formality, this.vulgarity};
         return Arrays.deepHashCode(letters);
     }
     
@@ -214,16 +215,14 @@ public class Word {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Word other = (Word) obj;
-        return this.id == other.id &&
-               Double.compare(other.emotional, this.emotional) == 0 &&
+        return Double.compare(other.emotional, this.emotional) == 0 &&
                Double.compare(other.formality, this.formality) == 0 &&
                Double.compare(other.vulgarity, this.vulgarity) == 0 &&
                this.letters.equals(other.letters) &&
-               this.lettersAscii.equals(other.lettersAscii) &&
                Objects.equals(this.translations, other.translations) &&
                Objects.equals(this.definitions, other.definitions) &&
-               Objects.equals(this.links, other.links) &&
-               Objects.equals(this.roots, other.roots) &&
+               PersistenceUtils.shallowEquals(this.links, other.links) &&
+               PersistenceUtils.shallowEquals(this.roots, other.roots) &&
                Objects.equals(this.types, other.types);
     }
 }

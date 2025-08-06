@@ -26,7 +26,6 @@ public class LetterEditorController {
 
     @FXML
     public void initialize() {
-        management = new LetterManagement();
         System.out.println(Colors.success("LetterEditorController initialized"));
     }
 
@@ -71,6 +70,7 @@ public class LetterEditorController {
         try{
             management.deleteLetter();
             mainController.initHome();
+            mainController.loadLettersNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
             alert.setTitle("In use error");
@@ -83,21 +83,28 @@ public class LetterEditorController {
     }
 
     public void init(Controller mainController, Letter letter) {
+        if (mainController == null || letter == null) {
+            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController and object cannot be null"));
+        }
+        init(mainController);
+        management = new LetterManagement(letter);
+        
+        this.letter.setText(letter.getCharacter());
+        this.ascii.setText(letter.getCharacterAscii());
+        this.headerObject.setText(letter.getCharacter());
+    }
+
+    public void init(Controller mainController) {
         if (mainController == null) {
             throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
         }
-        
+        management = new LetterManagement();
+
         this.mainController = mainController;
         Color color1 = Colors.convertRGBAToColor(new int[]{255, 0, 234, 255});
         Color color2 = Colors.convertRGBAToColor(new int[]{255, 187, 0, 255});
         this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
 
-        if (letter == null){
-            this.headerObject.setText("∱'");
-        }else{
-            this.letter.setText(letter.getCharacter());
-            this.ascii.setText(letter.getCharacterAscii());
-            this.headerObject.setText(letter.getCharacter());
-        }
+        this.headerObject.setText("∱'");
     }
 }

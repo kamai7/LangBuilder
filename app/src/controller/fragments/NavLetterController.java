@@ -1,13 +1,16 @@
 package controller.fragments;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 
 import controller.Controller;
 import controller.LetterEditorController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import model.managment.LetterManagement;
 import model.persistance.Letter;
 import utils.Colors;
 import view.FXMLHandler;
@@ -64,6 +67,21 @@ public class NavLetterController {
     public int hashCode() {
         Object[] obj = {objectLabel.getText(), descriptionLabel.getText()};
         return Arrays.deepHashCode(obj);
+    }
+
+    public void delete(){
+        LetterManagement management = new LetterManagement(object);
+        try{
+            management.deleteLetter();
+        }catch(IllegalArgumentException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            alert.setTitle("In use error");
+            alert.show();
+        }catch(SQLIntegrityConstraintViolationException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            alert.setTitle("In use error");
+            alert.show();
+        }
     }
     
 }

@@ -1,11 +1,14 @@
 package controller;
 
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import controller.fragments.WordFieldController;
+
 import controller.fragments.WordLetterController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -16,14 +19,18 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import model.managment.WordManagement;
 import model.persistance.Word;
 import utils.Colors;
 import utils.FragmentUtils;
+import utils.PersistenceUtils;
 import view.FXMLHandler;
 
 public class WordEditorController {
 
     private Controller mainController;
+
+    private WordManagement management;
 
     private ArrayList<FXMLHandler<HBox, WordLetterController>> letters;
     private ArrayList<FXMLHandler<HBox, WordFieldController>> roots;
@@ -182,7 +189,19 @@ public class WordEditorController {
 
     @FXML
     private void delete() {
-        mainController.initHome();
+        try{
+            management.deleteWord();
+            mainController.initHome();
+            mainController.loadLettersNav();
+        }catch(IllegalArgumentException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            alert.setTitle("In use error");
+            alert.show();
+        }catch(SQLIntegrityConstraintViolationException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            alert.setTitle("In use error");
+            alert.show();
+        }
     }
 
     public double getLength() {
@@ -218,16 +237,26 @@ public class WordEditorController {
     }
 
     public void init(Controller mainController, Word word) {
+        if (mainController == null || word == null) {
+            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController and object cannot be null"));
+        }
+        init(mainController);
+        management = new WordManagement(word);
+
+        this.headerObject.setText(PersistenceUtils.wordToString(word));
+    }
+
+    public void init(Controller mainController) {
         if (mainController == null) {
             throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
         }
+        management = new WordManagement();
+
         this.mainController = mainController;
-        if (word == null){
-            this.headerObject.setText("∱'⇔∩");
-            Color color2 = Colors.convertRGBAToColor(new int[]{153, 0, 255, 255});
-            Color color1 = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
-            this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
-        }
+        this.headerObject.setText("∱'⇔∩");
+        Color color2 = Colors.convertRGBAToColor(new int[]{153, 0, 255, 255});
+        Color color1 = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
+        this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
     }
 
 }

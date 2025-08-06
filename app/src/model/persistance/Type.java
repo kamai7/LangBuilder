@@ -1,6 +1,6 @@
 package model.persistance;
 
-import java.util.Objects;
+import java.util.Arrays;
 
 import javafx.scene.paint.Color;
 import utils.Colors;
@@ -108,7 +108,16 @@ public class Type {
 
     @Override
     public int hashCode(){
-        return Objects.hash(label);
+        Object[] obj = {label, parent.label, root.getLetters(), position, color};
+        return Arrays.deepHashCode(obj);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Type)) return false;
+        Type other = (Type) obj;
+        return label.equals(other.label) && parent.label.equals(other.parent.label) && root.getLetters().equals(other.root.getLetters()) && position == other.position && color.equals(other.color);
     }
 
 }

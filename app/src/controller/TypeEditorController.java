@@ -1,8 +1,11 @@
 package controller;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
@@ -41,9 +44,6 @@ public class TypeEditorController {
 
         positionWords = FXCollections.observableArrayList("start", "middle", "end");
         positionWordComboBox.setItems(positionWords);
-
-        management = new TypeManagement();
-
         System.out.println(Colors.success("TypeEditorController initialized"));
     }
 
@@ -90,20 +90,43 @@ public class TypeEditorController {
 
     @FXML
     private void delete() {
-        mainController.initHome();
+        try{
+            management.deleteType();
+            mainController.initHome();
+            mainController.loadLettersNav();
+        }catch(IllegalArgumentException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            alert.setTitle("In use error");
+            alert.show();
+        }catch(SQLIntegrityConstraintViolationException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            alert.setTitle("In use error");
+            alert.show();
+        }
     }
 
     public void init(Controller mainController, Type type) {
+        if (mainController == null || type == null) {
+            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
+        }
+        init(mainController);
+        management = new TypeManagement(type);
+
+        this.headerObject.setText(type.getLabel());
+        this.nameTextField.setText(type.getLabel());
+        this.colorColorPicker.setValue(type.getColor());
+    }
+
+    public void init(Controller mainController) {
         if (mainController == null) {
             throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
         }
-        this.mainController = mainController;
+        management = new TypeManagement();
 
-        if (type == null){
-            this.headerObject.setText("Verb");
-            Color color = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
-            Color[] colors = Colors.calcGradient(color);
-            this.headerObject.setStyle("-fx-text-fill:"  + Colors.linearGradient(colors[0], colors[1]));
-        }
+        this.mainController = mainController;
+        this.headerObject.setText("???");
+        Color color = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
+        Color[] colors = Colors.calcGradient(color);
+        this.headerObject.setStyle("-fx-text-fill:"  + Colors.linearGradient(colors[0], colors[1]));
     }
 }

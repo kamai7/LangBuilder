@@ -1,16 +1,19 @@
 package controller.fragments;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 
 import controller.Controller;
 import controller.WordEditorController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import model.managment.WordManagement;
 import model.persistance.Type;
 import model.persistance.Word;
 import utils.Colors;
@@ -92,6 +95,21 @@ public class NavWordController {
     public int hashCode() {
         Object[] obj = {objectLabel.getText(), descriptionLabel.getText()};
         return Arrays.deepHashCode(obj);
+    }
+
+    public void delete(){
+        WordManagement management = new WordManagement(object);
+        try{
+            management.deleteWord();
+        }catch(IllegalArgumentException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            alert.setTitle("In use error");
+            alert.show();
+        }catch(SQLIntegrityConstraintViolationException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            alert.setTitle("In use error");
+            alert.show();
+        }
     }
 
 }

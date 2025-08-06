@@ -32,16 +32,15 @@ public class LetterManagement {
             throw new IllegalArgumentException("Ascii cannot be empty");
         }
         if(this.letter == null){
-            this.letter = new Letter(letter, letterAscii);
-            this.letter.setId(letterDAO.create(this.letter));
+            Letter temp = new Letter(letter, letterAscii);
+            temp.setId(letterDAO.create(temp));
+            this.letter = temp;
         }else{
             Letter tmp = new Letter(letter, letterAscii);
             if (!tmp.equals(this.letter)){
                 this.letter.setCharacter(letter);
                 this.letter.setCharacterAscii(letterAscii);
-                System.out.println(letterDAO.findById(this.letter.getId()));
                 letterDAO.update(this.letter);
-                System.out.println(letterDAO.findById(this.letter.getId()));
             }
         }
     }

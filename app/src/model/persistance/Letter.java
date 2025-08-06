@@ -60,6 +60,6 @@ public class Letter {
         if (this == obj) return true;
         if (!(obj instanceof Letter)) return false;
         Letter other = (Letter) obj;
-        return id == other.id && character.equals(other.character) && characterAscii.equals(other.characterAscii);
+        return character.equals(other.character) && characterAscii.equals(other.characterAscii);
     }
 }

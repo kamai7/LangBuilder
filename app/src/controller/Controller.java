@@ -238,17 +238,35 @@ public class Controller {
 
     @FXML
     private void wordDeleteAll() {
-        System.out.println(Colors.info("Delete all button clicked"));
+        for(FXMLHandler<BorderPane, NavWordController> item: wordNavItems){
+            if (item.getController().getSelectCheckbox().isSelected()){
+                item.getController().delete();
+            }
+        }
+        loadWordsNav();
+        wordSelectAllCheckBox.setSelected(false);
     }
 
     @FXML
     private void letterDeleteAll() {
-        System.out.println(Colors.info("Delete all button clicked"));
+        for(FXMLHandler<BorderPane, NavLetterController> item: letterNavItems){
+            if (item.getController().getSelectCheckbox().isSelected()){
+                item.getController().delete();
+            }
+        }
+        loadLettersNav();
+        letterSelectAllCheckBox.setSelected(false);
     }
 
     @FXML
     private void typeDeleteAll() {
-        System.out.println(Colors.info("Delete all button clicked"));
+        for(FXMLHandler<BorderPane, NavTypeController> item: typeNavItems){
+            if (item.getController().getSelectCheckbox().isSelected()){
+                item.getController().delete();
+            }
+        }
+        loadTypesNav();
+        typeSelectAllCheckBox.setSelected(false);
     }
 
     public <T extends Node> void setContent(T content) {
