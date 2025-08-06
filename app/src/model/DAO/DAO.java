@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
-import java.util.Set;
+import java.util.ArrayList;
 
 import utils.Colors;
 
@@ -25,20 +25,20 @@ abstract class DAO<T> {
      * @param str the string to search for
      * @return an ArrayList containing all objects of type T, or an empty list if none are found
      */
-    public abstract Set<T> findByString(String str);
+    public abstract ArrayList<T> findByString(String str);
 
     /**
      * Finds all objects of type T in the database.
      * @param limit the maximum number of objects to return (-1 for no limit).
      * @return an ArrayList containing all objects of type T, or an empty list if none are found.
      */
-    public abstract Set<T> findAll(int limit);
+    public abstract ArrayList<T> findAll(int limit);
 
     /**
      * Finds all objects of type T in the database.
      * @return an ArrayList containing all objects of type T, or an empty list if none are found.
      */
-    public abstract Set<T> findAll();
+    public abstract ArrayList<T> findAll();
 
     /**
      * Finds an object of type T by its ID.
@@ -130,9 +130,9 @@ abstract class DAO<T> {
                 }
             }
         } catch (SQLException e) {
-            System.err.println(Colors.error("DAO nextId: ", e.getMessage()));
+            System.err.println(Colors.error("DAO.nextId: ", e.getMessage()));
         }
 
-        return 0;
+        return getRowsCount(tableName) + 1;
     }
 }

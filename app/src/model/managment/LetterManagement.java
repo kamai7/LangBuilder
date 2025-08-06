@@ -10,6 +10,9 @@ public class LetterManagement {
     private Letter letter;
     private LetterDAO letterDAO;
 
+    private String letterCharacter;
+    private String letterCharacterAscii;
+
     public LetterManagement() {
         this.letterDAO = new LetterDAO();
     }
@@ -22,24 +25,24 @@ public class LetterManagement {
         this.letterDAO = new LetterDAO();
     }
 
-    public void editLetter(String letter, String letterAscii) throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
+    public void editLetter() throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
 
-        if(letter.trim().length() == 0){
+        if(letterCharacter.trim().length() == 0){
             throw new IllegalArgumentException("Letter cannot be empty");
         }
 
-        if (letterAscii.trim().length() == 0){
+        if (letterCharacterAscii.trim().length() == 0){
             throw new IllegalArgumentException("Ascii cannot be empty");
         }
         if(this.letter == null){
-            Letter temp = new Letter(letter, letterAscii);
+            Letter temp = new Letter(letterCharacter, letterCharacterAscii);
             temp.setId(letterDAO.create(temp));
             this.letter = temp;
         }else{
-            Letter tmp = new Letter(letter, letterAscii);
+            Letter tmp = new Letter(letterCharacter, letterCharacterAscii);
             if (!tmp.equals(this.letter)){
-                this.letter.setCharacter(letter);
-                this.letter.setCharacterAscii(letterAscii);
+                this.letter.setCharacter(letterCharacter);
+                this.letter.setCharacterAscii(letterCharacterAscii);
                 letterDAO.update(this.letter);
             }
         }
@@ -52,5 +55,10 @@ public class LetterManagement {
 
         letterDAO.delete(letter);
         this.letter = null;
+    }
+
+    public void setLetter(String letter, String letterAscii){
+        this.letterCharacter = letter;
+        this.letterCharacterAscii = letterAscii;
     }
 }

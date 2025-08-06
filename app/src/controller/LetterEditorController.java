@@ -44,7 +44,8 @@ public class LetterEditorController {
     @FXML
     private void apply() {
         try{
-            management.editLetter(letter.getText(), ascii.getText());
+            management.setLetter(letter.getText(), ascii.getText());
+            management.editLetter();
             mainController.initHome();
             mainController.loadLettersNav();
         }catch(IllegalArgumentException e){
@@ -105,6 +106,6 @@ public class LetterEditorController {
         Color color2 = Colors.convertRGBAToColor(new int[]{255, 187, 0, 255});
         this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
 
-        this.headerObject.setText("∱'");
+        this.headerObject.setText("?");
     }
 }

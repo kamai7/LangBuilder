@@ -64,6 +64,10 @@ public class Colors {
         return new Color(rgba[0] / 255.0, rgba[1] / 255.0, rgba[2] / 255.0, rgba[3] / 255.0);
     }
 
+    public static int[] convertColorToRGBA(Color color) {
+        return new int[]{(int) (color.getRed() * 255), (int) (color.getGreen() * 255), (int) (color.getBlue() * 255), (int) (color.getOpacity() * 255)};
+    }
+
     public static String colorToHex(Color color) {
         return "#" + color.toString().substring(2);
     }

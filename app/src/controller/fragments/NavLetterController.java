@@ -1,7 +1,6 @@
 package controller.fragments;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Arrays;
 
 import controller.Controller;
 import controller.LetterEditorController;
@@ -36,6 +35,7 @@ public class NavLetterController {
     @FXML
     private void contentClicked() {
         selectedCheckBox.setSelected(!selectedCheckBox.isSelected());
+        mainController.getSelectedLetter().set(this);
     }
 
     @FXML
@@ -63,12 +63,6 @@ public class NavLetterController {
         return selectedCheckBox;
     }
 
-    @Override
-    public int hashCode() {
-        Object[] obj = {objectLabel.getText(), descriptionLabel.getText()};
-        return Arrays.deepHashCode(obj);
-    }
-
     public void delete(){
         LetterManagement management = new LetterManagement(object);
         try{
@@ -82,6 +76,10 @@ public class NavLetterController {
             alert.setTitle("In use error");
             alert.show();
         }
+    }
+
+    public Letter getLetter() {
+        return object;
     }
     
 }

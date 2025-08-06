@@ -2,12 +2,13 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collections;
 
 import controller.fragments.NavLetterController;
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -92,9 +93,13 @@ public class Controller {
                                    letterSortList,
                                    typeSortList;
 
-    private Set<FXMLHandler<BorderPane, NavWordController>> wordNavItems;
-    private Set<FXMLHandler<BorderPane, NavLetterController>> letterNavItems;
-    private Set<FXMLHandler<BorderPane, NavTypeController>> typeNavItems;
+    private ArrayList<FXMLHandler<BorderPane, NavWordController>> wordNavItems;
+    private ArrayList<FXMLHandler<BorderPane, NavLetterController>> letterNavItems;
+    private ArrayList<FXMLHandler<BorderPane, NavTypeController>> typeNavItems;
+
+    private ObjectProperty<NavWordController> selectedWord;
+    private ObjectProperty<NavLetterController> selectedLetter;
+    private ObjectProperty<NavTypeController> selectedType;
     
     @FXML
     private void initialize() {
@@ -141,21 +146,28 @@ public class Controller {
         wordSortList = FXCollections.observableArrayList(wordChoices);
         wordSortComboBox.setItems(wordSortList);
         wordSortComboBox.setValue("default (types)");
+        wordSortComboBox.setOnAction(event -> loadWordsNav());
 
         letterSortList = FXCollections.observableArrayList(letterChoices);
         letterSortComboBox.setItems(letterSortList);
         letterSortComboBox.setValue("default (types)");
+        letterSortComboBox.setOnAction(event -> loadLettersNav());
 
         typeSortList = FXCollections.observableArrayList(typeChoices);
         typeSortComboBox.setItems(typeSortList);
         typeSortComboBox.setValue("default (types)");
+        typeSortComboBox.setOnAction(event -> loadTypesNav());
 
         //create management object
         management = new Management();
 
-        wordNavItems = new HashSet<>();
-        typeNavItems = new HashSet<>();
-        letterNavItems = new HashSet<>();
+        wordNavItems = new ArrayList<>();
+        typeNavItems = new ArrayList<>();
+        letterNavItems = new ArrayList<>();
+
+        selectedWord = new SimpleObjectProperty<>();
+        selectedLetter = new SimpleObjectProperty<>();
+        selectedType = new SimpleObjectProperty<>();
 
         //init nav lists
         loadLettersNav();
@@ -307,7 +319,7 @@ public class Controller {
     public void loadWordsNav(){
         wordContainer.getChildren().clear();
         wordNavItems.clear();
-        Set<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
+        ArrayList<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
         for(Word word: filteredWords) {
             FXMLHandler<BorderPane, NavWordController> wordEditor = new FXMLHandler<>("/fxml/fragments/nav/word.fxml");
             wordContainer.getChildren().add(wordEditor.get());
@@ -319,7 +331,10 @@ public class Controller {
     public void loadLettersNav(){
         letterContainer.getChildren().clear();
         letterNavItems.clear();
-        Set<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
+        ArrayList<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
+
+        if (letterSortComboBox.getSelectionModel().getSelectedIndex() == 1) Collections.reverse(filteredLetters);
+
         for(Letter letter: filteredLetters) {
             FXMLHandler<BorderPane, NavLetterController> letterEditor = new FXMLHandler<>("/fxml/fragments/nav/letter.fxml");
             letterContainer.getChildren().add(letterEditor.get());
@@ -331,13 +346,25 @@ public class Controller {
     public void loadTypesNav(){
         typeContainer.getChildren().clear();
         typeNavItems.clear();
-        Set<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
+        ArrayList<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
         for(Type type: filteredTypes) {
             FXMLHandler<BorderPane, NavTypeController> typeEditor = new FXMLHandler<>("/fxml/fragments/nav/type.fxml");
             typeContainer.getChildren().add(typeEditor.get());
             typeNavItems.add(typeEditor);
             typeEditor.getController().init(this, type);
         }
+    }
+
+    public ObjectProperty<NavWordController> getSelectedWord() {
+        return selectedWord;
+    }
+
+    public ObjectProperty<NavTypeController> getSelectedType() {
+        return selectedType;
+    }
+
+    public ObjectProperty<NavLetterController> getSelectedLetter() {
+        return selectedLetter;
     }
 
 }

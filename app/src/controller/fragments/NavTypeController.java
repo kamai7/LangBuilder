@@ -1,7 +1,6 @@
 package controller.fragments;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Arrays;
 
 import controller.Controller;
 import controller.TypeEditorController;
@@ -37,6 +36,7 @@ public class NavTypeController {
     @FXML
     private void contentClicked() {
         selectedCheckBox.setSelected(!selectedCheckBox.isSelected());
+        mainController.getSelectedType().set(this);
     }
 
     @FXML
@@ -64,12 +64,6 @@ public class NavTypeController {
         return selectedCheckBox;
     }
 
-    @Override
-    public int hashCode() {
-        Object[] obj = {objectLabel.getText(), descriptionLabel.getText()};
-        return Arrays.deepHashCode(obj);
-    }
-
     public void delete(){
         TypeManagement management = new TypeManagement(object);
         try{
@@ -83,6 +77,10 @@ public class NavTypeController {
             alert.setTitle("In use error");
             alert.show();
         }
+    }
+
+    public Type getType() {
+        return object;
     }
     
 }

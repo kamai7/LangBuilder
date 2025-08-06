@@ -15,17 +15,17 @@ public class FXMLHandler<T extends Node, U> {
     public FXMLHandler(String path) {
 
         if (path == null) {
-            throw new IllegalArgumentException(Colors.error("FXMLHandler FXMLHandler: path cannot be null"));
+            throw new IllegalArgumentException(Colors.error("FXMLHandler.FXMLHandler: path cannot be null"));
         }
 
         if(path.trim().length() == 0) {
-            throw new IllegalArgumentException(Colors.error("FXMLHandler FXMLHandler: path cannot be empty"));
+            throw new IllegalArgumentException(Colors.error("FXMLHandler.FXMLHandler: path cannot be empty"));
         }
 
         URL url = getClass().getResource(path);
 
         if (url == null) {
-            throw new IllegalArgumentException(Colors.error("FXMLHandler FXMLHandler: path not found: " + path));
+            throw new IllegalArgumentException(Colors.error("FXMLHandler.FXMLHandler: path not found: " + path));
         }
 
         try{
@@ -33,7 +33,7 @@ public class FXMLHandler<T extends Node, U> {
             element = this.loader.load();
             controller = this.loader.getController();
         } catch (Exception e) {
-            System.err.println(Colors.error("FXMLHandler FXMLHandler: Could not load FXML file: " + url, e.getMessage() + "\n" + e.getStackTrace()));
+            System.err.println(Colors.error("FXMLHandler.FXMLHandler: Could not load FXML file: " + url, e.getMessage() + "\n" + e.getStackTrace()));
         }
     }
 

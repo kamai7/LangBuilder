@@ -253,7 +253,7 @@ public class WordEditorController {
         management = new WordManagement();
 
         this.mainController = mainController;
-        this.headerObject.setText("∱'⇔∩");
+        this.headerObject.setText("???");
         Color color2 = Colors.convertRGBAToColor(new int[]{153, 0, 255, 255});
         Color color1 = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
         this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));

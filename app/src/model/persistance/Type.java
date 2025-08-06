@@ -108,8 +108,17 @@ public class Type {
 
     @Override
     public int hashCode(){
-        Object[] obj = {label, parent.label, root.getLetters(), position, color};
+        Object[] obj;
+        if (parent == null && root == null) obj = new Object[]{label, position, color};
+        else if (parent == null) obj = new Object[]{label, root.getLetters(), position, color};
+        else if (root == null) obj = new Object[]{label, parent.label, position, color};
+        else obj = new Object[]{label, parent.label, root.getLetters(), position, color};
         return Arrays.deepHashCode(obj);
+    }
+
+    @Override
+    public String toString() {
+        return "Type [id=" + id + ", label=" + label + ", parent=" + parent + ", root=" + root + ", position=" + position + ", color=" + color + "]";
     }
 
     @Override
@@ -118,6 +127,11 @@ public class Type {
         if (!(obj instanceof Type)) return false;
         Type other = (Type) obj;
         return label.equals(other.label) && parent.label.equals(other.parent.label) && root.getLetters().equals(other.root.getLetters()) && position == other.position && color.equals(other.color);
+    }
+
+    @Override
+    public Type clone() {
+        return new Type(label, parent, root, position, color);
     }
 
 }

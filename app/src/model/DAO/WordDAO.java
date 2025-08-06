@@ -17,8 +17,8 @@ import utils.Colors;
 
 public class WordDAO extends DAO<Word> {
     @Override
-    public Set<Word> findAll(int limit) {
-        Set<Word> ret = new HashSet<>();
+    public ArrayList<Word> findAll(int limit) {
+        ArrayList<Word> ret = new ArrayList<>(getRowsCount("Word"));
 
         if(limit < -1){
             throw new IllegalArgumentException("Limit must be greater than -1.");
@@ -48,7 +48,7 @@ public class WordDAO extends DAO<Word> {
     }
 
     @Override
-    public Set<Word> findAll() {
+    public ArrayList<Word> findAll() {
         return findAll(-1);
     }
 
@@ -174,14 +174,14 @@ public class WordDAO extends DAO<Word> {
     }
 
     @Override
-    public Set<Word> findByString(String str) {
+    public ArrayList<Word> findByString(String str) {
         return null;
     }
 
-    public Set<Word> findByTranslation(String translation){
+    public ArrayList<Word> findByTranslation(String translation){
         Set<Word> ret = new HashSet<>();
 
-        String query = "SELECT * FROM Word JOIN Translation ON wordId = tWordId WHERE translation LIKE ?";
+        String query = "SELECT * FROM Word JOIN Translation ON wordId = tWordId WHERE translation LIKE ? ORDER BY char_length(letterAscii), letterAscii ASC";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
@@ -196,7 +196,7 @@ public class WordDAO extends DAO<Word> {
             System.err.println(Colors.error("WordDAO findByTranslation: ", e.getMessage()));
         }
 
-        return ret;
+        return new ArrayList<>(ret);
     }
 
     public Word findByLetters(Letter[] letters){

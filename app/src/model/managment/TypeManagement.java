@@ -10,11 +10,18 @@ import utils.Colors;
 
 public class TypeManagement {
 
-    public Type type;
-    public TypeDAO typeDAO;
+    private Type type;
+    private TypeDAO typeDAO;
+
+    private Type parent;
+    private Word root;
+    private Color color;
+    private int position;
+    private String label;
 
     public TypeManagement() {
         typeDAO = new TypeDAO();
+        position = -1;
     }
 
     public TypeManagement(Type type) {
@@ -23,10 +30,29 @@ public class TypeManagement {
         }
         this.type = type;
         typeDAO = new TypeDAO();
+        position = -1;
     }
 
-    public void createType(String label, Type parent, Word root, int position, Color color) throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
-
+    public void editType() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
+        if(label == null || label.trim().length() == 0){
+            throw new IllegalArgumentException("Type name cannot be empty");
+        }
+        if (this.root != null && position == -1){
+            throw new IllegalArgumentException("radical position is not not valid");
+        }
+        if(this.type == null){
+            Type temp = new Type(label, parent, root, position, color);
+            System.out.println(temp);
+            temp.setId(typeDAO.create(temp));
+            System.out.println(temp);
+            this.type = temp;
+        }else{
+            Type tmp = new Type(label, parent, root, position, color);
+            if (!tmp.equals(this.type)){
+                this.type = tmp;
+                typeDAO.update(this.type);
+            }
+        }
     }
 
     public Type getType() {
@@ -34,11 +60,29 @@ public class TypeManagement {
     }
 
     public void deleteType() throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
-        if(type == null) {
-            throw new IllegalArgumentException(Colors.error("TypeManagement.deleteType:", "type cannot be null"));
-        }
         typeDAO.delete(type);
         this.type = null;
     }
+
+    public void setParent(Type parent) {
+        this.parent = parent;
+    }
+
+    public void setRoot(Word root) {
+        this.root = root;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     
 }

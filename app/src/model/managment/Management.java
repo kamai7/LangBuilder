@@ -1,7 +1,6 @@
 package model.managment;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import model.dao.LetterDAO;
 import model.dao.TypeDAO;
@@ -9,6 +8,7 @@ import model.dao.WordDAO;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
+import utils.Colors;
 import utils.PersistenceUtils;
 
 public class Management {
@@ -17,9 +17,9 @@ public class Management {
     WordDAO wordDAO;
     TypeDAO typeDAO;
 
-    Set<Word> wordAll;
-    Set<Letter> letterAll;
-    Set<Type> typeAll;
+    ArrayList<Word> wordAll;
+    ArrayList<Letter> letterAll;
+    ArrayList<Type> typeAll;
 
     public Management() {
         wordDAO = new WordDAO();
@@ -31,15 +31,15 @@ public class Management {
         typeAll = typeDAO.findAll();
     }
 
-    public Set<Word> getFilteredWords(String str) {
+    public ArrayList<Word> getFilteredWords(String str) {
 
-        Set<Word> ret;
+        ArrayList<Word> ret;
 
         if(str.equals("")){
             ret = wordDAO.findAll(100);
         }else{
 
-            ret = new HashSet<>();
+            ret = new ArrayList<>();
             for (Word word : wordAll) {
                 boolean found = false;
                 String wordInString = PersistenceUtils.wordToString(word);
@@ -66,30 +66,17 @@ public class Management {
         return ret;
     }
 
-    public Set<Letter> getFilteredLetters(String str) {
+    public ArrayList<Letter> getFilteredLetters(String str) {
         if (str.equals("")){
             return letterDAO.findAll(100);
         }
         return letterDAO.findByString(str);
     }
 
-    public Set<Type> getFilteredTypes(String str) {
-
-        Set<Type> ret;
-
-        if(str.equals("")){
-            ret = typeDAO.findAll(100);
-        }else{
-
-            ret = new HashSet<>();
-
-            for (Type type : typeAll) {
-                if(type.getLabel().contains(str)) {
-                    ret.add(type);
-                }
-            }
-        }
-        return ret;
+    public ArrayList<Type> getFilteredTypes(String str) {
+        System.out.println(Colors.success("Management.getFilteredTypes","A FAIRE !!!"));
+        throw new RuntimeException("A FAIRE !!!");
+        // TODO
     }
 
 }

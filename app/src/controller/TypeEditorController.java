@@ -14,14 +14,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import model.managment.TypeManagement;
 import model.persistance.Type;
+import model.persistance.Word;
 import utils.Colors;
+import utils.PersistenceUtils;
 
 public class TypeEditorController {
 
+    private Type parent;
+    private Word root;
     private Controller mainController;
-
     private TypeManagement management;
-
     private ObservableList<String> positionWords;
     
     @FXML
@@ -34,7 +36,8 @@ public class TypeEditorController {
     private Label headerObject;
 
     @FXML
-    private Button chooseWordButton;
+    private Button chooseWordButton,
+                   chooseParentButton;
 
     @FXML
     private ComboBox<String> positionWordComboBox;
@@ -49,38 +52,56 @@ public class TypeEditorController {
 
     @FXML
     private void chooseWord() {
-        System.out.println(Colors.info("Choose word button clicked"));
+        mainController.getSelectedWord().addListener(event -> {
+            Word root = mainController.getSelectedWord().get().getWord();
+            chooseParentButton.setText(PersistenceUtils.wordToString(root));
+        });
     }
 
     @FXML
     private void deleteWord() {
-        System.out.println(Colors.info("Delete word button clicked"));
+        root = null;
+        chooseWordButton.setText("Choose a Word");
     }
 
     @FXML
     private void chooseParent() {
-        System.out.println(Colors.info("Choose parent button clicked"));
+        mainController.getSelectedType().addListener(event -> {
+            Type parent = mainController.getSelectedType().get().getType();
+            chooseParentButton.setText(parent.getLabel());
+        });
     }
 
     @FXML
-    private void apply() {/*
-        try{
-            management.createType(nameTextField.getText(), colorColorPicker.getValue());
-            mainController.initHome();
-        }catch(IllegalArgumentException e){
+    private void deleteParent() {
+        parent = null;
+        chooseParentButton.setText("Choose a Type");
+    }
 
-            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
+    @FXML
+    private void apply() {
+        management.setParent(parent);
+        management.setLabel(nameTextField.getText());
+        management.setColor(colorColorPicker.getValue());
+        management.setPosition(positionWordComboBox.getSelectionModel().getSelectedIndex());
+        management.setRoot(root);
+        try{
+            management.editType();
+            mainController.initHome();
+            mainController.loadTypesNav();
+        }catch(IllegalArgumentException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.setTitle("Arguments error");
             alert.setContentText(e.getMessage());
             alert.show();
 
         }catch(SQLIntegrityConstraintViolationException e){
 
-            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.setTitle("Clone error");
             alert.setContentText("this letter already exists");
             alert.show();
-        }*/
+        }
     } 
 
     @FXML
@@ -95,11 +116,11 @@ public class TypeEditorController {
             mainController.initHome();
             mainController.loadLettersNav();
         }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this type have already been deleted");
             alert.setTitle("In use error");
             alert.show();
         }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this type is used by several words or other types");
             alert.setTitle("In use error");
             alert.show();
         }

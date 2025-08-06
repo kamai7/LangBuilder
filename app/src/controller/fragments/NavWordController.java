@@ -1,7 +1,6 @@
 package controller.fragments;
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Arrays;
 
 import controller.Controller;
 import controller.WordEditorController;
@@ -47,6 +46,7 @@ public class NavWordController {
     @FXML
     private void contentClicked() {
         selectedCheckBox.setSelected(!selectedCheckBox.isSelected());
+        mainController.getSelectedWord().set(this);
     }
 
     @FXML
@@ -91,12 +91,6 @@ public class NavWordController {
         typesContainer.getChildren().add(typeLabel);
     }
 
-    @Override
-    public int hashCode() {
-        Object[] obj = {objectLabel.getText(), descriptionLabel.getText()};
-        return Arrays.deepHashCode(obj);
-    }
-
     public void delete(){
         WordManagement management = new WordManagement(object);
         try{
@@ -110,6 +104,10 @@ public class NavWordController {
             alert.setTitle("In use error");
             alert.show();
         }
+    }
+
+    public Word getWord() {
+        return object;
     }
 
 }

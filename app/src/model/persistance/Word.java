@@ -225,4 +225,9 @@ public class Word {
                PersistenceUtils.shallowEquals(this.roots, other.roots) &&
                Objects.equals(this.types, other.types);
     }
+
+    @Override
+    public Word clone() {
+        return new Word(this.letters, this.emotional, this.formality, this.vulgarity, this.translations, this.definitions, this.links, this.roots, this.types);
+    }
 }

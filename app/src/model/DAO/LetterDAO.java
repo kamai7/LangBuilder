@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,18 +16,18 @@ import utils.Colors;
 public  class LetterDAO extends DAO<Letter> {
 
     @Override
-    public Set<Letter> findAll(int limit) {
+    public ArrayList<Letter> findAll(int limit) {
 
         if(limit < -1){
             throw new IllegalArgumentException("Limit must be greater than -1.");
         }
 
-        Set<Letter> ret = new HashSet<>();
+        ArrayList<Letter> ret = new ArrayList<>(getRowsCount("Letter"));
         String query;
         if (limit == -1){
-            query = "SELECT * FROM Letter ORDER BY letterAscii ASC";
+            query = "SELECT * FROM Letter ORDER BY char_length(letterAscii), letterAscii ASC";
         }else{
-            query = "SELECT * FROM Letter ORDER BY letterAscii ASC LIMIT " + limit;
+            query = "SELECT * FROM Letter ORDER BY char_length(letterAscii), letterAscii ASC LIMIT " + limit;
         }
 
         try (Connection c = getConnection();
@@ -46,7 +47,7 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
-    public Set<Letter> findAll() {
+    public ArrayList<Letter> findAll() {
         return findAll(-1);
     }
 
@@ -73,9 +74,9 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
-    public Set<Letter> findByString(String str){
+    public ArrayList<Letter> findByString(String str){
         
-        String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ? LIMIT 200";
+        String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ? ORDER BY char_length(letterAscii), letterAscii ASC LIMIT 200";
         Set<Letter> ret = new HashSet<>();
 
         try(Connection c = getConnection();
@@ -95,7 +96,7 @@ public  class LetterDAO extends DAO<Letter> {
             System.err.println(Colors.error("LetterDAO findByString: ", e.getMessage()));
         }
 
-        return ret;
+        return new ArrayList<>(ret);
     }
 
     @Override
@@ -143,7 +144,7 @@ public  class LetterDAO extends DAO<Letter> {
 
             int id = nextId("Letter", "letterId");
 
-            ps.setInt(1, getRowsCount("Letter") + 1);
+            ps.setInt(1, id);
             ps.setString(2, letter.getCharacter());
             ps.setString(3, letter.getCharacterAscii());
             ps.executeUpdate();

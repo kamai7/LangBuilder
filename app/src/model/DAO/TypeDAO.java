@@ -5,8 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
 
 import javafx.scene.paint.Color;
 import model.persistance.Type;
@@ -16,7 +15,7 @@ import utils.Colors;
 public class TypeDAO extends DAO<Type>{
     
     @Override
-    public Set<Type> findAll(int limit) {
+    public ArrayList<Type> findAll(int limit) {
 
         if(limit < -1){
             throw new IllegalArgumentException("Limit must be greater than -1.");
@@ -30,7 +29,7 @@ public class TypeDAO extends DAO<Type>{
             query = "SELECT * FROM Type ORDER BY position LIMIT " + limit;
         }
 
-        Set<Type> ret = new HashSet<>();
+        ArrayList<Type> ret = new ArrayList<>(getRowsCount("Type"));
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query);
@@ -61,7 +60,7 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public Set<Type> findAll() {
+    public ArrayList<Type> findAll() {
         return findAll(-1);
     }
 
@@ -93,7 +92,7 @@ public class TypeDAO extends DAO<Type>{
                 ret.setId(id);
             }
         } catch (Exception e) {
-            System.err.println(Colors.error("TypeDAO findById: ", e.getMessage()));
+            System.err.println(Colors.error("TypeDAO.findById: ", e.getMessage()));
         }
 
         return ret;
@@ -120,7 +119,7 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public Set<Type> findByString(String str) {
+    public ArrayList<Type> findByString(String str) {
         return null;
     }
 
@@ -183,7 +182,7 @@ public class TypeDAO extends DAO<Type>{
 
     @Override
     public int create(Type type) throws SQLIntegrityConstraintViolationException{
-        String query = "INSERT INTO Type (typeId, label, parentId, rootId, position) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Type (typeId, label, colorR, colorG, colorB, colorT, parentId, rootId, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int retId = -1;
 
         try (Connection c = getConnection();
@@ -192,20 +191,28 @@ public class TypeDAO extends DAO<Type>{
             int id = nextId("Type", "typeId");
             ps.setInt(1, id);
             ps.setString(2, type.getLabel());
+            int[] color = Colors.convertColorToRGBA(type.getColor());
+            ps.setInt(3,color[0]);
+            ps.setInt(4,color[1]);
+            ps.setInt(5,color[2]);
+            ps.setInt(6,color[3]);
 
             if (type.getParent() == null) {
-                ps.setNull(3, java.sql.Types.INTEGER);
+                ps.setNull(7, java.sql.Types.INTEGER);
             } else {
-                ps.setInt(3, type.getParent().getId());
+                ps.setInt(7, type.getParent().getId());
             }
 
             if (type.getRoot() == null) {
-                ps.setNull(4, java.sql.Types.INTEGER);
+                ps.setNull(8, java.sql.Types.INTEGER);
             } else {
-                ps.setInt(4, type.getRoot().getId());
+                ps.setInt(8, type.getRoot().getId());
             }
-
-            ps.setInt(5, type.getPosition());
+            if (type.getPosition() == -1) {
+                ps.setNull(9, java.sql.Types.INTEGER);
+            } else {
+                ps.setInt(9, type.getPosition());
+            }
             ps.executeUpdate();
 
             // Only if the insert was successful
@@ -213,7 +220,7 @@ public class TypeDAO extends DAO<Type>{
             retId = id;
         }
         catch (SQLException e) {
-            System.err.println(Colors.error("TypeDAO create: ", e.getMessage()));
+            System.err.println(Colors.error("TypeDAO.create: ", e.getMessage()));
             if (e instanceof SQLIntegrityConstraintViolationException) {
                 throw (SQLIntegrityConstraintViolationException) e;
             }
