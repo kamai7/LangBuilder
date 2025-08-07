@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import model.persistance.Letter;
-import model.persistance.Type;
 import model.persistance.Word;
 import utils.Colors;
 
@@ -57,7 +56,7 @@ public class WordDAO extends DAO<Word> {
      * This method retrieves only the emotional, formality, and vulgarity attributes.
      * @param id The ID of the Word to find.
      * @return A Word object with the specified ID and its shallow attributes, or null if not found.
-     */
+     
     private Word findShallow(int id) {
         Word ret = null;
         String query = "SELECT * FROM Word WHERE wordId = ?";
@@ -80,7 +79,7 @@ public class WordDAO extends DAO<Word> {
         }
 
         return ret;
-    }
+    }*/
 
     /*
     also uopdate the word
@@ -89,7 +88,7 @@ public class WordDAO extends DAO<Word> {
     public Word findById(int id){
         Word ret = null;
         String query = "SELECT * FROM Word WHERE wordId = ?;" +
-                       "SELECT * FROM WordsLetters WHERE wordLId = ?;" +
+                       "SELECT * FROM WordsLetters WHERE wordLId = ? ORDER BY position ASC;" +
                        "SELECT * FROM Definition WHERE dWordId = ?;" +
                        "SELECT * FROM Translation WHERE tWordId = ?;" +
                        "SELECT * FROM UsedRoots WHERE roWordId = ?;" +
@@ -111,21 +110,20 @@ public class WordDAO extends DAO<Word> {
                 double emotional = rs.getDouble("emotional");
                 double formality = rs.getDouble("formality");
                 double vulgarity = rs.getDouble("vulgarity");
+                boolean isUsable = rs.getBoolean("isUsable");
                 
-                ArrayList<Letter> letters = new ArrayList<>();
+                ArrayList<Integer> letterIds = new ArrayList<>();
                 ArrayList<String> definitions = new ArrayList<>();
                 ArrayList<String> translations = new ArrayList<>();
-                HashSet<Word> roots = new HashSet<>();
-                HashSet<Word> links = new HashSet<>();
-                HashSet<Type> types = new HashSet<>();
+                Set<Integer> rootIds = new HashSet<>();
+                Set<Integer> linkIds = new HashSet<>();
+                Set<Integer> typeIds = new HashSet<>();
 
                 // Get the letters
                 ps.getMoreResults();
                 rs = ps.getResultSet();
-                LetterDAO letterDAO = new LetterDAO();
                 while (rs.next()) {
-                    Letter letter = letterDAO.findById(rs.getInt("letterWId"));
-                    letters.add(letter);
+                    letterIds.add(rs.getInt("letterWId"));
                 }
 
                 // Get the definitions
@@ -146,28 +144,28 @@ public class WordDAO extends DAO<Word> {
                 ps.getMoreResults();
                 rs = ps.getResultSet();
                 while (rs.next()) {
-                    roots.add(findShallow(rs.getInt("roWordId")));
+                    rootIds.add(rs.getInt("roWordId"));
                 }
 
                 // Get the links
                 ps.getMoreResults();
                 rs = ps.getResultSet();
                 while (rs.next()) {
-                    links.add(findShallow(rs.getInt("linkedWordId")));
+                    linkIds.add(rs.getInt("linkedWordId"));
                 }
 
                 // Get the types
                 ps.getMoreResults();
                 rs = ps.getResultSet();
                 while (rs.next()) {
-                    types.add(new Type(rs.getString("type")));
+                    typeIds.add(rs.getInt("wordTypeId"));
                 }
 
-                ret = new Word(letters, emotional, formality, vulgarity, translations, definitions, links, roots, types);
+                ret = new Word(letterIds, emotional, formality, vulgarity, translations, definitions, isUsable, linkIds, rootIds, typeIds);
                 ret.setId(id);
             }
         } catch(SQLException e) {
-            System.err.println(Colors.error("WordDAO findById: ", e.getMessage()));
+            System.err.println(Colors.error("WordDAO.findById: ", e.getMessage()));
         }
     
         return ret;
@@ -199,16 +197,16 @@ public class WordDAO extends DAO<Word> {
         return new ArrayList<>(ret);
     }
 
-    public Word findByLetters(Letter[] letters){
+    public Word findByLetters(ArrayList<Letter> letters){
         ArrayList<Integer> find = null;
         String query = "SELECT wordLId FROM WordsLetters WHERE position = ? AND letterWId = ?";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
             
-            for (int i = 0; i < letters.length; i++) {
+            for (int i = 0; i < letters.size(); i++) {
                 ps.setInt(1, i+1);
-                ps.setInt(2, letters[i].getId());
+                ps.setInt(2, letters.get(i).getId());
                 ResultSet rs = ps.executeQuery();
 
                 ArrayList<Integer> result = new ArrayList<>();
@@ -224,7 +222,7 @@ public class WordDAO extends DAO<Word> {
                 }
             }
         } catch(SQLException e) {
-            System.err.println(Colors.error("WordDAO findByLetters: ", e.getMessage()));
+            System.err.println(Colors.error("WordDAO.findByLetters: ", e.getMessage()));
         }
 
         if (find == null || find.isEmpty()) {
@@ -267,16 +265,16 @@ public class WordDAO extends DAO<Word> {
                 for(int i = 0; i < word.getLetters().size(); i++){
                     ps.setInt(1, word.getId());
                     ps.setInt(2, i + 1);
-                    ps.setInt(3, word.getLetters().get(i).getId());
+                    ps.setInt(3, word.getLetterIds().get(i));
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
             } catch(SQLException e) {
-                System.err.println(Colors.error("WordDAO updateLetters: invalid letters\n", e.getMessage()));
+                System.err.println(Colors.error("WordDAO.updateLetters: invalid letters\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         } catch(SQLException e) {
-            System.err.println(Colors.error("WordDAO updateLetters: invalid parameters\n", e.getMessage()));
+            System.err.println(Colors.error("WordDAO.updateLetters: invalid parameters\n", e.getMessage()));
         }
     }
 
@@ -352,9 +350,9 @@ public class WordDAO extends DAO<Word> {
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
-                for(Word r : word.getRoots()){
+                for(Integer r : word.getRootIds()){
                     ps.setInt(1, word.getId());
-                    ps.setInt(2, r.getId());
+                    ps.setInt(2, r);
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
@@ -376,17 +374,11 @@ public class WordDAO extends DAO<Word> {
             int rows = 0;
 
             // Récupérer les anciens liens
-            Set<Word> oldLinks = findById(word.getId()).getLinks();
-
-            // Préparer les sets pour comparaison
-            Set<Integer> oldLinkIds = new HashSet<>();
-            for (Word w : oldLinks) {
-                oldLinkIds.add(w.getId());
-            }
+            Set<Integer> oldLinkIds = findById(word.getId()).getLinkIds();
 
             Set<Integer> newLinkIds = new HashSet<>();
-            for (Word w : word.getLinks()) {
-                newLinkIds.add(w.getId());
+            for (Integer w : word.getLinkIds()) {
+                newLinkIds.add(w);
             }
 
             // Déterminer les liens à ajouter et à supprimer
@@ -505,6 +497,8 @@ public class WordDAO extends DAO<Word> {
         String queryDef = "INSERT INTO Definition (dWordId, def) VALUES (?, ?)";
         String queryTrans = "INSERT INTO Translation (tWordId, translation) VALUES (?, ?)";
         String queryLink = "INSERT INTO Link (lWordId, linkedWordId) VALUES (?, ?)";
+        String queryRoot = "INSERT INTO UsedRoots (roWordId, rootId) VALUES (?, ?)";
+        String queryType = "INSERT INTO Type (tyWordId, wordTypeId) VALUES (?, ?)";
 
         int rows = 0;
         int retId = -1;
@@ -524,10 +518,10 @@ public class WordDAO extends DAO<Word> {
             }
 
             try (PreparedStatement ps = c.prepareStatement(queryLetters)) {
-                for (int i = 0; i < word.getLetters().size(); i++) {
+                for (int i = 0; i < word.getLetterIds().size(); i++) {
                     ps.setInt(1, wordId);
                     ps.setInt(2, i+1);
-                    ps.setInt(3, word.getLetters().get(i).getId());
+                    ps.setInt(3, word.getLetterIds().get(i));
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
@@ -551,9 +545,27 @@ public class WordDAO extends DAO<Word> {
             }
 
             try (PreparedStatement ps = c.prepareStatement(queryLink)) {
-                for(Word l : word.getLinks()){
+                for(Integer l : word.getLinkIds()){
                     ps.setInt(1, wordId);
-                    ps.setInt(2, l.getId());
+                    ps.setInt(2, l);
+                    ps.addBatch();
+                }
+                rows += ps.executeBatch().length;
+            }
+
+            try (PreparedStatement ps = c.prepareStatement(queryRoot)) {
+                for(Integer r : word.getRootIds()){
+                    ps.setInt(1, wordId);
+                    ps.setInt(2, r);
+                    ps.addBatch();
+                }
+                rows += ps.executeBatch().length;
+            }
+
+            try (PreparedStatement ps = c.prepareStatement(queryType)) {
+                for(Integer t : word.getTypeIds()){
+                    ps.setInt(1, wordId);
+                    ps.setInt(2, t);
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
@@ -565,7 +577,7 @@ public class WordDAO extends DAO<Word> {
             retId = wordId;
         }
         catch (SQLException e) {
-            System.err.println(Colors.error("WordDAO create: invalid parameters", e.getMessage()));
+            System.err.println(Colors.error("WordDAO.create: invalid parameters", e.getMessage()));
             if (e instanceof SQLIntegrityConstraintViolationException) {
                 throw (SQLIntegrityConstraintViolationException) e;
             }

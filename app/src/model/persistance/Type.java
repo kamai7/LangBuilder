@@ -3,46 +3,122 @@ package model.persistance;
 import java.util.Arrays;
 
 import javafx.scene.paint.Color;
+import model.dao.TypeDAO;
+import model.dao.WordDAO;
 import utils.Colors;
 
+/**
+ * Represents a grammatical type for a word (e.g., verb, adverb, first-group verb).
+ * This class models the linguistic categorization of words, allowing hierarchical
+ * relationships (parentId types), morphological rootIds (prefixes or suffixes),
+ * and their positions within the type label.
+ */
 public class Type {
-    
+
+    /**
+     * The unique identifier of the word type in the database.
+     * This serves as the primary key for the {@code Type} entity.
+     * It is initialized with a default value of {@code -1}, which typically indicates
+     * that the object has not yet been persisted or retrieved from the database.
+     */
     private int id = -1;
+
+    /**
+     * The textual label representing the name of the type.
+     * This can be any grammatical or linguistic category, such as "Verb",
+     * "Adverb", or "First-Group Verb". It provides a human-readable identifier
+     * for the type.
+     */
     private String label;
+
+    /**
+     * The identifier of the parentId type in the type hierarchy.
+     * This is a foreign key pointing to another {@code Type} entity in the database,
+     * establishing a hierarchical relationship. For example, a "First-Group Verb"
+     * could have "Verb" as its parentId.
+     * If no parentId exists, this could be set to a sentinel value (e.g., {@code -1}).
+     */
+    private int parentId = -1;
+
+    /**
+     * The identifier of the morphological rootId (prefix or suffix) associated with this type.
+     * This refers to a rootId entity in the database, which contributes to the construction
+     * or meaning of the type label. For instance, a prefix like "pre-" or a suffix like "-ing".
+     * This is useful for morphological analysis and generation.
+     */
+    private int rootId = -1;
+
+    /**
+     * The position of the rootId (prefix or suffix) within the label of the type.
+     * <ul>
+     *   <li>{@code 0} – The rootId appears at the beginning (prefix).</li>
+     *   <li>{@code 1} – The rootId appears in the middle.</li>
+     *   <li>{@code 2} – The rootId appears at the end (suffix).</li>
+     * </ul>
+     * This field determines how the rootId is combined with the label.
+     */
+    private int position = -1;
+
     private Type parent;
+
     private Word root;
-    private int position;
-    private Color color;
+
+    /**
+     * The color associated with this type, used for visualization purposes.
+     * This can be useful in graphical interfaces or linguistic visualizations
+     * where different types are represented using distinct colors for easy identification.
+     */
+    private Color color = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
     
     public Type(String label, Type parent, Word root, int position, Color color) {
 
         if (label == null || color == null) {
-            throw new IllegalArgumentException(Colors.error("parameters cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Type.Type:","parameters cannot be null"));
         }
         if (label.trim().length() == 0) {
-            throw new IllegalArgumentException(Colors.error("invalid parameters length"));
+            throw new IllegalArgumentException(Colors.error("Type.Type:","invalid parameters length"));
         }
         if (root != null && (position < 0 || position > 2)) {
-            throw new IllegalArgumentException(Colors.error("position must be between 0 and 2"));
+            throw new IllegalArgumentException(Colors.error("Type.Type:","position must be between 0 and 2"));
         }
 
         this.id = -1;
         this.label = label;
-        this.parent = parent;
+        this.parentId = parent.getId();
+        this.rootId = root.getId();
         this.root = root;
+        this.parent = parent;
+        this.position = position;
+        this.color = color;
+    }
+
+    public Type(String label, int parentId, int rootId, int position, Color color) {
+
+        if (label == null || color == null) {
+            throw new IllegalArgumentException(Colors.error("Type.Type:","parameters cannot be null"));
+        }
+        if (label.trim().length() == 0) {
+            throw new IllegalArgumentException(Colors.error("Type.Type:","invalid parameters length"));
+        }
+        if (rootId != -1 && (position < 0 || position > 2)) {
+            throw new IllegalArgumentException(Colors.error("Type.Type:","position must be between 0 and 2"));
+        }
+
+        this.id = -1;
+        this.label = label;
+        this.parentId = parentId;
+        this.rootId = rootId;
         this.position = position;
         this.color = color;
     }
 
     public Type(String label) {
         if (label == null) {
-            throw new IllegalArgumentException(Colors.error("parameters cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Type.Type:","parameters cannot be null"));
         }
         if (label.trim().length() == 0) {
-            throw new IllegalArgumentException(Colors.error("label cannot be empty"));
+            throw new IllegalArgumentException(Colors.error("Type.Type:","label cannot be empty"));
         }
-        this.color = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
-        this.id = -1;
         this.label = label;
     }
 
@@ -50,34 +126,84 @@ public class Type {
         return label;
     }
 
-    public void setLabel(String label) {
-        if (label == null) {
-            throw new IllegalArgumentException(Colors.error("label cannot be null"));
-        }
-        if (label.trim().length() == 0) {
-            throw new IllegalArgumentException(Colors.error("label cannot be empty"));
-        }
-        this.label = label;
+    public int getParentId() {
+        return parentId;
     }
 
-    public Type getParent() {
-        return parent;
+    public int getRootId() {
+        return rootId;
     }
 
-    public void setParent(Type parent) {
-        this.parent = parent;
+    public int getId() {
+        return id;
     }
 
     public Word getRoot() {
+
+        if (root == null){
+            WordDAO wordDAO = new WordDAO();
+            root = wordDAO.findById(rootId);
+        }
+
         return root;
     }
 
-    public void setRoot(Word root) {
-        this.root = root;
+    public Type getParent() {
+
+        if (parent == null){
+            TypeDAO typeDAO = new TypeDAO();
+            parent = typeDAO.findById(parentId);
+        }
+
+        return parent;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     public int getPosition() {
         return position;
+    }
+
+    public void setLabel(String label) {
+        if (label == null) {
+            throw new IllegalArgumentException(Colors.error("Type.setLabel:","label cannot be null"));
+        }
+        if (label.trim().length() == 0) {
+            throw new IllegalArgumentException(Colors.error("Type.setLabel:","label cannot be empty"));
+        }
+        this.label = label;
+    }
+
+    public void setParent(int parentId) {
+        if (parentId < 0) {
+            throw new IllegalArgumentException(Colors.error("Type.setParent:","parentId must be greater than 0"));
+        }
+        this.parentId = parentId;
+    }
+
+    public void setParent(Type parent) {
+        if (parent == null) {
+            throw new IllegalArgumentException(Colors.error("Type.setParent:","parent cannot be null"));
+        }
+        this.parentId = parent.getId();
+        this.parent = parent;
+    }
+
+    public void setRoot(int rootId) {
+        if (rootId < 0) {
+            throw new IllegalArgumentException(Colors.error("Type.setRoot:","rootId must be greater than 0"));
+        }
+        this.rootId = rootId;
+    }
+
+    public void setRoot(Word root) {
+        if (root == null) {
+            throw new IllegalArgumentException(Colors.error("Type.setRoot:","root cannot be null"));
+        }
+        this.rootId = root.getId();
+        this.root = root;
     }
 
     public void setPosition(int position) {
@@ -87,38 +213,26 @@ public class Type {
         this.position = position;
     }
 
-    public int getId() {
-        return id;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
 
-    public Color getColor() {
-        return color;
-    }
-
     public void setColor(Color color) {
         if (color == null) {
-            throw new IllegalArgumentException(Colors.error("color cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Type.setColor:","color cannot be null"));
         }
         this.color = color;
     }
 
     @Override
     public int hashCode(){
-        Object[] obj;
-        if (parent == null && root == null) obj = new Object[]{label, position, color};
-        else if (parent == null) obj = new Object[]{label, root.getLetters(), position, color};
-        else if (root == null) obj = new Object[]{label, parent.label, position, color};
-        else obj = new Object[]{label, parent.label, root.getLetters(), position, color};
+        Object[] obj = {label, parentId, rootId, position, color};
         return Arrays.deepHashCode(obj);
     }
 
     @Override
     public String toString() {
-        return "Type [id=" + id + ", label=" + label + ", parent=" + parent + ", root=" + root + ", position=" + position + ", color=" + color + "]";
+        return "Type [id=" + id + ", label=" + label + ", parentId=" + parentId + ", rootId=" + rootId + ", position=" + position + ", color=" + color + "]";
     }
 
     @Override
@@ -126,12 +240,12 @@ public class Type {
         if (this == obj) return true;
         if (!(obj instanceof Type)) return false;
         Type other = (Type) obj;
-        return label.equals(other.label) && parent.label.equals(other.parent.label) && root.getLetters().equals(other.root.getLetters()) && position == other.position && color.equals(other.color);
+        return hashCode() == other.hashCode();
     }
 
     @Override
     public Type clone() {
-        return new Type(label, parent, root, position, color);
+        return new Type(label, parentId, rootId, position, color);
     }
 
 }

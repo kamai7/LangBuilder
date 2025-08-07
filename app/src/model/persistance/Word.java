@@ -3,68 +3,120 @@ package model.persistance;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.Set;
 
+import model.dao.LetterDAO;
+import model.dao.TypeDAO;
+import model.dao.WordDAO;
 import utils.Colors;
-import utils.PersistenceUtils;
 
 public class Word {
 
     private int id = -1;
 
-    private ArrayList<Letter> letters;
-    private ArrayList<String> lettersAscii;
+    private ArrayList<Integer> letterIds;
 
     private double emotional;
     private double formality;
     private double vulgarity;
-    private boolean isUsable = true;
+    private boolean isUsable;
 
     private ArrayList<String> translations;
     private ArrayList<String> definitions;
     
     /** non-directed graph!!! */
-    private HashSet<Word> links;
+    private Set<Integer> linkIds;
     
-    private HashSet<Word> roots;
+    private Set<Integer> rootIds;
 
-    private HashSet<Type> types;
+    private Set<Integer> typeIds;
+
+    private Set<Word> links;
+    private Set<Word> roots;
+    private Set<Type> types;
+    private ArrayList<Letter> letters;
+    private ArrayList<String> lettersAscii;
     
     
-    public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, HashSet<Word> links, HashSet<Word> roots, HashSet<Type> types) {
+    public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions,
+                Set<Word> links, Set<Word> roots, Set<Type> types, boolean isUsable) {
         if (letters == null || translations == null || definitions == null || links == null || roots == null || types == null) {
-            throw new IllegalArgumentException(Colors.error("parameters are null"));
+            throw new IllegalArgumentException(Colors.error("Word.Word","parameters are null"));
         }
 
         if (letters.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
-            throw new IllegalArgumentException(Colors.error("invalid parameters, no letters or out of range"));
+            throw new IllegalArgumentException(Colors.error("Word.Word","invalid parameters, no letterIds or out of range"));
         }
 
-        this.letters = letters;
+        this.letterIds = new ArrayList<>();
+        this.linkIds = new HashSet<>();
+        this.rootIds = new HashSet<>();
+        this.typeIds = new HashSet<>();
         this.lettersAscii = new ArrayList<>();
+
+        this.letters = letters;
+        this.emotional = emotional;
+        this.formality = formality;
+        this.vulgarity = vulgarity;
+        this.translations = translations;
+        this.definitions = definitions;
+        this.links = links;
+        this.roots = roots;
+        this.types = types;
+        this.isUsable = isUsable;
+
         for (Letter letter : letters) {
             this.lettersAscii.add(letter.getCharacterAscii());
+            this.letterIds.add(letter.getId());
         }
+
+        for (Word link : links) {
+            this.linkIds.add(link.getId());
+        }
+
+        for (Word root : roots) {
+            this.rootIds.add(root.getId());
+        }
+
+        for (Type type : types) {
+            this.typeIds.add(type.getId());
+        }
+    }
+
+    public Word(ArrayList<Integer> letterIds, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, boolean isUsable,
+                Set<Integer> linkIds, Set<Integer> rootIds, Set<Integer> typeIds) {
+        if (letterIds == null || translations == null || definitions == null || linkIds == null || rootIds == null || typeIds == null) {
+            throw new IllegalArgumentException(Colors.error("Word.Word","parameters are null"));
+        }
+
+        if (letters.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
+            throw new IllegalArgumentException(Colors.error("Word.Word","invalid parameters, no letterIds or out of range"));
+        }
+
+        this.letterIds = letterIds;
+        this.linkIds = linkIds;
+        this.rootIds = rootIds;
+        this.typeIds = typeIds;
+        this.lettersAscii = new ArrayList<>();
 
         this.emotional = emotional;
         this.formality = formality;
         this.vulgarity = vulgarity;
-
         this.translations = translations;
         this.definitions = definitions;
+        this.isUsable = isUsable;
 
-        this.links = links;
-        this.roots = roots;
-
-        this.types = types;
+        for (Letter letter : letters) {
+            this.lettersAscii.add(letter.getCharacterAscii());
+        }
     }
 
-    public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity) {
-        this(letters, emotional, formality, vulgarity, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
+    public Word(ArrayList<Integer> letterIds, double emotional, double formality, double vulgarity) {
+        this(letterIds, emotional, formality, vulgarity, new ArrayList<>(), new ArrayList<>(), false, new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
-    public Word(ArrayList<Letter> letters) {
-        this(letters, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), new HashSet<>(), new HashSet<>(), new HashSet<>());
+    public Word(ArrayList<Integer> letterIds) {
+        this(letterIds, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), false, new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
     @Override
@@ -76,12 +128,23 @@ public class Word {
             "\n\t emotional=" + emotional +
             ", formality=" + formality +
             ", vulgarity=" + vulgarity +
-            "\n\t roots=" + roots +
-            "\n\t links=" + links +
-            "\n\t types=" + types;
+            "\n\t rootIds=" + rootIds +
+            "\n\t linkIds=" + linkIds +
+            "\n\t typeIds=" + typeIds;
+    }
+
+    public ArrayList<Integer> getLetterIds() {
+        return letterIds;
     }
 
     public ArrayList<Letter> getLetters() {
+        if (letters == null) {
+            letterIds = new ArrayList<>();
+            LetterDAO letterDAO = new LetterDAO();
+            for (Letter letter : letters) {
+                letters.add(letterDAO.findById(letter.getId()));
+            }
+        }
         return letters;
     }
 
@@ -117,64 +180,106 @@ public class Word {
         return id;
     }
 
-    public HashSet<Word> getRoots() {
+    public Set<Word> getRoots() {
+        if (roots == null) {
+            roots = new HashSet<>(); 
+            WordDAO wordDAO = new WordDAO();
+            for (Integer id : rootIds) {
+                roots.add(wordDAO.findById(id));
+            }
+        }
         return roots;
     }
 
-    public HashSet<Word> getLinks() {
+    public Set<Integer> getRootIds() {
+        return rootIds;
+    }
+
+    public Set<Word> getLinks() {
+        
+        if (links == null) {
+            links = new HashSet<>(); 
+            WordDAO wordDAO = new WordDAO();
+            for (Integer id : linkIds) {
+                links.add(wordDAO.findById(id));
+            }
+        }
+
         return links;
     }
 
-    public HashSet<Type> getTypes() {
+    public Set<Integer> getLinkIds() {
+        return linkIds;
+    }
+
+    public Set<Type> getTypes() {
+        if (types == null) {
+            types = new HashSet<>(); 
+            TypeDAO typeDAO = new TypeDAO();
+            for (Integer id : typeIds) {
+                types.add(typeDAO.findById(id));
+            }
+        }
         return types;
     }
 
+    public Set<Integer> getTypeIds() {
+        return typeIds;
+    }
+
     public void setId(int id) {
+        if (id < 0) {
+            throw new IllegalArgumentException(Colors.error("Word.setId","id cannot be negative"));
+        }
         this.id = id;
     }
 
     public void setLetters(ArrayList<Letter> letters) {
-        if (letters == null || letters.isEmpty()) {
-            throw new IllegalArgumentException(Colors.error("letters cannot be null or empty"));
+        if (letterIds == null || letterIds.isEmpty()) {
+            throw new IllegalArgumentException(Colors.error("Word.setLetters","letterIds cannot be null or empty"));
         }
-        this.letters = new ArrayList<>(letters);
+
+        this.letters = letters;
         this.lettersAscii = new ArrayList<>();
+        this.letterIds = new ArrayList<>();
+
         for (Letter letter : letters) {
             this.lettersAscii.add(letter.getCharacterAscii());
+            this.letterIds.add(letter.getId());
         }
     }
 
     public void setTranslations(ArrayList<String> translations) {
         if (translations == null) {
-            throw new IllegalArgumentException(Colors.error("translations cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Word.setTranslations","translations cannot be null"));
         }
         this.translations = translations;
     }
 
     public void setDefinitions(ArrayList<String> definitions) {
         if (definitions == null) {
-            throw new IllegalArgumentException(Colors.error("definitions cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Word.setDefinitions","definitions cannot be null"));
         }
         this.definitions = definitions;
     }
 
     public void setEmotional(double emotional) {
         if (emotional < 0 || emotional > 1) {
-            throw new IllegalArgumentException(Colors.error("emotional must be between 0 and 1"));
+            throw new IllegalArgumentException(Colors.error("Word.setEmotional","emotional must be between 0 and 1"));
         }
         this.emotional = emotional;
     }
 
     public void setFormality(double formality) {
         if (formality < 0 || formality > 1) {
-            throw new IllegalArgumentException(Colors.error("formality must be between 0 and 1"));
+            throw new IllegalArgumentException(Colors.error("Word.setFormality","formality must be between 0 and 1"));
         }
         this.formality = formality;
     }
 
     public void setVulgarity(double vulgarity) {
         if (vulgarity < 0 || vulgarity > 1) {
-            throw new IllegalArgumentException(Colors.error("vulgarity must be between 0 and 1"));
+            throw new IllegalArgumentException(Colors.error("Word.setVulgarity","vulgarity must be between 0 and 1"));
         }
         this.vulgarity = vulgarity;
     }
@@ -185,29 +290,71 @@ public class Word {
 
     public void setRoots(HashSet<Word> roots) {
         if (roots == null) {
-            throw new IllegalArgumentException(Colors.error("roots cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Word.setRoots","roots cannot be null"));
         }
+
         this.roots = roots;
+        this.rootIds = new HashSet<>();
+
+        for (Word word : roots) {
+            this.rootIds.add(word.getId());
+        }
+    }
+
+    public void setRoots(Set<Integer> rootIds) {
+        if (rootIds == null) {
+            throw new IllegalArgumentException(Colors.error("Word.setRoots","rootIds cannot be null"));
+        }
+
+        this.rootIds = rootIds;
     }
 
     public void setLinks(HashSet<Word> links) {
         if (links == null) {
-            throw new IllegalArgumentException(Colors.error("links cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Word.setLinks","links cannot be null"));
         }
+
         this.links = links;
+        this.linkIds = new HashSet<>();
+
+        for (Word word : links) {
+            this.linkIds.add(word.getId());
+        }
+    }
+
+    public void setLinks(Set<Integer> linkIds) {
+        if (linkIds == null) {
+            throw new IllegalArgumentException(Colors.error("Word.setLinks","linkIds cannot be null"));
+        }
+
+        this.linkIds = linkIds;
     }
 
     public void setTypes(HashSet<Type> types) {
         if (types == null) {
-            throw new IllegalArgumentException(Colors.error("types cannot be null"));
+            throw new IllegalArgumentException(Colors.error("Word.setTypes","types cannot be null"));
         }
+
         this.types = types;
+        this.typeIds = new HashSet<>();
+
+        for (Type type : types) {
+            this.typeIds.add(type.getId());
+        }
+    }
+
+    public void setTypes(Set<Integer> typeIds) {
+        if (typeIds == null) {
+            throw new IllegalArgumentException(Colors.error("Word.setTypes","typeIds cannot be null"));
+        }
+
+        this.typeIds = typeIds;
     }
 
     @Override
     public int hashCode() {
-        Object[] letters = {this.letters, this.translations, this.definitions, this.emotional, this.formality, this.vulgarity};
-        return Arrays.deepHashCode(letters);
+        Object[] letterIds = {this.letterIds, this.translations, this.definitions, this.emotional, this.formality, this.vulgarity, this.rootIds, this.linkIds, this.typeIds, this.isUsable};
+        return Arrays.deepHashCode(letterIds);
     }
     
     @Override
@@ -215,19 +362,11 @@ public class Word {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         Word other = (Word) obj;
-        return Double.compare(other.emotional, this.emotional) == 0 &&
-               Double.compare(other.formality, this.formality) == 0 &&
-               Double.compare(other.vulgarity, this.vulgarity) == 0 &&
-               this.letters.equals(other.letters) &&
-               Objects.equals(this.translations, other.translations) &&
-               Objects.equals(this.definitions, other.definitions) &&
-               PersistenceUtils.shallowEquals(this.links, other.links) &&
-               PersistenceUtils.shallowEquals(this.roots, other.roots) &&
-               Objects.equals(this.types, other.types);
+        return hashCode() == other.hashCode();
     }
 
     @Override
     public Word clone() {
-        return new Word(this.letters, this.emotional, this.formality, this.vulgarity, this.translations, this.definitions, this.links, this.roots, this.types);
+        return new Word(this.letterIds, this.emotional, this.formality, this.vulgarity, this.translations, this.definitions, this.isUsable, this.linkIds, this.rootIds, this.typeIds);
     }
 }
