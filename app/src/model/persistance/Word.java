@@ -181,12 +181,10 @@ public class Word {
     }
 
     public Set<Word> getRoots() {
-        if (roots == null) {
-            roots = new HashSet<>(); 
-            WordDAO wordDAO = new WordDAO();
-            for (Integer id : rootIds) {
-                roots.add(wordDAO.findById(id));
-            }
+        roots = new HashSet<>(); 
+        WordDAO wordDAO = new WordDAO();
+        for (Integer id : rootIds) {
+            roots.add(wordDAO.findById(id));
         }
         return roots;
     }
@@ -197,12 +195,10 @@ public class Word {
 
     public Set<Word> getLinks() {
         
-        if (links == null) {
-            links = new HashSet<>(); 
-            WordDAO wordDAO = new WordDAO();
-            for (Integer id : linkIds) {
-                links.add(wordDAO.findById(id));
-            }
+        links = new HashSet<>(); 
+        WordDAO wordDAO = new WordDAO();
+        for (Integer id : linkIds) {
+            links.add(wordDAO.findById(id));
         }
 
         return links;
@@ -213,12 +209,10 @@ public class Word {
     }
 
     public Set<Type> getTypes() {
-        if (types == null) {
-            types = new HashSet<>(); 
-            TypeDAO typeDAO = new TypeDAO();
-            for (Integer id : typeIds) {
-                types.add(typeDAO.findById(id));
-            }
+        types = new HashSet<>(); 
+        TypeDAO typeDAO = new TypeDAO();
+        for (Integer id : typeIds) {
+            types.add(typeDAO.findById(id));
         }
         return types;
     }
@@ -247,6 +241,14 @@ public class Word {
             this.lettersAscii.add(letter.getCharacterAscii());
             this.letterIds.add(letter.getId());
         }
+    }
+
+    public void setLetterIds(ArrayList<Integer> letterIds) {
+        if (letterIds == null || letterIds.isEmpty()) {
+            throw new IllegalArgumentException(Colors.error("Word.setLetters","letterIds cannot be null or empty"));
+        }
+        this.letterIds = letterIds;
+        this.letters = null;
     }
 
     public void setTranslations(ArrayList<String> translations) {
@@ -307,6 +309,7 @@ public class Word {
         }
 
         this.rootIds = rootIds;
+        this.roots = null;
     }
 
     public void setLinks(HashSet<Word> links) {
@@ -328,6 +331,7 @@ public class Word {
         }
 
         this.linkIds = linkIds;
+        this.links = null;
     }
 
     public void setTypes(HashSet<Type> types) {
@@ -349,6 +353,7 @@ public class Word {
         }
 
         this.typeIds = typeIds;
+        this.types = null;
     }
 
     @Override

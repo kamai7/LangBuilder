@@ -8,7 +8,6 @@ import model.dao.WordDAO;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
-import utils.Colors;
 import utils.PersistenceUtils;
 
 public class Management {
@@ -74,9 +73,13 @@ public class Management {
     }
 
     public ArrayList<Type> getFilteredTypes(String str) {
-        System.out.println(Colors.success("Management.getFilteredTypes","A FAIRE !!!"));
-        throw new RuntimeException("A FAIRE !!!");
-        // TODO
+        if (str.equals("")){
+            System.out.println("getFilteredTypes " + typeDAO.findAll());
+            return typeDAO.findAll(100);
+        }
+        ArrayList<Type> ret = typeDAO.findByLabel(str);
+        ret.addAll(typeDAO.findByParentLabel(str));
+        return ret;
     }
 
 }

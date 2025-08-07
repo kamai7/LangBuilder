@@ -26,9 +26,9 @@ public class WordDAO extends DAO<Word> {
         String query;
 
         if (limit == -1){
-            query = "SELECT wordId FROM Word";
+            query = "SELECT w.wordId FROM WordsLetters wl JOIN Word w ON wl.wordLId = w.wordId JOIN Letter l ON l.letterId = wl.letterWId GROUP BY w.wordId ORDER BY COUNT(*) ASC, MIN(l.letterAscii) ASC";
         }else{
-            query = "SELECT wordId FROM Word LIMIT " + limit;
+            query = "SELECT w.wordId FROM WordsLetters wl JOIN Word w ON wl.wordLId = w.wordId JOIN Letter l ON l.letterId = wl.letterWId GROUP BY w.wordId ORDER BY COUNT(*) ASC, MIN(l.letterAscii) ASC " + limit;
         }
 
         try (Connection c = getConnection();
@@ -50,36 +50,6 @@ public class WordDAO extends DAO<Word> {
     public ArrayList<Word> findAll() {
         return findAll(-1);
     }
-
-    /**
-     * Finds a Word by its ID without loading all its details.
-     * This method retrieves only the emotional, formality, and vulgarity attributes.
-     * @param id The ID of the Word to find.
-     * @return A Word object with the specified ID and its shallow attributes, or null if not found.
-     
-    private Word findShallow(int id) {
-        Word ret = null;
-        String query = "SELECT * FROM Word WHERE wordId = ?";
-
-        try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement(query)) {
-            
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                double emotional = rs.getDouble("emotional");
-                double formality = rs.getDouble("formality");
-                double vulgarity = rs.getDouble("vulgarity");
-                ret = new Word(new ArrayList<>(), emotional, formality, vulgarity);
-                ret.setId(id);
-            }
-        } catch(SQLException e) {
-            System.err.println(Colors.error("WordDAO findShallow: ", e.getMessage()));
-        }
-
-        return ret;
-    }*/
 
     /*
     also uopdate the word

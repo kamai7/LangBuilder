@@ -38,7 +38,7 @@ public class Type {
      * could have "Verb" as its parentId.
      * If no parentId exists, this could be set to a sentinel value (e.g., {@code -1}).
      */
-    private int parentId = -1;
+    private int parentId = 0;
 
     /**
      * The identifier of the morphological rootId (prefix or suffix) associated with this type.
@@ -46,7 +46,7 @@ public class Type {
      * or meaning of the type label. For instance, a prefix like "pre-" or a suffix like "-ing".
      * This is useful for morphological analysis and generation.
      */
-    private int rootId = -1;
+    private int rootId = 0;
 
     /**
      * The position of the rootId (prefix or suffix) within the label of the type.
@@ -57,7 +57,7 @@ public class Type {
      * </ul>
      * This field determines how the rootId is combined with the label.
      */
-    private int position = -1;
+    private int position = 0;
 
     private Type parent;
 
@@ -84,8 +84,14 @@ public class Type {
 
         this.id = -1;
         this.label = label;
-        this.parentId = parent.getId();
-        this.rootId = root.getId();
+        if (parent != null) {
+            this.parentId = parent.getId();
+        }
+        if (root != null) {
+            this.rootId = root.getId();
+        }
+        this.position = position;
+        this.color = color;
         this.root = root;
         this.parent = parent;
         this.position = position;
@@ -139,8 +145,7 @@ public class Type {
     }
 
     public Word getRoot() {
-
-        if (root == null){
+        if (root == null) {
             WordDAO wordDAO = new WordDAO();
             root = wordDAO.findById(rootId);
         }
@@ -149,12 +154,10 @@ public class Type {
     }
 
     public Type getParent() {
-
-        if (parent == null){
+        if (this.parent == null) {
             TypeDAO typeDAO = new TypeDAO();
             parent = typeDAO.findById(parentId);
         }
-
         return parent;
     }
 
@@ -181,29 +184,34 @@ public class Type {
             throw new IllegalArgumentException(Colors.error("Type.setParent:","parentId must be greater than 0"));
         }
         this.parentId = parentId;
+        this.parent = null;
     }
 
     public void setParent(Type parent) {
-        if (parent == null) {
-            throw new IllegalArgumentException(Colors.error("Type.setParent:","parent cannot be null"));
-        }
-        this.parentId = parent.getId();
         this.parent = parent;
+        if (parent == null){
+            this.parentId = 0;
+        }else{
+            this.parentId = parent.getId();
+        }
     }
 
     public void setRoot(int rootId) {
         if (rootId < 0) {
             throw new IllegalArgumentException(Colors.error("Type.setRoot:","rootId must be greater than 0"));
         }
+
         this.rootId = rootId;
+        this.root = null;
     }
 
     public void setRoot(Word root) {
-        if (root == null) {
-            throw new IllegalArgumentException(Colors.error("Type.setRoot:","root cannot be null"));
-        }
-        this.rootId = root.getId();
         this.root = root;
+        if (root == null){
+            this.rootId = 0;
+        }else{
+            this.rootId = root.getId();
+        }
     }
 
     public void setPosition(int position) {
