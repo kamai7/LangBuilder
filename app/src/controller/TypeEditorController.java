@@ -26,6 +26,8 @@ public class TypeEditorController {
     private Controller mainController;
     private TypeManagement management;
     private ObservableList<String> positionWords;
+    private ChangeListener<NavTypeController> parentListener;
+    private ChangeListener<NavWordController> rootListener;
     
     @FXML
     private TextField nameTextField;
@@ -48,12 +50,8 @@ public class TypeEditorController {
 
         positionWords = FXCollections.observableArrayList("start", "middle", "end");
         positionWordComboBox.setItems(positionWords);
-        System.out.println(Colors.success("TypeEditorController initialized"));
-    }
 
-    @FXML
-    private void chooseWord() {
-        ChangeListener<NavWordController> listener = new ChangeListener<>() {
+        rootListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
                 chooseParentButton.setStyle("-fx-font-weight: bold;");
@@ -62,37 +60,56 @@ public class TypeEditorController {
                 mainController.getSelectedWord().removeListener(this);
             }
         };
-        mainController.getSelectedWord().addListener(listener);
+
+        parentListener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
+                chooseParentButton.setText(newValue.getType().getLabel());
+                chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newValue.getType().getColor()) + ";");
+                chooseParentButton.setStyle("-fx-font-weight: bold;");
+                management.setParent(newValue.getType());
+                //remove the listener
+                mainController.getSelectedType().removeListener(this);
+                System.out.println("listener removed");
+            }
+        };
+
+        System.out.println(Colors.success("TypeEditorController initialized"));
+    }
+
+    @FXML
+    private void chooseWord() {
+        mainController.getSelectedWord().addListener(rootListener);
+        chooseWordButton.setText("click on a Word");
+        chooseWordButton.setStyle("-fx-text-fill: #ffffffff;");
     }
 
     @FXML
     private void deleteWord() {
         management.setRoot(null);
+        mainController.getSelectedWord().removeListener(rootListener);
         chooseWordButton.setText("Choose a Word");
         chooseWordButton.setStyle("-fx-font-weight: normal;");
+        chooseWordButton.setStyle("-fx-text-fill: #c0c0c0;");
+
     }
 
     @FXML
     private void chooseParent() {
-        ChangeListener<NavTypeController> listener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
-                chooseParentButton.setText(newValue.getType().getLabel());
-                chooseParentButton.setStyle("-fx-text-fill:" + Colors.colorToHex(newValue.getType().getColor()));
-                chooseParentButton.setStyle("-fx-font-weight: bold;");
-                management.setParent(newValue.getType());
-                //remove the listener
-                mainController.getSelectedType().removeListener(this);
-            }
-        };
-        mainController.getSelectedType().addListener(listener);
+        mainController.getSelectedType().addListener(parentListener);
+        System.out.println("listener set");
+        chooseParentButton.setText("click on a Type");
+        chooseParentButton.setStyle("-fx-text-fill: #ffffffff;");
     }
 
     @FXML
     private void deleteParent() {
         management.setParent(null);
+        mainController.getSelectedType().removeListener(parentListener);
+        System.out.println("listener removed");
         chooseParentButton.setText("Choose a Type");
         chooseParentButton.setStyle("-fx-font-weight: normal;");
+        chooseParentButton.setStyle("-fx-text-fill: #c0c0c0;");
     }
 
     @FXML
@@ -149,6 +166,9 @@ public class TypeEditorController {
         management = new TypeManagement(type);
 
         this.headerObject.setText(type.getLabel());
+        Color[] colors = Colors.calcGradient(type.getColor());
+        System.out.println("colors: " + colors[0] + " " + colors[1]+ " " + type.getColor());
+        this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(colors[0], colors[1]));
         this.nameTextField.setText(type.getLabel());
         this.colorColorPicker.setValue(type.getColor());
         if (type.getParentId() != 0) {
@@ -172,8 +192,8 @@ public class TypeEditorController {
 
         this.mainController = mainController;
         this.headerObject.setText("???");
-        Color color = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
-        Color[] colors = Colors.calcGradient(color);
-        this.headerObject.setStyle("-fx-text-fill:"  + Colors.linearGradient(colors[0], colors[1]));
+        Color color1 = Colors.convertRGBAToColor(new int[]{255, 0, 234, 255});
+        Color color2 = Colors.convertRGBAToColor(new int[]{255, 187, 0, 255});
+        this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
     }
 }

@@ -117,6 +117,10 @@ public class WordEditorController {
             }else{
                 System.out.println(Colors.error("Letter field is empty"));
             }
+        } else if (event.getCode() == KeyCode.BACK_SPACE) {
+            if (addLetterField.getText().equals("") && lettersPane.getChildren().size() > 1) {
+                lettersPane.getChildren().remove(lettersPane.getChildren().size() - 2);
+            }
         }
     }
 
