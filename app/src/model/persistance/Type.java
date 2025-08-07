@@ -215,7 +215,7 @@ public class Type {
     }
 
     public void setPosition(int position) {
-        if (position < 0 || position > 2) {
+        if (position < -1 || position > 2) {
             throw new IllegalArgumentException(Colors.error("position must be between 0 and 2"));
         }
         this.position = position;

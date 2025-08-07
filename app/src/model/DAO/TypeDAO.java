@@ -149,8 +149,11 @@ public class TypeDAO extends DAO<Type>{
             } else {
                 ps.setInt(7, type.getRootId());
             }
-
-            ps.setInt(8, type.getPosition());
+            if(type.getPosition() == -1) {
+                ps.setNull(8, java.sql.Types.INTEGER);
+            }else{
+                ps.setInt(8, type.getPosition());
+            }
             ps.setInt(9, type.getId());
             
             int lines = ps.executeUpdate();

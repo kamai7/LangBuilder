@@ -2,6 +2,10 @@ package controller;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
+import controller.fragments.NavTypeController;
+import controller.fragments.NavWordController;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,14 +18,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import model.managment.TypeManagement;
 import model.persistance.Type;
-import model.persistance.Word;
 import utils.Colors;
 import utils.PersistenceUtils;
 
 public class TypeEditorController {
 
-    private Type parent;
-    private Word root;
     private Controller mainController;
     private TypeManagement management;
     private ObservableList<String> positionWords;
@@ -52,39 +53,53 @@ public class TypeEditorController {
 
     @FXML
     private void chooseWord() {
-        mainController.getSelectedWord().addListener(event -> {
-            Word root = mainController.getSelectedWord().get().getWord();
-            chooseParentButton.setText(PersistenceUtils.wordToString(root));
-        });
+        ChangeListener<NavWordController> listener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
+                chooseParentButton.setStyle("-fx-font-weight: bold;");
+                management.setRoot(newValue.getWord());
+                //remove the listener
+                mainController.getSelectedWord().removeListener(this);
+            }
+        };
+        mainController.getSelectedWord().addListener(listener);
     }
 
     @FXML
     private void deleteWord() {
-        root = null;
+        management.setRoot(null);
         chooseWordButton.setText("Choose a Word");
+        chooseWordButton.setStyle("-fx-font-weight: normal;");
     }
 
     @FXML
     private void chooseParent() {
-        mainController.getSelectedType().addListener(event -> {
-            Type parent = mainController.getSelectedType().get().getType();
-            chooseParentButton.setText(parent.getLabel());
-        });
+        ChangeListener<NavTypeController> listener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
+                chooseParentButton.setText(newValue.getType().getLabel());
+                chooseParentButton.setStyle("-fx-text-fill:" + Colors.colorToHex(newValue.getType().getColor()));
+                chooseParentButton.setStyle("-fx-font-weight: bold;");
+                management.setParent(newValue.getType());
+                //remove the listener
+                mainController.getSelectedType().removeListener(this);
+            }
+        };
+        mainController.getSelectedType().addListener(listener);
     }
 
     @FXML
     private void deleteParent() {
-        parent = null;
+        management.setParent(null);
         chooseParentButton.setText("Choose a Type");
+        chooseParentButton.setStyle("-fx-font-weight: normal;");
     }
 
     @FXML
     private void apply() {
-        management.setParent(parent);
         management.setLabel(nameTextField.getText());
         management.setColor(colorColorPicker.getValue());
         management.setPosition(positionWordComboBox.getSelectionModel().getSelectedIndex());
-        management.setRoot(root);
         try{
             management.editType();
             mainController.initHome();
@@ -114,7 +129,7 @@ public class TypeEditorController {
         try{
             management.deleteType();
             mainController.initHome();
-            mainController.loadLettersNav();
+            mainController.loadTypesNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this type have already been deleted");
             alert.setTitle("In use error");
@@ -136,6 +151,17 @@ public class TypeEditorController {
         this.headerObject.setText(type.getLabel());
         this.nameTextField.setText(type.getLabel());
         this.colorColorPicker.setValue(type.getColor());
+        if (type.getParentId() != 0) {
+            this.chooseParentButton.setText(type.getParent().getLabel());
+            this.chooseParentButton.setStyle("-fx-font-weight: bold;");
+        }
+        if (type.getRootId() != 0) {
+            this.chooseWordButton.setText(PersistenceUtils.wordToString(type.getRoot()));
+            this.chooseWordButton.setStyle("-fx-font-weight: bold;");
+        }
+        if(type.getPosition() != -1) {
+            this.positionWordComboBox.getSelectionModel().select(type.getPosition());
+        }
     }
 
     public void init(Controller mainController) {

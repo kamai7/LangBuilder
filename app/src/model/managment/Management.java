@@ -74,7 +74,6 @@ public class Management {
 
     public ArrayList<Type> getFilteredTypes(String str) {
         if (str.equals("")){
-            System.out.println("getFilteredTypes " + typeDAO.findAll());
             return typeDAO.findAll(100);
         }
         ArrayList<Type> ret = typeDAO.findByLabel(str);

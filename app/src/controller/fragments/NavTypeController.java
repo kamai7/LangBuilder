@@ -12,7 +12,6 @@ import javafx.scene.layout.BorderPane;
 import model.managment.TypeManagement;
 import model.persistance.Type;
 import utils.Colors;
-import utils.PersistenceUtils;
 import view.FXMLHandler;
 
 public class NavTypeController {
@@ -53,7 +52,13 @@ public class NavTypeController {
         this.mainController = mainController;
         this.object = type;
         objectLabel.setText(type.getLabel());
-        descriptionLabel.setText(PersistenceUtils.wordToString(type.getRoot()));
+        objectLabel.setStyle("-fx-text-fill:" + Colors.colorToHex(type.getColor()));
+        if (type.getParentId() != 0) {
+            descriptionLabel.setText(type.getParent().getLabel());
+            descriptionLabel.setStyle("-fx-text-fill:" + Colors.colorToHex(type.getParent().getColor()));
+        }else{
+            descriptionLabel.setText("");
+        }
     }
 
     public boolean isSelected() {

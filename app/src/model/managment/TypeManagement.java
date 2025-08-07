@@ -21,7 +21,7 @@ public class TypeManagement {
 
     public TypeManagement() {
         typeDAO = new TypeDAO();
-        position = -1;
+        this.position = -1;
     }
 
     public TypeManagement(Type type) {
@@ -29,8 +29,13 @@ public class TypeManagement {
             throw new IllegalArgumentException(Colors.error("TypeManagement.TypeManagement:", "type cannot be null"));
         }
         this.type = type;
+        this.parent = type.getParent();
+        this.root = type.getRoot();
+        this.color = type.getColor();
+        this.label = type.getLabel();
+        this.position = type.getPosition();
+
         typeDAO = new TypeDAO();
-        position = -1;
     }
 
     public void editType() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
@@ -49,7 +54,11 @@ public class TypeManagement {
         }else{
             Type tmp = new Type(label, parent, root, position, color);
             if (!tmp.equals(this.type)){
-                this.type = tmp;
+                this.type.setLabel(label);
+                this.type.setParent(parent);
+                this.type.setRoot(root);
+                this.type.setPosition(position);
+                this.type.setColor(color);
                 typeDAO.update(this.type);
             }
         }
