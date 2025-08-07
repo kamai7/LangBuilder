@@ -23,9 +23,9 @@ public class TypeDAO extends DAO<Type>{
         String query;
 
         if (limit == -1){
-            query = "SELECT * FROM Type ORDER BY LENGTH(label), label ASC";
+            query = "SELECT * FROM Type ORDER BY label ASC";
         }else{
-            query = "SELECT * FROM Type ORDER BY LENGTH(label), label ASC LIMIT " + limit;
+            query = "SELECT * FROM Type ORDER BY label ASC LIMIT " + limit;
         }
 
         ArrayList<Type> ret = new ArrayList<>(getRowsCount("Type"));
@@ -81,7 +81,7 @@ public class TypeDAO extends DAO<Type>{
     
     public ArrayList<Type> findByLabel(String label){
         ArrayList<Type> ret = new ArrayList<>();
-        String query = "SELECT typeId FROM Type WHERE label LIKE ? ORDER BY LENGTH(label), label asc";
+        String query = "SELECT typeId FROM Type WHERE label LIKE ? ORDER BY label asc";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
@@ -91,29 +91,10 @@ public class TypeDAO extends DAO<Type>{
 
             while (rs.next()) {
                 ret.add(findById(rs.getInt("typeId")));
+                ret.add(findById(rs.getInt("parentId")));
             }
         } catch (Exception e) {
             System.err.println(Colors.error("TypeDAO.findByLabel: ", e.getMessage()));
-        }
-
-        return ret;
-    }
-
-    public ArrayList<Type> findByParentLabel(String label) {
-        ArrayList<Type> ret = new ArrayList<>();
-        String query = "SELECT typeId FROM Type WHERE parentId LIKE ? ORDER BY LENGTH(label), label asc";
-
-        try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement(query)) {
-            
-            ps.setString(1, "%" + label + "%");
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                ret.add(findById(rs.getInt("typeId")));
-            }
-        } catch (Exception e) {
-            System.err.println(Colors.error("TypeDAO.findByParentLabel: ", e.getMessage()));
         }
 
         return ret;

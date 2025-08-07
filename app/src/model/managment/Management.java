@@ -76,9 +76,7 @@ public class Management {
         if (str.equals("")){
             return typeDAO.findAll(100);
         }
-        ArrayList<Type> ret = typeDAO.findByLabel(str);
-        ret.addAll(typeDAO.findByParentLabel(str));
-        return ret;
+        return typeDAO.findByLabel(str);
     }
 
 }

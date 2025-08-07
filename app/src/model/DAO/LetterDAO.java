@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import model.persistance.Letter;
 import utils.Colors;
@@ -77,7 +75,7 @@ public  class LetterDAO extends DAO<Letter> {
     public ArrayList<Letter> findByString(String str){
         
         String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ? ORDER BY char_length(letterAscii), letterAscii ASC LIMIT 200";
-        Set<Letter> ret = new HashSet<>();
+        ArrayList<Letter> ret = new ArrayList<>();
 
         try(Connection c = getConnection();
             PreparedStatement ps = c.prepareStatement(query)){
@@ -96,7 +94,7 @@ public  class LetterDAO extends DAO<Letter> {
             System.err.println(Colors.error("LetterDAO findByString: ", e.getMessage()));
         }
 
-        return new ArrayList<>(ret);
+        return ret;
     }
 
     @Override

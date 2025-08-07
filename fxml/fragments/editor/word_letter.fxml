@@ -7,11 +7,15 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
 <HBox fx:id="container" alignment="CENTER_LEFT" prefHeight="0.0" spacing="2.0" styleClass="editor-item" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.fragments.WordLetterController">
    <children>
       <CheckBox fx:id="checkbox" mnemonicParsing="false" />
-      <Label fx:id="objectLabel" minWidth="10.0" styleClass="text-color1" text="a" />
+      <Label fx:id="objectLabel" minWidth="10.0" styleClass="text-color1" text="a">
+         <font>
+            <Font size="16.0" />
+         </font></Label>
       <Button fx:id="deleteButton" mnemonicParsing="false">
          <graphic>
             <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">

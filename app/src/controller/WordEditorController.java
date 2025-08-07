@@ -2,11 +2,11 @@ package controller;
 
 
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 
 import controller.fragments.WordFieldController;
 
 import controller.fragments.WordLetterController;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
@@ -31,11 +31,6 @@ public class WordEditorController {
     private Controller mainController;
 
     private WordManagement management;
-
-    private ArrayList<FXMLHandler<HBox, WordLetterController>> letters;
-    private ArrayList<FXMLHandler<HBox, WordFieldController>> roots;
-    private ArrayList<FXMLHandler<HBox, WordFieldController>> links;
-    private ArrayList<FXMLHandler<HBox, WordFieldController>> types;
 
     @FXML
     private HBox chooseTypeButtonContainer;
@@ -108,10 +103,7 @@ public class WordEditorController {
         rootsCheckBox.selectedProperty().addListener(event -> rootsContainer.setDisable(!rootsCheckBox.isSelected()));
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
 
-        letters = new ArrayList<>();
-        roots = new ArrayList<>();
-        links = new ArrayList<>();
-        types = new ArrayList<>();
+        addLetterField.textProperty().addListener((obs, oldVal, newVal) -> letterUpdated());
 
         System.out.println(Colors.success("WordEditorController initialized"));
     }
@@ -120,13 +112,8 @@ public class WordEditorController {
     private void addLetter(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             if(addLetterField.getText().length() > 0) {
-                FXMLHandler<HBox, WordLetterController> letter = new FXMLHandler<>("../fxml/fragments/editor/word_letter.fxml");
-                WordLetterController wordLetterController = letter.getController();
-                lettersPane.getChildren().add(lettersPane.getChildren().size() - 1,letter.get());
-                wordLetterController.init(addLetterField.getText());
-                wordLetterController.getDeleteButton().setOnAction(event1 -> {lettersPane.getChildren().remove(letter.get()); letters.remove(letter);});
-                addLetterField.setText("");
-                letters.add(letter);
+                String letter = management.addLetter(addLetterField.getText());
+                addLetterFragment(letter);
             }else{
                 System.out.println(Colors.error("Letter field is empty"));
             }
@@ -139,8 +126,7 @@ public class WordEditorController {
         rootsPane.getChildren().add(root.get());
         WordFieldController wordFieldController = root.getController();
         wordFieldController.init("Σ");
-        wordFieldController.getDeleteButton().setOnAction(event -> {rootsPane.getChildren().remove(root.get()); roots.remove(root);});
-        roots.add(root);
+        wordFieldController.getDeleteButton().setOnAction(event -> rootsPane.getChildren().remove(root.get()));
 
     }
 
@@ -148,18 +134,16 @@ public class WordEditorController {
     private void addLink() {
         FXMLHandler<HBox, WordFieldController> link = new FXMLHandler<>("../fxml/fragments/editor/word_field.fxml");
         linksPane.getChildren().add(link.get());
-        link.getController().getDeleteButton().setOnAction(event -> {linksPane.getChildren().remove(link.get()); links.remove(link);});
+        link.getController().getDeleteButton().setOnAction(event -> linksPane.getChildren().remove(link.get()));
         link.getController().init("Σ");
-        links.add(link);
     }
 
     @FXML
     private void addType() {
         FXMLHandler<HBox, WordFieldController> type = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
         typesPane.getChildren().add(type.get());
-        type.getController().getDeleteButton().setOnAction(event -> {typesPane.getChildren().remove(type.get()); types.remove(type);});
+        type.getController().getDeleteButton().setOnAction(event -> typesPane.getChildren().remove(type.get()));
         type.getController().init("verb");
-        types.add(type);
     }
 
     @FXML
@@ -257,6 +241,22 @@ public class WordEditorController {
         Color color2 = Colors.convertRGBAToColor(new int[]{153, 0, 255, 255});
         Color color1 = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
         this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
+    }
+
+    private void letterUpdated() {
+        if (management.checkLetter(addLetterField.getText())) {
+            String letter = management.addLetter(addLetterField.getText());
+            addLetterFragment(letter);
+        }
+    }
+
+    private void addLetterFragment(String l) {
+        FXMLHandler<HBox, WordLetterController> letter = new FXMLHandler<>("../fxml/fragments/editor/word_letter.fxml");
+        WordLetterController wordLetterController = letter.getController();
+        lettersPane.getChildren().add(lettersPane.getChildren().size() - 1,letter.get());
+        wordLetterController.init(l);
+        wordLetterController.getDeleteButton().setOnAction(event1 -> lettersPane.getChildren().remove(letter.get()));
+        addLetterField.setText("");
     }
 
 }

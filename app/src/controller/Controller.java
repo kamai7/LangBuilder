@@ -347,6 +347,9 @@ public class Controller {
         typeContainer.getChildren().clear();
         typeNavItems.clear();
         ArrayList<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
+
+        if (typeSortComboBox.getSelectionModel().getSelectedIndex() == 1) Collections.reverse(filteredTypes);
+
         for(Type type: filteredTypes) {
             FXMLHandler<BorderPane, NavTypeController> typeEditor = new FXMLHandler<>("/fxml/fragments/nav/type.fxml");
             typeContainer.getChildren().add(typeEditor.get());
