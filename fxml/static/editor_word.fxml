@@ -55,13 +55,19 @@
                            <children>
                               <FlowPane fx:id="lettersPane" maxWidth="800.0" minWidth="200.0" styleClass="editor-container">
                                  <children>
-                                    <TextField fx:id="addLetterField" maxWidth="1.7976931348623157E308" onKeyPressed="#addLetter" prefWidth="70.0" promptText="write here" />
+                                    <TextField fx:id="addLetterField" maxWidth="1.7976931348623157E308" onKeyPressed="#letterKeyEvent" prefWidth="70.0" promptText="write here" />
                                  </children>
                               </FlowPane>
                               <HBox spacing="10.0">
                                  <children>
-                                    <Label fx:id="generatedWordLabel" text="word" textFill="WHITE" />
-                                    <Label fx:id="generatedWordAsciiLabel" style="-fx-opacity: 0.6;" text="Word ascii" textFill="WHITE" />
+                                    <Label fx:id="wordPreviewLabel" text="word" textFill="WHITE">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font></Label>
+                                    <Label fx:id="wordAsciiPreviewLabel" style="-fx-opacity: 0.6;" text="Word ascii" textFill="WHITE">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font></Label>
                                  </children>
                                  <padding>
                                     <Insets left="10.0" right="10.0" />

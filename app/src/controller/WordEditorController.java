@@ -2,11 +2,16 @@ package controller;
 
 
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
 
+import controller.fragments.NavTypeController;
+import controller.fragments.NavWordController;
 import controller.fragments.WordFieldController;
 
 import controller.fragments.WordLetterController;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
@@ -20,6 +25,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import model.managment.WordManagement;
+import model.persistance.Letter;
+import model.persistance.Type;
 import model.persistance.Word;
 import utils.Colors;
 import utils.FragmentUtils;
@@ -32,6 +39,10 @@ public class WordEditorController {
 
     private WordManagement management;
 
+    private ChangeListener<NavTypeController> chooseTypeListener;
+    private ChangeListener<NavWordController> chooseRootListener;
+    private ChangeListener<NavWordController> chooseLinkListener;
+
     @FXML
     private HBox chooseTypeButtonContainer;
 
@@ -43,8 +54,8 @@ public class WordEditorController {
 
     @FXML
     private Label headerObject,
-                  generatedWordLabel,
-                  generatedWordAsciiLabel;
+                  wordPreviewLabel,
+                  wordAsciiPreviewLabel;
 
     @FXML
     private CheckBox usableCheckBox,
@@ -89,6 +100,10 @@ public class WordEditorController {
         FragmentUtils.initSlider(vulgaritySlider, vulgarityValue, 0.05);
         FragmentUtils.initSlider(formalitySlider, formalityValue, 0.05);
 
+        emotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.setEmotionality(newValue.doubleValue()));
+        vulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.setVulgarity(newValue.doubleValue()));
+        formalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.setFormality(newValue.doubleValue()));
+
         lengthContainer.setDisable(!lengthCheckBox.isSelected());
         emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected());
         vulgarityContainer.setDisable(!vulgarityCheckBox.isSelected());
@@ -102,24 +117,128 @@ public class WordEditorController {
         formalityCheckBox.selectedProperty().addListener(event -> formalityContainer.setDisable(!formalityCheckBox.isSelected()));
         rootsCheckBox.selectedProperty().addListener(event -> rootsContainer.setDisable(!rootsCheckBox.isSelected()));
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
+        usableCheckBox.selectedProperty().addListener(event -> management.setUsable(usableCheckBox.isSelected()));
 
-        addLetterField.textProperty().addListener((obs, oldVal, newVal) -> letterUpdated());
+        addLetterField.textProperty().addListener((obs, oldVal, newVal) -> {
+            Letter letter = management.findLetterUnique(newVal);
+            if (letter != null) {
+                management.addLetter(letter);
+                addLetter(letter);
+            }
+        });
+
+        chooseTypeListener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
+                Type type = newValue.getType();
+                try {
+                    management.addType(newValue.getType());
+
+                    FXMLHandler<HBox, WordFieldController> typeFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
+                    WordFieldController typeControl = typeFragment.getController();
+                    typesPane.getChildren().add(typeFragment.get());
+
+                    typeControl.getDeleteButton().setOnAction(event -> {
+                        typesPane.getChildren().remove(typeFragment.get());
+                        management.removeType(type);
+                    });
+
+                    typeControl.init(type.getLabel());
+                    typeControl.setStyle("-fx-text-fill: " + Colors.colorToHex(type.getColor()) + "; -fx-font-weight: bold;");
+
+                    //remove the listener
+                    mainController.getSelectedType().removeListener(this);
+                    mainController.getSelectedType().set(null);
+                }catch(IllegalArgumentException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                    alert.setTitle("Arguments error");
+                    alert.setContentText(e.getMessage());
+                    alert.show();
+                }
+            }
+        };
+
+        chooseRootListener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
+                Word word = newValue.getWord();
+                try {
+                    management.addRoot(word);
+
+                    FXMLHandler<HBox, WordFieldController> rootFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
+                    WordFieldController rootControl = rootFragment.getController();
+                    rootsPane.getChildren().add(rootFragment.get());
+
+                    rootControl.getDeleteButton().setOnAction(event -> {
+                        rootsPane.getChildren().remove(rootFragment.get());
+                        management.removeRoot(word);
+                    });
+
+                    rootControl.init(PersistenceUtils.wordToString(word));
+                    rootControl.setStyle("-fx-font-weight: bold;");
+
+                    //remove the listener
+                    mainController.getSelectedWord().removeListener(this);
+                    mainController.getSelectedWord().set(null);
+                }catch(IllegalArgumentException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                    alert.setTitle("Arguments error");
+                    alert.setContentText(e.getMessage());
+                    alert.show();
+                }
+            }
+        };
+
+        chooseLinkListener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
+                Word word = newValue.getWord();
+                try {
+                    management.addLink(word);
+
+                    FXMLHandler<HBox, WordFieldController> linkFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
+                    WordFieldController linkControl = linkFragment.getController();
+                    linksPane.getChildren().add(linkFragment.get());
+
+                    linkControl.getDeleteButton().setOnAction(event -> {
+                        linksPane.getChildren().remove(linkFragment.get());
+                        management.removeRoot(word);
+                    });
+
+                    linkControl.init(PersistenceUtils.wordToString(word));
+                    linkControl.setStyle("-fx-font-weight: bold;");
+
+                    //remove the listener
+                    mainController.getSelectedWord().removeListener(this);
+                    mainController.getSelectedWord().set(null);
+                }catch(IllegalArgumentException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                    alert.setTitle("Arguments error");
+                    alert.setContentText(e.getMessage());
+                    alert.show();
+                }
+            }
+        };
 
         System.out.println(Colors.success("WordEditorController initialized"));
     }
 
     @FXML
-    private void addLetter(KeyEvent event) {
+    private void letterKeyEvent(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             if(addLetterField.getText().length() > 0) {
-                String letter = management.addLetter(addLetterField.getText());
-                addLetterFragment(letter);
+                Letter letter = management.findLetter(addLetterField.getText());
+                if (letter != null) {
+                    management.addLetter(letter);
+                    addLetter(letter);
+                }
             }else{
                 System.out.println(Colors.error("Letter field is empty"));
             }
         } else if (event.getCode() == KeyCode.BACK_SPACE) {
             if (addLetterField.getText().equals("") && lettersPane.getChildren().size() > 1) {
                 lettersPane.getChildren().remove(lettersPane.getChildren().size() - 2);
+                updateWordPreview();
             }
         }
     }
@@ -144,10 +263,7 @@ public class WordEditorController {
 
     @FXML
     private void addType() {
-        FXMLHandler<HBox, WordFieldController> type = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
-        typesPane.getChildren().add(type.get());
-        type.getController().getDeleteButton().setOnAction(event -> typesPane.getChildren().remove(type.get()));
-        type.getController().init("verb");
+        mainController.getSelectedType().addListener(chooseTypeListener);
     }
 
     @FXML
@@ -167,6 +283,8 @@ public class WordEditorController {
 
     @FXML
     private void apply() {
+        management.addTranslations(translationsArea.getText());
+        management.addDefinitions(definitionsArea.getText());
         mainController.initHome();
     }
 
@@ -247,20 +365,33 @@ public class WordEditorController {
         this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(color1, color2));
     }
 
-    private void letterUpdated() {
-        if (management.checkLetter(addLetterField.getText())) {
-            String letter = management.addLetter(addLetterField.getText());
-            addLetterFragment(letter);
+    private void updateWordPreview() {
+        ArrayList<Letter> letters = management.getLetters();
+        String word = "";
+        String wordAscii = "";
+
+        for (Letter l : letters) {
+            word += l.getCharacter();
+            wordAscii += l.getCharacterAscii();
         }
+        this.wordPreviewLabel.setText(word);
+        this.wordAsciiPreviewLabel.setText(wordAscii);
     }
 
-    private void addLetterFragment(String l) {
+    private void addLetter(Letter l) {
         FXMLHandler<HBox, WordLetterController> letter = new FXMLHandler<>("../fxml/fragments/editor/word_letter.fxml");
         WordLetterController wordLetterController = letter.getController();
         lettersPane.getChildren().add(lettersPane.getChildren().size() - 1,letter.get());
         wordLetterController.init(l);
-        wordLetterController.getDeleteButton().setOnAction(event1 -> lettersPane.getChildren().remove(letter.get()));
-        addLetterField.setText("");
+        wordLetterController.getDeleteButton().setOnAction(event -> {
+            lettersPane.getChildren().remove(letter.get());
+            management.removeLetter(l);
+            updateWordPreview();
+        });
+        Platform.runLater(() -> {
+            addLetterField.setText("");
+        });
+        updateWordPreview();
     }
 
 }

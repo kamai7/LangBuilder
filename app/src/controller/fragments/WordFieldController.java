@@ -32,5 +32,11 @@ public class WordFieldController {
     public Button getDeleteButton() {
         return deleteButton;
     }
-    
+
+    public void setStyle(String style) {
+        if (style == null) {
+            throw new IllegalArgumentException(Colors.error("EditorItemController.init" , "editorController cannot be null"));
+        }
+        this.objectLabel.setStyle(style);
+    }
 }

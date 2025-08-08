@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import model.managment.TypeManagement;
 import model.persistance.Type;
+import model.persistance.Word;
 import utils.Colors;
 import utils.PersistenceUtils;
 
@@ -54,8 +55,9 @@ public class TypeEditorController {
         rootListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
+                Word root = newValue.getWord();
                 chooseParentButton.setStyle("-fx-font-weight: bold;");
-                management.setRoot(newValue.getWord());
+                management.setRoot(root);
                 //remove the listener
                 mainController.getSelectedWord().removeListener(this);
                 mainController.getSelectedWord().set(null);
@@ -65,11 +67,11 @@ public class TypeEditorController {
         parentListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
+                Type parent = newValue.getType();
                 try {
-                    management.setParent(newValue.getType());
-                    chooseParentButton.setText(newValue.getType().getLabel());
-                    chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newValue.getType().getColor()) + ";");
-                    chooseParentButton.setStyle("-fx-font-weight: bold;");
+                    management.setParent(parent);
+                    chooseParentButton.setText(parent.getLabel());
+                    chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(parent.getColor()) + "; -fx-font-weight: bold;");
                     //remove the listener
                     mainController.getSelectedType().removeListener(this);
                     mainController.getSelectedType().set(null);
@@ -178,7 +180,7 @@ public class TypeEditorController {
         this.colorColorPicker.setValue(type.getColor());
         if (type.getParentId() != 0) {
             this.chooseParentButton.setText(type.getParent().getLabel());
-            this.chooseParentButton.setStyle("-fx-font-weight: bold;");
+            this.chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(type.getColor()) + "; -fx-font-weight: bold;");
         }
         if (type.getRootId() != 0) {
             this.chooseWordButton.setText(PersistenceUtils.wordToString(type.getRoot()));

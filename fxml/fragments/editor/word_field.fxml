@@ -9,7 +9,7 @@
 
 <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" spacing="5.0" styleClass="editor-item" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.fragments.WordFieldController">
    <children>
-      <Label fx:id="objectLabel" styleClass="text-color1" text="Word2" />
+      <Label fx:id="objectLabel" styleClass="text-color1" text="text..."/>
       <Button fx:id="deleteButton" mnemonicParsing="false">
          <graphic>
             <ImageView fitHeight="18.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">

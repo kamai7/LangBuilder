@@ -77,14 +77,11 @@ public class WordManagement {
         this.word = null;
     }
 
-    public String addLetter(String letter) {
+    public void addLetter(Letter letter) {
         if (letter == null) {
             throw new IllegalArgumentException(Colors.error("WordManagement.addLetter:", "letter cannot be null"));
         }
-        LetterDAO letterDAO = new LetterDAO();
-        Letter letterObj = letterDAO.findByString(letter).get(0);
-        letters.add(letterObj);
-        return letterObj.getCharacter();
+        letters.add(letter);
     }
 
     public void removeLetter(Letter letter) {
@@ -106,14 +103,64 @@ public class WordManagement {
             allLettersAscii.add(letter.getCharacterAscii());
         }
     }
+    public void addType(Type type) {
+        if (type == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.addType:", "type cannot be null"));
+        }
+        if (types.contains(type)) {
+            throw new IllegalArgumentException("type already selected");
+        }
+        types.add(type);
+    }
 
-    public boolean checkLetter(String l){
-        boolean ret = false;
+    public void removeType(Type type) {
+        if (type == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.removeType:", "type cannot be null"));
+        }
+        types.remove(type);
+    }
+
+    public void setUsable(boolean isUsable) {
+        this.isUsable = isUsable;
+    }
+
+    public void setEmotionality(double emotional) {
+        this.emotional = emotional;
+    }
+
+    public void setFormality(double formality) {
+        this.formality = formality;
+    }
+
+    public void setVulgarity(double vulgarity) {
+        this.vulgarity = vulgarity;
+    }
+
+    public void addTranslations(String translations) {
+        String[] translationSeparated = translations.split(";");
+        for (String translation: translationSeparated) {
+            if (translation != null && translation.trim().length() > 0) {
+                this.translations.add(translation);
+            }
+        }
+    }
+
+    public void addDefinitions(String definitions) {
+        String[] definitionSeparated = definitions.split(";");
+        for (String definition: definitionSeparated) {
+            if (definition != null && definition.trim().length() > 0) {
+                this.definitions.add(definition);
+            }
+        }
+    }
+
+    public Letter findLetterUnique(String l){
+        Letter ret = null;
 
         int counter = 0;
         for (String letter: allLetters) {
             if (letter.contains(l)){
-                counter++;
+                counter++;;
             }
         }
         for (String letterAscii: allLettersAscii) {
@@ -122,9 +169,63 @@ public class WordManagement {
             }
         }
         if (counter == 1){
-            ret = true;
+            LetterDAO letterDAO = new LetterDAO();
+            ret = letterDAO.findByString(l).get(0);
         }
         return ret;
+    }
+
+    public void addRoot(Word word) {
+        if (word == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.addRoot:", "word cannot be null"));
+        }
+        if (roots.contains(word)) {
+            throw new IllegalArgumentException("root already selected");
+        }
+        roots.add(word);
+    }
+
+    public void removeRoot(Word word) {
+        if (word == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.removeRoot:", "word cannot be null"));
+        }
+        roots.remove(word);
+    }
+
+    public void addLink(Word word) {
+        if (word == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.addLink:", "word cannot be null"));
+        }
+        if (links.contains(word)) {
+            throw new IllegalArgumentException("link already selected");
+        }
+        links.add(word);
+    }
+
+    public void removeLink(Word word) {
+        if (word == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.removeLink:", "word cannot be null"));
+        }
+        links.remove(word);
+    }
+
+    public Letter findLetter(String l){
+        if (l == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.addLetter:", "letter cannot be null"));
+        }
+        Letter ret = null;
+        LetterDAO letterDAO = new LetterDAO();
+        int size = letterDAO.findByString(l).size();
+
+        if (size > 0) {
+            ret = letterDAO.findByString(l).get(0);
+        }
+
+        return ret;
+    }
+
+    public ArrayList<Letter> getLetters() {
+        return letters;
     }
 
 }
