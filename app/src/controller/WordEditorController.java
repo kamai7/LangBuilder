@@ -43,6 +43,8 @@ public class WordEditorController {
     private ChangeListener<NavWordController> chooseRootListener;
     private ChangeListener<NavWordController> chooseLinkListener;
 
+    private ArrayList<Letter> letters;
+
     @FXML
     private HBox chooseTypeButtonContainer;
 
@@ -94,6 +96,8 @@ public class WordEditorController {
     @FXML
     public void initialize() {
 
+        letters = new ArrayList<>();
+
         // Add listeners to sliders
         FragmentUtils.initSlider(lengthSlider, lengthValue, 1);
         FragmentUtils.initSlider(emotionalitySlider, emotionalityValue, 0.05);
@@ -124,6 +128,8 @@ public class WordEditorController {
             if (letter != null) {
                 management.addLetter(letter);
                 addLetter(letter);
+                updateWordPreview();
+                letters.add(letter);
             }
         });
 
@@ -231,13 +237,15 @@ public class WordEditorController {
                 if (letter != null) {
                     management.addLetter(letter);
                     addLetter(letter);
+                    updateWordPreview();
+                    letters.add(letter);
                 }
-            }else{
-                System.out.println(Colors.error("Letter field is empty"));
             }
         } else if (event.getCode() == KeyCode.BACK_SPACE) {
             if (addLetterField.getText().equals("") && lettersPane.getChildren().size() > 1) {
                 lettersPane.getChildren().remove(lettersPane.getChildren().size() - 2);
+                management.removeLetter(letters.get(letters.size() - 1));
+                letters.remove(letters.size() - 1);
                 updateWordPreview();
             }
         }
@@ -381,12 +389,13 @@ public class WordEditorController {
         wordLetterController.getDeleteButton().setOnAction(event -> {
             lettersPane.getChildren().remove(letter.get());
             management.removeLetter(l);
+            letters.remove(l);
             updateWordPreview();
         });
         Platform.runLater(() -> {
             addLetterField.setText("");
         });
-        updateWordPreview();
+
     }
 
 }
