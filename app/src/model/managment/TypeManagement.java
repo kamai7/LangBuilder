@@ -73,8 +73,28 @@ public class TypeManagement {
         this.type = null;
     }
 
-    public void setParent(Type parent) {
+    public void setParent(Type parent) throws IllegalArgumentException{
+
+        if (parent.equals(this.type)) {
+            throw new IllegalArgumentException("This type cannot be its own parent");
+        }
+
+        checkParentCycles(parent.getParentId());
+
         this.parent = parent;
+    }
+
+    private void checkParentCycles(int parentId) throws IllegalArgumentException{
+
+        Type parent = typeDAO.findById(parentId);
+
+        if (parent != null) {
+            if (parent.equals(this.type)) {
+                throw new IllegalArgumentException("This type cannot be the parent of a type that it is a supertype");
+            } else {
+                checkParentCycles(parent.getParentId());
+            }
+        }
     }
 
     public void setRoot(Word root) {

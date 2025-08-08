@@ -49,14 +49,17 @@ public class Colors {
     }
 
     public static Color[] calcGradient(Color color){
-        double distance = 0.5;
-        double col1R = Math.min(Math.max(0.0,color.getRed() - color.getRed() * distance),1.0);
-        double col1G = Math.min(Math.max(0.0,color.getGreen() - color.getGreen() * distance),1.0);
-        double col1B = Math.min(Math.max(0.0,color.getBlue() - color.getBlue() * distance),1.0);
-        double col2R = Math.min(Math.max(0.0,color.getRed() + (color.getRed() - col1R)),1.0);
-        double col2G = Math.min(Math.max(0.0,color.getGreen() + (color.getGreen() - col1G)),1.0);
-        double col2B = Math.min(Math.max(0.0,color.getBlue() + (color.getBlue() - col1B)),1.0);
-        Color[] ret = new Color[]{new Color(col1R, col1G, col1B, color.getOpacity()), new Color(col2R, col2G, col2B, color.getOpacity())};
+        double distance = 0.4;
+        double rShift = color.getRed() * distance;
+        double gShift = color.getGreen() * distance;
+        double bShift = color.getBlue() * distance;
+        double col1R = Math.min(Math.max(0.0,color.getRed() + rShift),1.0);
+        double col1G = Math.min(Math.max(0.0,color.getGreen() + gShift),1.0);
+        double col1B = Math.min(Math.max(0.0,color.getBlue() + bShift),1.0);
+        double col2R = Math.min(Math.max(0.0, color.getRed() - (col1R * rShift * 2)),1.0);
+        double col2G = Math.min(Math.max(0.0,color.getGreen() - (col1G * gShift * 2)),1.0);
+        double col2B = Math.min(Math.max(0.0,color.getBlue() - (col1B * bShift * 2)),1.0);
+        Color[] ret = new Color[]{new Color(col2R, col2G, col2B, color.getOpacity()), new Color(col1R, col1G, col1B, color.getOpacity())};
         return ret;
     }
 

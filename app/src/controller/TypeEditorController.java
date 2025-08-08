@@ -58,19 +58,27 @@ public class TypeEditorController {
                 management.setRoot(newValue.getWord());
                 //remove the listener
                 mainController.getSelectedWord().removeListener(this);
+                mainController.getSelectedWord().set(null);
             }
         };
 
         parentListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
-                chooseParentButton.setText(newValue.getType().getLabel());
-                chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newValue.getType().getColor()) + ";");
-                chooseParentButton.setStyle("-fx-font-weight: bold;");
-                management.setParent(newValue.getType());
-                //remove the listener
-                mainController.getSelectedType().removeListener(this);
-                System.out.println("listener removed");
+                try {
+                    management.setParent(newValue.getType());
+                    chooseParentButton.setText(newValue.getType().getLabel());
+                    chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newValue.getType().getColor()) + ";");
+                    chooseParentButton.setStyle("-fx-font-weight: bold;");
+                    //remove the listener
+                    mainController.getSelectedType().removeListener(this);
+                    mainController.getSelectedType().set(null);
+                }catch(IllegalArgumentException e){
+                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+                    alert.setTitle("Arguments error");
+                    alert.setContentText(e.getMessage());
+                    alert.show();
+                }
             }
         };
 
@@ -97,7 +105,6 @@ public class TypeEditorController {
     @FXML
     private void chooseParent() {
         mainController.getSelectedType().addListener(parentListener);
-        System.out.println("listener set");
         chooseParentButton.setText("click on a Type");
         chooseParentButton.setStyle("-fx-text-fill: #ffffffff;");
     }
@@ -106,7 +113,6 @@ public class TypeEditorController {
     private void deleteParent() {
         management.setParent(null);
         mainController.getSelectedType().removeListener(parentListener);
-        System.out.println("listener removed");
         chooseParentButton.setText("Choose a Type");
         chooseParentButton.setStyle("-fx-font-weight: normal;");
         chooseParentButton.setStyle("-fx-text-fill: #c0c0c0;");
@@ -167,7 +173,6 @@ public class TypeEditorController {
 
         this.headerObject.setText(type.getLabel());
         Color[] colors = Colors.calcGradient(type.getColor());
-        System.out.println("colors: " + colors[0] + " " + colors[1]+ " " + type.getColor());
         this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(colors[0], colors[1]));
         this.nameTextField.setText(type.getLabel());
         this.colorColorPicker.setValue(type.getColor());
