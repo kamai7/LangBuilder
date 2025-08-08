@@ -78,7 +78,6 @@ public class TypeManagement {
         if (parent.equals(this.type)) {
             throw new IllegalArgumentException("This type cannot be its own parent");
         }
-
         checkParentCycles(parent.getParentId());
 
         this.parent = parent;

@@ -89,6 +89,7 @@ public class TypeEditorController {
 
     @FXML
     private void chooseWord() {
+        mainController.getSelectedWord().removeListener(rootListener);
         mainController.getSelectedWord().addListener(rootListener);
         chooseWordButton.setText("click on a Word");
         chooseWordButton.setStyle("-fx-text-fill: #ffffffff;");
@@ -96,8 +97,8 @@ public class TypeEditorController {
 
     @FXML
     private void deleteWord() {
-        management.setRoot(null);
         mainController.getSelectedWord().removeListener(rootListener);
+        mainController.getSelectedWord().set(null);
         chooseWordButton.setText("Choose a Word");
         chooseWordButton.setStyle("-fx-font-weight: normal;");
         chooseWordButton.setStyle("-fx-text-fill: #c0c0c0;");
@@ -106,6 +107,7 @@ public class TypeEditorController {
 
     @FXML
     private void chooseParent() {
+        mainController.getSelectedType().removeListener(parentListener);
         mainController.getSelectedType().addListener(parentListener);
         chooseParentButton.setText("click on a Type");
         chooseParentButton.setStyle("-fx-text-fill: #ffffffff;");
@@ -113,8 +115,8 @@ public class TypeEditorController {
 
     @FXML
     private void deleteParent() {
-        management.setParent(null);
         mainController.getSelectedType().removeListener(parentListener);
+        mainController.getSelectedType().set(null);
         chooseParentButton.setText("Choose a Type");
         chooseParentButton.setStyle("-fx-font-weight: normal;");
         chooseParentButton.setStyle("-fx-text-fill: #c0c0c0;");

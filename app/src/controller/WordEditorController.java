@@ -245,24 +245,19 @@ public class WordEditorController {
 
     @FXML
     private void addRoot() {
-        FXMLHandler<HBox, WordFieldController> root = new FXMLHandler<>("../fxml/fragments/editor/word_field.fxml");
-        rootsPane.getChildren().add(root.get());
-        WordFieldController wordFieldController = root.getController();
-        wordFieldController.init("Σ");
-        wordFieldController.getDeleteButton().setOnAction(event -> rootsPane.getChildren().remove(root.get()));
-
+        mainController.getSelectedWord().removeListener(chooseRootListener);
+        mainController.getSelectedWord().addListener(chooseRootListener);
     }
 
     @FXML
     private void addLink() {
-        FXMLHandler<HBox, WordFieldController> link = new FXMLHandler<>("../fxml/fragments/editor/word_field.fxml");
-        linksPane.getChildren().add(link.get());
-        link.getController().getDeleteButton().setOnAction(event -> linksPane.getChildren().remove(link.get()));
-        link.getController().init("Σ");
+        mainController.getSelectedWord().removeListener(chooseLinkListener);
+        mainController.getSelectedWord().addListener(chooseLinkListener);
     }
 
     @FXML
     private void addType() {
+        mainController.getSelectedType().removeListener(chooseTypeListener);
         mainController.getSelectedType().addListener(chooseTypeListener);
     }
 
