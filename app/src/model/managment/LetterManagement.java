@@ -10,11 +10,9 @@ public class LetterManagement {
     private Letter letter;
     private LetterDAO letterDAO;
 
-    private String letterCharacter;
-    private String letterCharacterAscii;
-
     public LetterManagement() {
         this.letterDAO = new LetterDAO();
+        this.letter = new Letter();
     }
 
     public LetterManagement(Letter letter) {
@@ -27,24 +25,10 @@ public class LetterManagement {
 
     public void editLetter() throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
 
-        if(letterCharacter.trim().length() == 0){
-            throw new IllegalArgumentException("Letter cannot be empty");
-        }
-
-        if (letterCharacterAscii.trim().length() == 0){
-            throw new IllegalArgumentException("Ascii cannot be empty");
-        }
-        if(this.letter == null){
-            Letter temp = new Letter(letterCharacter, letterCharacterAscii);
-            temp.setId(letterDAO.create(temp));
-            this.letter = temp;
+        if(this.letter.getId() == -1){
+            letterDAO.create(letter);
         }else{
-            Letter tmp = new Letter(letterCharacter, letterCharacterAscii);
-            if (!tmp.equals(this.letter)){
-                this.letter.setCharacter(letterCharacter);
-                this.letter.setCharacterAscii(letterCharacterAscii);
-                letterDAO.update(this.letter);
-            }
+            letterDAO.update(this.letter);
         }
     }
 
@@ -57,8 +41,7 @@ public class LetterManagement {
         this.letter = null;
     }
 
-    public void setLetter(String letter, String letterAscii){
-        this.letterCharacter = letter;
-        this.letterCharacterAscii = letterAscii;
+    public Letter getLetter() {
+        return letter;
     }
 }

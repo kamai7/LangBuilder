@@ -14,28 +14,28 @@ public class Word {
 
     private int id = -1;
 
-    private ArrayList<Integer> letterIds;
+    private ArrayList<Integer> letterIds = new ArrayList<>();
 
-    private double emotional;
-    private double formality;
-    private double vulgarity;
-    private boolean isUsable;
+    private double emotional = 0.5;
+    private double formality = 0.5;
+    private double vulgarity = 0.5;
+    private boolean isUsable = true;
 
-    private ArrayList<String> translations;
-    private ArrayList<String> definitions;
+    private ArrayList<String> translations = new ArrayList<>();
+    private ArrayList<String> definitions = new ArrayList<>();
     
     /** non-directed graph!!! */
-    private Set<Integer> linkIds;
+    private Set<Integer> linkIds = new HashSet<>();
     
-    private Set<Integer> rootIds;
+    private Set<Integer> rootIds = new HashSet<>();
 
-    private Set<Integer> typeIds;
+    private Set<Integer> typeIds = new HashSet<>();
 
-    private Set<Word> links;
-    private Set<Word> roots;
-    private Set<Type> types;
-    private ArrayList<Letter> letters;
-    private ArrayList<String> lettersAscii;
+    private Set<Word> links = new HashSet<>();
+    private Set<Word> roots = new HashSet<>();
+    private Set<Type> types = new HashSet<>();
+    private ArrayList<Letter> letters = new ArrayList<>();
+    private ArrayList<String> lettersAscii = new ArrayList<>();
     
     
     public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions,
@@ -47,12 +47,6 @@ public class Word {
         if (letters.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
             throw new IllegalArgumentException(Colors.error("Word.Word","invalid parameters, no letterIds or out of range"));
         }
-
-        this.letterIds = new ArrayList<>();
-        this.linkIds = new HashSet<>();
-        this.rootIds = new HashSet<>();
-        this.typeIds = new HashSet<>();
-        this.lettersAscii = new ArrayList<>();
 
         this.letters = letters;
         this.emotional = emotional;
@@ -89,7 +83,7 @@ public class Word {
             throw new IllegalArgumentException(Colors.error("Word.Word","parameters are null"));
         }
 
-        if (letters.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
+        if (letterIds.isEmpty() || emotional < 0 || emotional > 1 || formality < 0 || formality > 1 || vulgarity < 0 || vulgarity > 1) {
             throw new IllegalArgumentException(Colors.error("Word.Word","invalid parameters, no letterIds or out of range"));
         }
 
@@ -97,7 +91,6 @@ public class Word {
         this.linkIds = linkIds;
         this.rootIds = rootIds;
         this.typeIds = typeIds;
-        this.lettersAscii = new ArrayList<>();
 
         this.emotional = emotional;
         this.formality = formality;
@@ -116,7 +109,10 @@ public class Word {
     }
 
     public Word(ArrayList<Integer> letterIds) {
-        this(letterIds, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), false, new HashSet<>(), new HashSet<>(), new HashSet<>());
+        this(letterIds, 0.5, 0.5, 0.5, new ArrayList<>(), new ArrayList<>(), false, new HashSet<>(), new HashSet<>(), new HashSet<>());
+    }
+
+    public Word () {
     }
 
     @Override

@@ -35,6 +35,8 @@ import view.FXMLHandler;
 
 public class WordEditorController {
 
+    private boolean delete = true;
+
     private Controller mainController;
 
     private WordManagement management;
@@ -42,8 +44,6 @@ public class WordEditorController {
     private ChangeListener<NavTypeController> chooseTypeListener;
     private ChangeListener<NavWordController> chooseRootListener;
     private ChangeListener<NavWordController> chooseLinkListener;
-
-    private ArrayList<Letter> letters;
 
     @FXML
     private HBox chooseTypeButtonContainer;
@@ -96,17 +96,15 @@ public class WordEditorController {
     @FXML
     public void initialize() {
 
-        letters = new ArrayList<>();
-
         // Add listeners to sliders
         FragmentUtils.initSlider(lengthSlider, lengthValue, 1);
         FragmentUtils.initSlider(emotionalitySlider, emotionalityValue, 0.05);
         FragmentUtils.initSlider(vulgaritySlider, vulgarityValue, 0.05);
         FragmentUtils.initSlider(formalitySlider, formalityValue, 0.05);
 
-        emotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.setEmotionality(newValue.doubleValue()));
-        vulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.setVulgarity(newValue.doubleValue()));
-        formalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.setFormality(newValue.doubleValue()));
+        emotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.getWord().setEmotional(newValue.doubleValue()));
+        vulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.getWord().setVulgarity(newValue.doubleValue()));
+        formalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.getWord().setFormality(newValue.doubleValue()));
 
         lengthContainer.setDisable(!lengthCheckBox.isSelected());
         emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected());
@@ -121,24 +119,14 @@ public class WordEditorController {
         formalityCheckBox.selectedProperty().addListener(event -> formalityContainer.setDisable(!formalityCheckBox.isSelected()));
         rootsCheckBox.selectedProperty().addListener(event -> rootsContainer.setDisable(!rootsCheckBox.isSelected()));
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
-        usableCheckBox.selectedProperty().addListener(event -> management.setUsable(usableCheckBox.isSelected()));
-
-        addLetterField.textProperty().addListener((obs, oldVal, newVal) -> {
-            Letter letter = management.findLetterUnique(newVal);
-            if (letter != null) {
-                management.addLetter(letter);
-                addLetter(letter);
-                updateWordPreview();
-                letters.add(letter);
-            }
-        });
+        usableCheckBox.selectedProperty().addListener(event -> management.getWord().setUsable(usableCheckBox.isSelected()));
 
         chooseTypeListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
                 Type type = newValue.getType();
                 try {
-                    management.addType(newValue.getType());
+                    management.getWord().getTypes().add(newValue.getType());
 
                     FXMLHandler<HBox, WordFieldController> typeFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
                     WordFieldController typeControl = typeFragment.getController();
@@ -146,7 +134,7 @@ public class WordEditorController {
 
                     typeControl.getDeleteButton().setOnAction(event -> {
                         typesPane.getChildren().remove(typeFragment.get());
-                        management.removeType(type);
+                        management.getWord().getTypes().remove(type);
                     });
 
                     typeControl.init(type.getLabel());
@@ -169,7 +157,7 @@ public class WordEditorController {
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
                 Word word = newValue.getWord();
                 try {
-                    management.addRoot(word);
+                    management.getWord().getRoots().add(word);
 
                     FXMLHandler<HBox, WordFieldController> rootFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
                     WordFieldController rootControl = rootFragment.getController();
@@ -177,7 +165,7 @@ public class WordEditorController {
 
                     rootControl.getDeleteButton().setOnAction(event -> {
                         rootsPane.getChildren().remove(rootFragment.get());
-                        management.removeRoot(word);
+                        management.getWord().getRoots().remove(word);
                     });
 
                     rootControl.init(PersistenceUtils.wordToString(word));
@@ -200,7 +188,7 @@ public class WordEditorController {
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
                 Word word = newValue.getWord();
                 try {
-                    management.addLink(word);
+                    management.getWord().getLinks().add(word);
 
                     FXMLHandler<HBox, WordFieldController> linkFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
                     WordFieldController linkControl = linkFragment.getController();
@@ -208,7 +196,7 @@ public class WordEditorController {
 
                     linkControl.getDeleteButton().setOnAction(event -> {
                         linksPane.getChildren().remove(linkFragment.get());
-                        management.removeRoot(word);
+                        management.getWord().getLinks().remove(word);
                     });
 
                     linkControl.init(PersistenceUtils.wordToString(word));
@@ -231,24 +219,39 @@ public class WordEditorController {
 
     @FXML
     private void letterKeyEvent(KeyEvent event) {
+        ArrayList<Letter> letters = management.getLetters();
         if (event.getCode() == KeyCode.ENTER) {
             if(addLetterField.getText().length() > 0) {
                 Letter letter = management.findLetter(addLetterField.getText());
                 if (letter != null) {
-                    management.addLetter(letter);
-                    addLetter(letter);
-                    updateWordPreview();
                     letters.add(letter);
+                    addLetter(letter);
+                    
                 }
             }
         } else if (event.getCode() == KeyCode.BACK_SPACE) {
             if (addLetterField.getText().equals("") && lettersPane.getChildren().size() > 1) {
-                lettersPane.getChildren().remove(lettersPane.getChildren().size() - 2);
-                management.removeLetter(letters.get(letters.size() - 1));
-                letters.remove(letters.size() - 1);
-                updateWordPreview();
+                if (delete){
+                    lettersPane.getChildren().remove(lettersPane.getChildren().size() - 2);
+                    letters.remove(letters.size() - 1);
+                }else{
+                    delete = true;
+                }
+                
             }
+        } else {
+            Platform.runLater(() -> {
+                Letter letter = management.findLetterUnique(addLetterField.getText());
+                delete = false;
+                if (letter != null) {
+                    letters.add(letter);
+                    addLetter(letter);
+                }
+            });
         }
+        Platform.runLater(() -> {
+            updateWordPreview();
+        });
     }
 
     @FXML
@@ -388,14 +391,13 @@ public class WordEditorController {
         wordLetterController.init(l);
         wordLetterController.getDeleteButton().setOnAction(event -> {
             lettersPane.getChildren().remove(letter.get());
-            management.removeLetter(l);
-            letters.remove(l);
+            management.getLetters().remove(l);
             updateWordPreview();
         });
         Platform.runLater(() -> {
             addLetterField.setText("");
         });
-
+        delete = true;
     }
 
 }

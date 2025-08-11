@@ -57,7 +57,7 @@ public class TypeEditorController {
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
                 Word root = newValue.getWord();
                 chooseParentButton.setStyle("-fx-font-weight: bold;");
-                management.setRoot(root);
+                management.getType().setRoot(root);
                 //remove the listener
                 mainController.getSelectedWord().removeListener(this);
                 mainController.getSelectedWord().set(null);
@@ -91,6 +91,7 @@ public class TypeEditorController {
     private void chooseWord() {
         mainController.getSelectedWord().removeListener(rootListener);
         mainController.getSelectedWord().addListener(rootListener);
+        management.getType().setRoot(null);
         chooseWordButton.setText("click on a Word");
         chooseWordButton.setStyle("-fx-text-fill: #ffffffff;");
     }
@@ -117,6 +118,7 @@ public class TypeEditorController {
     private void deleteParent() {
         mainController.getSelectedType().removeListener(parentListener);
         mainController.getSelectedType().set(null);
+        management.getType().setParent(null);
         chooseParentButton.setText("Choose a Type");
         chooseParentButton.setStyle("-fx-font-weight: normal;");
         chooseParentButton.setStyle("-fx-text-fill: #c0c0c0;");
@@ -124,10 +126,11 @@ public class TypeEditorController {
 
     @FXML
     private void apply() {
-        management.setLabel(nameTextField.getText());
-        management.setColor(colorColorPicker.getValue());
-        management.setPosition(positionWordComboBox.getSelectionModel().getSelectedIndex());
         try{
+            Type type = management.getType();
+            type.setLabel(nameTextField.getText());
+            type.setColor(colorColorPicker.getValue());
+            type.setPosition(positionWordComboBox.getSelectionModel().getSelectedIndex());
             management.editType();
             mainController.initHome();
             mainController.loadTypesNav();

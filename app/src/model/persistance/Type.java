@@ -123,9 +123,13 @@ public class Type {
             throw new IllegalArgumentException(Colors.error("Type.Type:","parameters cannot be null"));
         }
         if (label.trim().length() == 0) {
-            throw new IllegalArgumentException(Colors.error("Type.Type:","label cannot be empty"));
+            throw new IllegalArgumentException(Colors.error("Type.Type:","invalid parameters length"));
         }
         this.label = label;
+    }
+
+    public Type() {
+        this.label = "";
     }
 
     public String getLabel() {

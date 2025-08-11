@@ -15,9 +15,17 @@ public class Letter {
         if (character == null || characterAscii == null) {
             throw new IllegalArgumentException(Colors.error("both parameters cannot be null"));
         }
+        if (character.trim().length() == 0 || characterAscii.trim().length() == 0) {
+            throw new IllegalArgumentException(Colors.error("both parameters cannot be empty"));
+        }
 
         this.character = character;
         this.characterAscii = characterAscii;
+    }
+
+    public Letter() {
+        character = "";
+        characterAscii = "";
     }
 
     public int getId() {
@@ -37,10 +45,22 @@ public class Letter {
     }
 
     public void setCharacter(String character) {
+        if (character == null) {
+            throw new IllegalArgumentException(Colors.error("Letter.setCharacter:","character cannot be null"));
+        }
+        if (character.trim().length() == 0) {
+            throw new IllegalArgumentException(Colors.error("Letter.setCharacter:","character cannot be empty"));
+        }
         this.character = character;
     }
 
     public void setCharacterAscii(String characterAscii) {
+        if (characterAscii == null) {
+            throw new IllegalArgumentException(Colors.error("Letter.setCharacterAscii:","characterAscii cannot be null"));
+        }
+        if (characterAscii.trim().length() == 0) {
+            throw new IllegalArgumentException(Colors.error("Letter.setCharacterAscii:","characterAscii cannot be empty"));
+        }
         this.characterAscii = characterAscii;
     }
 

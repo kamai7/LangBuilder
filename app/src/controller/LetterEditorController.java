@@ -44,7 +44,8 @@ public class LetterEditorController {
     @FXML
     private void apply() {
         try{
-            management.setLetter(letter.getText(), ascii.getText());
+            management.getLetter().setCharacter(letter.getText());
+            management.getLetter().setCharacterAscii(ascii.getText());
             management.editLetter();
             mainController.initHome();
             mainController.loadLettersNav();
