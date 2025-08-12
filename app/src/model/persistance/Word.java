@@ -14,28 +14,27 @@ public class Word {
 
     private int id = -1;
 
-    private ArrayList<Integer> letterIds = new ArrayList<>();
+    private ArrayList<Integer> letterIds;
 
-    private double emotional = 0.5;
-    private double formality = 0.5;
-    private double vulgarity = 0.5;
-    private boolean isUsable = true;
+    private double emotional;
+    private double formality;
+    private double vulgarity;
+    private boolean isUsable;
 
-    private ArrayList<String> translations = new ArrayList<>();
-    private ArrayList<String> definitions = new ArrayList<>();
+    private ArrayList<String> translations;
+    private ArrayList<String> definitions;
     
     /** non-directed graph!!! */
-    private Set<Integer> linkIds = new HashSet<>();
+    private Set<Integer> linkIds;
     
-    private Set<Integer> rootIds = new HashSet<>();
+    private Set<Integer> rootIds;
 
-    private Set<Integer> typeIds = new HashSet<>();
+    private Set<Integer> typeIds;
 
-    private Set<Word> links = new HashSet<>();
-    private Set<Word> roots = new HashSet<>();
-    private Set<Type> types = new HashSet<>();
-    private ArrayList<Letter> letters = new ArrayList<>();
-    private ArrayList<String> lettersAscii = new ArrayList<>();
+    private Set<Word> links;
+    private Set<Word> roots;
+    private Set<Type> types;
+    private ArrayList<Letter> letters;
     
     
     public Word(ArrayList<Letter> letters, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions,
@@ -58,23 +57,6 @@ public class Word {
         this.roots = roots;
         this.types = types;
         this.isUsable = isUsable;
-
-        for (Letter letter : letters) {
-            this.lettersAscii.add(letter.getCharacterAscii());
-            this.letterIds.add(letter.getId());
-        }
-
-        for (Word link : links) {
-            this.linkIds.add(link.getId());
-        }
-
-        for (Word root : roots) {
-            this.rootIds.add(root.getId());
-        }
-
-        for (Type type : types) {
-            this.typeIds.add(type.getId());
-        }
     }
 
     public Word(ArrayList<Integer> letterIds, double emotional, double formality, double vulgarity, ArrayList<String> translations, ArrayList<String> definitions, boolean isUsable,
@@ -98,27 +80,29 @@ public class Word {
         this.translations = translations;
         this.definitions = definitions;
         this.isUsable = isUsable;
-
-        for (Letter letter : letters) {
-            this.lettersAscii.add(letter.getCharacterAscii());
-        }
-    }
-
-    public Word(ArrayList<Integer> letterIds, double emotional, double formality, double vulgarity) {
-        this(letterIds, emotional, formality, vulgarity, new ArrayList<>(), new ArrayList<>(), false, new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
     public Word(ArrayList<Integer> letterIds) {
-        this(letterIds, 0.5, 0.5, 0.5, new ArrayList<>(), new ArrayList<>(), false, new HashSet<>(), new HashSet<>(), new HashSet<>());
+        this(letterIds, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), true, new HashSet<>(), new HashSet<>(), new HashSet<>());
     }
 
     public Word () {
+        this.letterIds = new ArrayList<>();
+        this.linkIds = new HashSet<>();
+        this.rootIds = new HashSet<>();
+        this.typeIds = new HashSet<>();
+
+        this.emotional = 0;
+        this.formality = 0;
+        this.vulgarity = 0;
+        this.translations = new ArrayList<>();
+        this.definitions = new ArrayList<>();
+        this.isUsable = true;
     }
 
     @Override
     public String toString() {
-        return "Word: " + id + " : " +
-            letters + " (" + lettersAscii + ") " +
+        return "Word: " + id + " : " + letters +
             "\n\t translations=" + translations +
             "\n\t definitions=" + definitions +
             "\n\t emotional=" + emotional +
@@ -130,22 +114,28 @@ public class Word {
     }
 
     public ArrayList<Integer> getLetterIds() {
+        if (letterIds == null) {
+            letterIds = new ArrayList<>();
+            for (Letter letter : letters) {
+                letterIds.add(letter.getId());
+            }
+        }
+
+        letters = null;
         return letterIds;
     }
 
     public ArrayList<Letter> getLetters() {
         if (letters == null) {
-            letterIds = new ArrayList<>();
+            letters = new ArrayList<>();
             LetterDAO letterDAO = new LetterDAO();
             for (Letter letter : letters) {
                 letters.add(letterDAO.findById(letter.getId()));
             }
         }
-        return letters;
-    }
 
-    public ArrayList<String> getLettersAscii() {
-        return lettersAscii;
+        letterIds = null;
+        return letters;
     }
 
     public ArrayList<String> getTranslations() {
@@ -182,10 +172,20 @@ public class Word {
         for (Integer id : rootIds) {
             roots.add(wordDAO.findById(id));
         }
+
+        rootIds = null;
         return roots;
     }
 
     public Set<Integer> getRootIds() {
+        if (rootIds == null) {
+            rootIds = new HashSet<>(); 
+            for (Word word : roots) {
+                rootIds.add(word.getId());
+            }
+        }
+
+        roots = null;
         return rootIds;
     }
 
@@ -197,23 +197,43 @@ public class Word {
             links.add(wordDAO.findById(id));
         }
 
+        linkIds = null;
         return links;
     }
 
     public Set<Integer> getLinkIds() {
+        if (linkIds == null) {
+            linkIds = new HashSet<>(); 
+            for (Word word : links) {
+                linkIds.add(word.getId());
+            }
+        }
+
         return linkIds;
     }
 
     public Set<Type> getTypes() {
-        types = new HashSet<>(); 
-        TypeDAO typeDAO = new TypeDAO();
-        for (Integer id : typeIds) {
-            types.add(typeDAO.findById(id));
+        if (types == null) {
+            types = new HashSet<>(); 
+            TypeDAO typeDAO = new TypeDAO();
+            for (Integer id : typeIds) {
+                types.add(typeDAO.findById(id));
+            }
         }
+        
+        typeIds = null;
         return types;
     }
 
     public Set<Integer> getTypeIds() {
+        if (typeIds == null) {
+            typeIds = new HashSet<>(); 
+            for (Type type : types) {
+                typeIds.add(type.getId());
+            }
+        }
+
+        types = null;
         return typeIds;
     }
 
@@ -225,18 +245,12 @@ public class Word {
     }
 
     public void setLetters(ArrayList<Letter> letters) {
-        if (letterIds == null || letterIds.isEmpty()) {
+        if (letters == null || letters.isEmpty()) {
             throw new IllegalArgumentException(Colors.error("Word.setLetters","letterIds cannot be null or empty"));
         }
 
         this.letters = letters;
-        this.lettersAscii = new ArrayList<>();
-        this.letterIds = new ArrayList<>();
-
-        for (Letter letter : letters) {
-            this.lettersAscii.add(letter.getCharacterAscii());
-            this.letterIds.add(letter.getId());
-        }
+        this.letterIds = null;
     }
 
     public void setLetterIds(ArrayList<Integer> letterIds) {
@@ -286,20 +300,16 @@ public class Word {
         this.isUsable = isUsable;
     }
 
-    public void setRoots(HashSet<Word> roots) {
+    public void setRoots(Set<Word> roots) {
         if (roots == null) {
             throw new IllegalArgumentException(Colors.error("Word.setRoots","roots cannot be null"));
         }
 
         this.roots = roots;
-        this.rootIds = new HashSet<>();
-
-        for (Word word : roots) {
-            this.rootIds.add(word.getId());
-        }
+        this.rootIds = null;
     }
 
-    public void setRoots(Set<Integer> rootIds) {
+    public void setRootsId(Set<Integer> rootIds) {
         if (rootIds == null) {
             throw new IllegalArgumentException(Colors.error("Word.setRoots","rootIds cannot be null"));
         }
@@ -308,20 +318,16 @@ public class Word {
         this.roots = null;
     }
 
-    public void setLinks(HashSet<Word> links) {
+    public void setLinks(Set<Word> links) {
         if (links == null) {
             throw new IllegalArgumentException(Colors.error("Word.setLinks","links cannot be null"));
         }
 
         this.links = links;
-        this.linkIds = new HashSet<>();
-
-        for (Word word : links) {
-            this.linkIds.add(word.getId());
-        }
+        this.linkIds = null;
     }
 
-    public void setLinks(Set<Integer> linkIds) {
+    public void setLinksId(Set<Integer> linkIds) {
         if (linkIds == null) {
             throw new IllegalArgumentException(Colors.error("Word.setLinks","linkIds cannot be null"));
         }
@@ -330,20 +336,16 @@ public class Word {
         this.links = null;
     }
 
-    public void setTypes(HashSet<Type> types) {
+    public void setTypes(Set<Type> types) {
         if (types == null) {
             throw new IllegalArgumentException(Colors.error("Word.setTypes","types cannot be null"));
         }
 
         this.types = types;
-        this.typeIds = new HashSet<>();
-
-        for (Type type : types) {
-            this.typeIds.add(type.getId());
-        }
+        this.typeIds = null;
     }
 
-    public void setTypes(Set<Integer> typeIds) {
+    public void setTypesId(Set<Integer> typeIds) {
         if (typeIds == null) {
             throw new IllegalArgumentException(Colors.error("Word.setTypes","typeIds cannot be null"));
         }

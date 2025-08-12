@@ -179,7 +179,7 @@
                               <HBox fx:id="lengthContainer" alignment="CENTER_LEFT">
                                  <children>
                                     <TextField fx:id="lengthValue" alignment="CENTER" minWidth="0.0" prefWidth="20.0" style="-fx-padding: 2;" text="10" />
-                                    <Slider fx:id="lengthSlider" blockIncrement="1.0" majorTickUnit="10.0" max="60.0" maxWidth="800.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="10.0" HBox.hgrow="ALWAYS" />
+                                    <Slider fx:id="lengthSlider" blockIncrement="1.0" majorTickUnit="10.0" max="60.0" maxWidth="800.0" min="1.0" minorTickCount="5" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="1.0" HBox.hgrow="ALWAYS" />
                                  </children>
                                  <padding>
                                     <Insets left="5.0" />
@@ -203,21 +203,21 @@
                               <HBox fx:id="emotionalityContainer" spacing="5.0" GridPane.columnIndex="2">
                                  <children>
                                     <TextField fx:id="emotionalityValue" alignment="CENTER" minWidth="30.0" prefWidth="30.0" style="-fx-padding: 2;" text="0.5" />
-                                    <Slider fx:id="emotionalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                    <Slider fx:id="emotionalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" />
                                  </children>
                               </HBox>
                               <CheckBox fx:id="vulgarityCheckBox" layoutX="10.0" layoutY="11.0" mnemonicParsing="false" selected="true" styleClass="text-color1" text="Vulgarity" GridPane.rowIndex="1" />
                               <HBox fx:id="vulgarityContainer" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                  <children>
                                     <TextField fx:id="vulgarityValue" alignment="CENTER" minWidth="30.0" prefWidth="30.0" style="-fx-padding: 2;" text="0.5" />
-                                    <Slider fx:id="vulgaritySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" value="0.5" />
+                                    <Slider fx:id="vulgaritySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" snapToTicks="true" />
                                  </children>
                               </HBox>
                               <CheckBox fx:id="formalityCheckBox" layoutX="10.0" layoutY="46.0" mnemonicParsing="false" selected="true" styleClass="text-color1" text="Formality" GridPane.rowIndex="2" />
                               <HBox fx:id="formalityContainer" spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                                  <children>
                                     <TextField fx:id="formalityValue" alignment="CENTER" minWidth="30.0" prefWidth="30.0" style="-fx-padding: 2;" text="0.5" />
-                                    <Slider fx:id="formalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" value="0.5" />
+                                    <Slider fx:id="formalitySlider" blockIncrement="0.05" majorTickUnit="0.25" max="1.0" showTickMarks="true" />
                                  </children>
                               </HBox>
                            </children>

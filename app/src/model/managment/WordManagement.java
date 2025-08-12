@@ -13,7 +13,6 @@ public class WordManagement {
     private Word word;
     private WordDAO wordDAO;
 
-    private ArrayList<Letter> lettersList;
     private ArrayList<String> allLetters;
     private ArrayList<String> allLettersAscii;
     
@@ -21,7 +20,6 @@ public class WordManagement {
         wordDAO = new WordDAO();
         
         word = new Word();
-        lettersList = new ArrayList<>();
 
         findLetters();
     }
@@ -33,8 +31,6 @@ public class WordManagement {
         this.word = word;
         wordDAO = new WordDAO();
 
-        lettersList = word.getLetters();
-
         findLetters();
     }
 
@@ -44,6 +40,15 @@ public class WordManagement {
         }
         wordDAO.delete(word);
         this.word = null;
+    }
+
+    public void edit() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
+
+        if(word.getId() == -1){
+            wordDAO.create(word);
+        }else{
+            wordDAO.update(word);
+        }
     }
 
     private void findLetters(){
@@ -115,10 +120,6 @@ public class WordManagement {
 
     public Word getWord() {
         return word;
-    }
-
-    public ArrayList<Letter> getLetters() {
-        return lettersList;
     }
 
 }

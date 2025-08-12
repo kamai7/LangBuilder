@@ -45,11 +45,6 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
-    public ArrayList<Letter> findAll() {
-        return findAll(-1);
-    }
-
-    @Override
     public Letter findById(int id) {
         Letter ret = null;
         String query = "SELECT * FROM Letter WHERE letterId = ?";
@@ -71,7 +66,6 @@ public  class LetterDAO extends DAO<Letter> {
         return ret;
     }
 
-    @Override
     public ArrayList<Letter> findByString(String str){
         
         String query = "SELECT * FROM Letter WHERE letter LIKE ? OR letterAscii LIKE ? ORDER BY char_length(letterAscii), letterAscii ASC LIMIT 200";

@@ -46,11 +46,6 @@ public class WordDAO extends DAO<Word> {
         return ret;
     }
 
-    @Override
-    public ArrayList<Word> findAll() {
-        return findAll(-1);
-    }
-
     /*
     also uopdate the word
      */
@@ -141,11 +136,6 @@ public class WordDAO extends DAO<Word> {
         return ret;
     }
 
-    @Override
-    public ArrayList<Word> findByString(String str) {
-        return null;
-    }
-
     public ArrayList<Word> findByTranslation(String translation){
         Set<Word> ret = new HashSet<>();
 
@@ -171,10 +161,10 @@ public class WordDAO extends DAO<Word> {
         ArrayList<Integer> find = null;
         String query = "SELECT wordLId FROM WordsLetters WHERE position = ? AND letterWId = ?";
 
-        try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement(query)) {
+        try (Connection c = getConnection()) {
             
             for (int i = 0; i < letters.size(); i++) {
+                PreparedStatement ps = c.prepareStatement(query);
                 ps.setInt(1, i+1);
                 ps.setInt(2, letters.get(i).getId());
                 ResultSet rs = ps.executeQuery();

@@ -91,7 +91,6 @@ public class TypeEditorController {
     private void chooseWord() {
         mainController.getSelectedWord().removeListener(rootListener);
         mainController.getSelectedWord().addListener(rootListener);
-        management.getType().setRoot(null);
         chooseWordButton.setText("click on a Word");
         chooseWordButton.setStyle("-fx-text-fill: #ffffffff;");
     }
@@ -183,11 +182,11 @@ public class TypeEditorController {
         this.headerObject.setStyle("-fx-text-fill:" + Colors.radialGradient(colors[0], colors[1]));
         this.nameTextField.setText(type.getLabel());
         this.colorColorPicker.setValue(type.getColor());
-        if (type.getParentId() != 0) {
+        if (type.getParentId() != -1) {
             this.chooseParentButton.setText(type.getParent().getLabel());
             this.chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(type.getColor()) + "; -fx-font-weight: bold;");
         }
-        if (type.getRootId() != 0) {
+        if (type.getRootId() != -1) {
             this.chooseWordButton.setText(PersistenceUtils.wordToString(type.getRoot()));
             this.chooseWordButton.setStyle("-fx-font-weight: bold;");
         }

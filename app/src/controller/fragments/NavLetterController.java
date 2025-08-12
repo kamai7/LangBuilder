@@ -47,7 +47,7 @@ public class NavLetterController {
 
     public void init(Controller mainController, Letter letter) {
         if (mainController == null || letter == null) {
-            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController and object cannot be null"));
+            throw new IllegalArgumentException(Colors.error("NavLetterController.init" , "mainController and object cannot be null"));
         }
         this.mainController = mainController;
         this.object = letter;

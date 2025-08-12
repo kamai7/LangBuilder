@@ -3,6 +3,7 @@ package controller;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.Set;
 
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
@@ -128,17 +129,7 @@ public class WordEditorController {
                 try {
                     management.getWord().getTypes().add(newValue.getType());
 
-                    FXMLHandler<HBox, WordFieldController> typeFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
-                    WordFieldController typeControl = typeFragment.getController();
-                    typesPane.getChildren().add(typeFragment.get());
-
-                    typeControl.getDeleteButton().setOnAction(event -> {
-                        typesPane.getChildren().remove(typeFragment.get());
-                        management.getWord().getTypes().remove(type);
-                    });
-
-                    typeControl.init(type.getLabel());
-                    typeControl.setStyle("-fx-text-fill: " + Colors.colorToHex(type.getColor()) + "; -fx-font-weight: bold;");
+                    addField(type, typesPane, management.getWord().getTypes(), type.getLabel(), type.getColor());
 
                     //remove the listener
                     mainController.getSelectedType().removeListener(this);
@@ -158,19 +149,8 @@ public class WordEditorController {
                 Word word = newValue.getWord();
                 try {
                     management.getWord().getRoots().add(word);
-
-                    FXMLHandler<HBox, WordFieldController> rootFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
-                    WordFieldController rootControl = rootFragment.getController();
-                    rootsPane.getChildren().add(rootFragment.get());
-
-                    rootControl.getDeleteButton().setOnAction(event -> {
-                        rootsPane.getChildren().remove(rootFragment.get());
-                        management.getWord().getRoots().remove(word);
-                    });
-
-                    rootControl.init(PersistenceUtils.wordToString(word));
-                    rootControl.setStyle("-fx-font-weight: bold;");
-
+                    addField(word, rootsPane, management.getWord().getRoots(), PersistenceUtils.wordToString(word), null);
+                    
                     //remove the listener
                     mainController.getSelectedWord().removeListener(this);
                     mainController.getSelectedWord().set(null);
@@ -189,18 +169,7 @@ public class WordEditorController {
                 Word word = newValue.getWord();
                 try {
                     management.getWord().getLinks().add(word);
-
-                    FXMLHandler<HBox, WordFieldController> linkFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
-                    WordFieldController linkControl = linkFragment.getController();
-                    linksPane.getChildren().add(linkFragment.get());
-
-                    linkControl.getDeleteButton().setOnAction(event -> {
-                        linksPane.getChildren().remove(linkFragment.get());
-                        management.getWord().getLinks().remove(word);
-                    });
-
-                    linkControl.init(PersistenceUtils.wordToString(word));
-                    linkControl.setStyle("-fx-font-weight: bold;");
+                    addField(word, linksPane, management.getWord().getLinks(), PersistenceUtils.wordToString(word), null); 
 
                     //remove the listener
                     mainController.getSelectedWord().removeListener(this);
@@ -219,7 +188,7 @@ public class WordEditorController {
 
     @FXML
     private void letterKeyEvent(KeyEvent event) {
-        ArrayList<Letter> letters = management.getLetters();
+        ArrayList<Letter> letters = management.getWord().getLetters();
         if (event.getCode() == KeyCode.ENTER) {
             if(addLetterField.getText().length() > 0) {
                 Letter letter = management.findLetter(addLetterField.getText());
@@ -289,9 +258,24 @@ public class WordEditorController {
 
     @FXML
     private void apply() {
-        management.addTranslations(translationsArea.getText());
-        management.addDefinitions(definitionsArea.getText());
-        mainController.initHome();
+        try{
+            management.addTranslations(translationsArea.getText());
+            management.addDefinitions(definitionsArea.getText());
+            management.edit();
+            mainController.initHome();
+        }catch(IllegalArgumentException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.setTitle("Arguments error");
+            alert.setContentText(e.getMessage());
+            alert.show();
+            System.out.println(e.getMessage());
+        }catch(SQLIntegrityConstraintViolationException e){
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+            alert.setTitle("Clone error");
+            alert.setContentText("this word already exists");
+            alert.show();
+            System.out.println(e.getMessage());
+        }
     }
 
     @FXML
@@ -356,6 +340,40 @@ public class WordEditorController {
         management = new WordManagement(word);
 
         this.headerObject.setText(PersistenceUtils.wordToString(word));
+
+        emotionalitySlider.setValue(word.getEmotional());
+        vulgaritySlider.setValue(word.getVulgarity());
+        formalitySlider.setValue(word.getFormality());
+
+        String definitionsText = "";
+        for (String s : word.getDefinitions()) {
+            definitionsText += s + ";\n";
+        }
+        definitionsArea.setText(definitionsText);
+
+        String translationsText = "";
+        for (String s : word.getTranslations()) {
+            translationsText += s + ";\n";
+        }
+        translationsArea.setText(translationsText);
+
+        ArrayList<Letter> letters = management.getWord().getLetters();
+        lengthSlider.setValue(letters.size());
+        for (Letter l: letters) {
+            addLetter(l);
+        }
+        updateWordPreview();
+
+        for (Type t : word.getTypes()) {
+            addField(t, typesPane, management.getWord().getTypes(), t.getLabel(), t.getColor());
+        }
+        for (Word w : word.getRoots()) {
+            addField(w, rootsPane, management.getWord().getRoots(), PersistenceUtils.wordToString(w), null);
+        }
+        for (Word w : word.getLinks()) {
+            addField(w, linksPane, management.getWord().getLinks(), PersistenceUtils.wordToString(w), null);
+        }
+
     }
 
     public void init(Controller mainController) {
@@ -372,7 +390,7 @@ public class WordEditorController {
     }
 
     private void updateWordPreview() {
-        ArrayList<Letter> letters = management.getLetters();
+        ArrayList<Letter> letters = management.getWord().getLetters();
         String word = "";
         String wordAscii = "";
 
@@ -391,13 +409,32 @@ public class WordEditorController {
         wordLetterController.init(l);
         wordLetterController.getDeleteButton().setOnAction(event -> {
             lettersPane.getChildren().remove(letter.get());
-            management.getLetters().remove(l);
+            management.getWord().getLetters().remove(l);
             updateWordPreview();
         });
         Platform.runLater(() -> {
             addLetterField.setText("");
         });
         delete = true;
+    }
+
+    private <U> void addField(U object, FlowPane fieldPane, Set<U> actionOn, String text, Color color) {
+        FXMLHandler<HBox, WordFieldController> fieldFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
+        WordFieldController fieldControl = fieldFragment.getController();
+        fieldPane.getChildren().add(fieldFragment.get());
+
+        fieldControl.getDeleteButton().setOnAction(event -> {
+            fieldPane.getChildren().remove(fieldFragment.get());
+            actionOn.remove(object);
+        });
+
+        fieldControl.init(text);
+        if (color == null) {
+            fieldControl.setStyle("-fx-font-weight: bold;");
+        } else {
+            fieldControl.setStyle("-fx-text-fill: " + Colors.colorToHex(color) + "; -fx-font-weight: bold;");
+        }
+        
     }
 
 }

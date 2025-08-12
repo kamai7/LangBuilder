@@ -58,7 +58,7 @@ public class NavWordController {
 
     public void init(Controller mainController, Word word) {
         if (mainController == null || word == null) {
-            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController and object cannot be null"));
+            throw new IllegalArgumentException(Colors.error("NavWordController.init" , "mainController and object cannot be null"));
         }
         this.mainController = mainController;
         this.object = word;

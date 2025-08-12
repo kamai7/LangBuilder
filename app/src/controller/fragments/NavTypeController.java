@@ -47,13 +47,14 @@ public class NavTypeController {
 
     public void init(Controller mainController, Type type) {
         if (mainController == null || type == null) {
-            throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController and object cannot be null"));
+            if (mainController == null) System.out.println("mainController == null");
+            throw new IllegalArgumentException(Colors.error("TypeItemController.init" , "mainController and object cannot be null"));
         }
         this.mainController = mainController;
         this.object = type;
         objectLabel.setText(type.getLabel());
         objectLabel.setStyle("-fx-text-fill:" + Colors.colorToHex(type.getColor()));
-        if (type.getParentId() != 0) {
+        if (type.getParentId() != -1) {
             descriptionLabel.setText(type.getParent().getLabel());
             descriptionLabel.setStyle("-fx-text-fill:" + Colors.colorToHex(type.getParent().getColor()));
         }else{

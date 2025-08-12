@@ -21,13 +21,6 @@ abstract class DAO<T> {
     DAO() {}
 
     /**
-     * Finds all objects of type T in the database which contains the given string.
-     * @param str the string to search for
-     * @return an ArrayList containing all objects of type T, or an empty list if none are found
-     */
-    public abstract ArrayList<T> findByString(String str);
-
-    /**
      * Finds all objects of type T in the database.
      * @param limit the maximum number of objects to return (-1 for no limit).
      * @return an ArrayList containing all objects of type T, or an empty list if none are found.
@@ -38,7 +31,9 @@ abstract class DAO<T> {
      * Finds all objects of type T in the database.
      * @return an ArrayList containing all objects of type T, or an empty list if none are found.
      */
-    public abstract ArrayList<T> findAll();
+    public ArrayList<T> findAll() {
+        return findAll(-1);
+    };
 
     /**
      * Finds an object of type T by its ID.

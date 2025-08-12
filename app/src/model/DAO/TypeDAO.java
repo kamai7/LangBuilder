@@ -36,7 +36,13 @@ public class TypeDAO extends DAO<Type>{
 
             while (rs.next()) {
                 int parentId = rs.getInt("parentId");
+                if (rs.wasNull()){
+                    parentId = -1;
+                }
                 int rootId = rs.getInt("rootId");
+                if (rs.wasNull()){
+                    rootId = -1;
+                }
                 Color color = Colors.convertRGBAToColor(new int[]{rs.getInt("colorR"), rs.getInt("colorG"), rs.getInt("colorB"), rs.getInt("colorT")});
                 Type type = new Type(rs.getString("label"), parentId, rootId, rs.getInt("position"), color);
                 type.setId(rs.getInt("typeId"));
@@ -47,11 +53,6 @@ public class TypeDAO extends DAO<Type>{
         }
 
         return ret;
-    }
-
-    @Override
-    public ArrayList<Type> findAll() {
-        return findAll(-1);
     }
 
     @Override
@@ -67,7 +68,13 @@ public class TypeDAO extends DAO<Type>{
 
             if (rs.next()){
                 int parentId = rs.getInt("parentId");
+                if (rs.wasNull()){
+                    parentId = -1;
+                }
                 int rootId = rs.getInt("rootId");
+                if (rs.wasNull()){
+                    rootId = -1;
+                }
                 Color color = Colors.convertRGBAToColor(new int[]{rs.getInt("colorR"), rs.getInt("colorG"), rs.getInt("colorB"), rs.getInt("colorT")});
                 ret = new Type(rs.getString("label"), parentId, rootId, rs.getInt("position"), color);
                 ret.setId(id);
@@ -81,7 +88,7 @@ public class TypeDAO extends DAO<Type>{
     
     public ArrayList<Type> findByLabel(String label){
         ArrayList<Type> ret = new ArrayList<>();
-        String query = "SELECT typeId FROM Type WHERE label LIKE ? ORDER BY label asc";
+        String query = "SELECT typeId, parentId FROM Type WHERE label LIKE ? ORDER BY label asc";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
@@ -91,7 +98,10 @@ public class TypeDAO extends DAO<Type>{
 
             while (rs.next()) {
                 ret.add(findById(rs.getInt("typeId")));
-                ret.add(findById(rs.getInt("parentId")));
+                int parentId = rs.getInt("parentId");
+                if (!rs.wasNull()){
+                    ret.add(findById(parentId));
+                }
             }
         } catch (Exception e) {
             System.err.println(Colors.error("TypeDAO.findByLabel: ", e.getMessage()));
@@ -101,13 +111,10 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public ArrayList<Type> findByString(String str) {
-        return null;
-    }
-
-    @Override
     public void update(Type type) {
         String query = "UPDATE Type SET label = ?, colorR = ?, colorG = ?, colorB = ?, colorT = ?, parentId = ?, rootId = ?, position = ? WHERE typeId = ?";
+
+        System.out.println(type);
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
@@ -119,13 +126,13 @@ public class TypeDAO extends DAO<Type>{
             ps.setInt(4,color[2]);
             ps.setInt(5,color[3]);
 
-            if (type.getParentId() == 0) {
+            if (type.getParentId() == -1) {
                 ps.setNull(6, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(6, type.getParentId());
             }
 
-            if (type.getRootId() == 0) {
+            if (type.getRootId() == -1) {
                 ps.setNull(7, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(7, type.getRootId());
@@ -162,13 +169,13 @@ public class TypeDAO extends DAO<Type>{
             ps.setInt(5,color[2]);
             ps.setInt(6,color[3]);
 
-            if (type.getParentId() == 0) {
+            if (type.getParentId() == -1) {
                 ps.setNull(7, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(7, type.getParentId());
             }
 
-            if (type.getRootId() == 0) {
+            if (type.getRootId() == -1) {
                 ps.setNull(8, java.sql.Types.INTEGER);
             } else {
                 ps.setInt(8, type.getRootId());
