@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-
 import model.persistance.Letter;
 import model.persistance.Word;
 import utils.Colors;
@@ -239,8 +238,8 @@ public class WordDAO extends DAO<Word> {
     }
 
     public void updateDefinitions(Word word){
-        String queryDelete = "DELETE FROM Def WHERE dWordId = ?";
-        String queryAdd = "INSERT INTO Def VALUES (?, ?)";
+        String queryDelete = "DELETE FROM Definition WHERE dWordId = ?";
+        String queryAdd = "INSERT INTO Definition VALUES (?, ?)";
         int rows = 0;
         try(Connection c = getConnection()){
 
@@ -269,7 +268,7 @@ public class WordDAO extends DAO<Word> {
 
     public void updateTranslations(Word word){
         String queryDelete = "DELETE FROM Translation WHERE tWordId = ?";
-        String queryAdd = "INSERT INTO Translation VALUES (?, ?)";
+        String queryAdd = "INSERT INTO Translation (tWordId, translation) VALUES (?, ?)";
         int rows = 0;
         try(Connection c = getConnection()){
 

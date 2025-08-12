@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
 import model.dao.LetterDAO;
 import model.dao.TypeDAO;
 import model.dao.WordDAO;
@@ -129,8 +128,8 @@ public class Word {
         if (letters == null) {
             letters = new ArrayList<>();
             LetterDAO letterDAO = new LetterDAO();
-            for (Letter letter : letters) {
-                letters.add(letterDAO.findById(letter.getId()));
+            for (int letterId : letterIds) {
+                letters.add(letterDAO.findById(letterId));
             }
         }
 
