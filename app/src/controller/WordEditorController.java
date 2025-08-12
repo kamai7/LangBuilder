@@ -226,19 +226,19 @@ public class WordEditorController {
 
     @FXML
     private void addRoot() {
-        mainController.getSelectedWord().removeListener(chooseRootListener);
+        removeAllListeners();
         mainController.getSelectedWord().addListener(chooseRootListener);
     }
 
     @FXML
     private void addLink() {
-        mainController.getSelectedWord().removeListener(chooseLinkListener);
+        removeAllListeners();
         mainController.getSelectedWord().addListener(chooseLinkListener);
     }
 
     @FXML
     private void addType() {
-        mainController.getSelectedType().removeListener(chooseTypeListener);
+        removeAllListeners();
         mainController.getSelectedType().addListener(chooseTypeListener);
     }
 
@@ -263,6 +263,7 @@ public class WordEditorController {
             management.addTranslations(translationsArea.getText());
             management.addDefinitions(definitionsArea.getText());
             management.edit();
+            removeAllListeners();
             mainController.initHome();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
@@ -281,6 +282,7 @@ public class WordEditorController {
 
     @FXML
     private void cancel() {
+        removeAllListeners();
         mainController.initHome();
     }
 
@@ -288,6 +290,7 @@ public class WordEditorController {
     private void delete() {
         try{
             management.deleteWord();
+            removeAllListeners();
             mainController.initHome();
             mainController.loadLettersNav();
         }catch(IllegalArgumentException e){
@@ -436,6 +439,12 @@ public class WordEditorController {
             fieldControl.setStyle("-fx-text-fill: " + Colors.colorToHex(color) + "; -fx-font-weight: bold;");
         }
         
+    }
+
+    public void removeAllListeners() {
+        mainController.getSelectedType().removeListener(chooseTypeListener);
+        mainController.getSelectedWord().removeListener(chooseLinkListener);
+        mainController.getSelectedWord().removeListener(chooseRootListener);
     }
 
 }
