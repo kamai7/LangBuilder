@@ -89,7 +89,7 @@ public class TypeEditorController {
 
     @FXML
     private void chooseWord() {
-        mainController.getSelectedWord().removeListener(rootListener);
+        removeAllListeners();
         mainController.getSelectedWord().addListener(rootListener);
         chooseWordButton.setText("click on a Word");
         chooseWordButton.setStyle("-fx-text-fill: #ffffffff;");
@@ -107,7 +107,7 @@ public class TypeEditorController {
 
     @FXML
     private void chooseParent() {
-        mainController.getSelectedType().removeListener(parentListener);
+        removeAllListeners();
         mainController.getSelectedType().addListener(parentListener);
         chooseParentButton.setText("click on a Type");
         chooseParentButton.setStyle("-fx-text-fill: #ffffffff;");
@@ -131,6 +131,7 @@ public class TypeEditorController {
             type.setColor(colorColorPicker.getValue());
             type.setPosition(positionWordComboBox.getSelectionModel().getSelectedIndex());
             management.editType();
+            removeAllListeners();
             mainController.initHome();
             mainController.loadTypesNav();
         }catch(IllegalArgumentException e){
@@ -150,6 +151,7 @@ public class TypeEditorController {
 
     @FXML
     private void cancel() {
+        removeAllListeners();
         mainController.initHome();
     }
 
@@ -157,6 +159,7 @@ public class TypeEditorController {
     private void delete() {
         try{
             management.deleteType();
+            removeAllListeners();
             mainController.initHome();
             mainController.loadTypesNav();
         }catch(IllegalArgumentException e){
@@ -168,6 +171,11 @@ public class TypeEditorController {
             alert.setTitle("In use error");
             alert.show();
         }
+    }
+
+    private void removeAllListeners() {
+        mainController.getSelectedType().removeListener(parentListener);
+        mainController.getSelectedWord().removeListener(rootListener);
     }
 
     public void init(Controller mainController, Type type) {
