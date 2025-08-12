@@ -28,7 +28,7 @@ public class WordDAO extends DAO<Word> {
         if (limit == -1){
             query = "SELECT w.wordId FROM WordsLetters wl JOIN Word w ON wl.wordLId = w.wordId JOIN Letter l ON l.letterId = wl.letterWId GROUP BY w.wordId ORDER BY COUNT(*) ASC, MIN(l.letterAscii) ASC";
         }else{
-            query = "SELECT w.wordId FROM WordsLetters wl JOIN Word w ON wl.wordLId = w.wordId JOIN Letter l ON l.letterId = wl.letterWId GROUP BY w.wordId ORDER BY COUNT(*) ASC, MIN(l.letterAscii) ASC " + limit;
+            query = "SELECT w.wordId FROM WordsLetters wl JOIN Word w ON wl.wordLId = w.wordId JOIN Letter l ON l.letterId = wl.letterWId GROUP BY w.wordId ORDER BY COUNT(*) ASC, MIN(l.letterAscii) ASC LIMIT " + limit;
         }
 
         try (Connection c = getConnection();
@@ -458,7 +458,7 @@ public class WordDAO extends DAO<Word> {
         String queryTrans = "INSERT INTO Translation (tWordId, translation) VALUES (?, ?)";
         String queryLink = "INSERT INTO Link (lWordId, linkedWordId) VALUES (?, ?)";
         String queryRoot = "INSERT INTO UsedRoots (roWordId, rootId) VALUES (?, ?)";
-        String queryType = "INSERT INTO Type (tyWordId, wordTypeId) VALUES (?, ?)";
+        String queryType = "INSERT INTO WordsTypes (tyWordId, wordTypeId) VALUES (?, ?)";
 
         int rows = 0;
         int retId = -1;

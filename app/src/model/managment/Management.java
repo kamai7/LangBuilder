@@ -32,23 +32,20 @@ public class Management {
 
     public ArrayList<Word> getFilteredWords(String str) {
 
-        ArrayList<Word> ret;
-
         if(str.equals("")){
-            ret = wordDAO.findAll(100);
+            return wordDAO.findAll(100);
         }else{
-
-            ret = new ArrayList<>();
+            ArrayList<Word> ret = new ArrayList<>();
             for (Word word : wordAll) {
                 boolean found = false;
                 String wordInString = PersistenceUtils.wordToString(word);
 
-                if(wordInString.contains(str.toLowerCase())) {
+                if(wordInString.contains(str)) {
                     ret.add(word);
                     found = true;
                 }
                 if(!found){
-                    String wordInStringAscii = PersistenceUtils.wordAsciiToString(word);
+                    String wordInStringAscii = PersistenceUtils.wordAsciiToString(word).toLowerCase();
 
                     if(wordInStringAscii.toLowerCase().contains(str.toLowerCase())) {
                         ret.add(word);
@@ -56,13 +53,15 @@ public class Management {
                     }
                 }
                 if(!found) {
-                    if(word.getTranslations().contains(str.toLowerCase())) {
-                        ret.add(word);
+                    for (String t: word.getTranslations()) {
+                        if(t.toLowerCase().contains(str.toLowerCase())) {
+                            ret.add(word);
+                        }
                     }
                 } 
             }
+            return ret;
         }
-        return ret;
     }
 
     public ArrayList<Letter> getFilteredLetters(String str) {

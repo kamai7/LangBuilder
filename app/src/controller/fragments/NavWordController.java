@@ -8,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -33,7 +33,7 @@ public class NavWordController {
     private HBox typesContainer;
 
     @FXML
-    private Image warningImage;
+    private ImageView warningImage;
 
     @FXML
     private CheckBox selectedCheckBox;
@@ -68,6 +68,10 @@ public class NavWordController {
         for (Type type : word.getTypes()) {
             addType(type.getLabel(), type.getColor());
         }
+        if (word.getTranslations().size() == 0) {
+            warningImage.setOpacity(1);
+        }
+            
     }
 
     public boolean isSelected() {

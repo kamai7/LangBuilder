@@ -320,6 +320,9 @@ public class Controller {
         wordContainer.getChildren().clear();
         wordNavItems.clear();
         ArrayList<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
+
+        if (wordSortComboBox.getSelectionModel().getSelectedIndex() == 1) Collections.reverse(filteredWords);
+
         for(Word word: filteredWords) {
             FXMLHandler<BorderPane, NavWordController> wordEditor = new FXMLHandler<>("/fxml/fragments/nav/word.fxml");
             wordContainer.getChildren().add(wordEditor.get());

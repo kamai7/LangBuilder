@@ -125,6 +125,7 @@ public class WordEditorController {
         chooseTypeListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
+                System.out.println(newValue);
                 Type type = newValue.getType();
                 try {
                     management.getWord().getTypes().add(newValue.getType());

@@ -184,7 +184,8 @@ public class TypeEditorController {
         this.colorColorPicker.setValue(type.getColor());
         if (type.getParentId() != -1) {
             this.chooseParentButton.setText(type.getParent().getLabel());
-            this.chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(type.getColor()) + "; -fx-font-weight: bold;");
+            this.chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(type.getParent().getColor()) + "; -fx-font-weight: bold;");
+            System.out.println(Colors.colorToHex(type.getColor()));
         }
         if (type.getRootId() != -1) {
             this.chooseWordButton.setText(PersistenceUtils.wordToString(type.getRoot()));
