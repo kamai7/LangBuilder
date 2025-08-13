@@ -43,7 +43,6 @@ public class WordManagement {
     }
 
     public void edit() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
-        System.out.println(word);
         if(word.getId() == -1){
             wordDAO.create(word);
         }else{

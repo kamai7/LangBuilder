@@ -125,7 +125,6 @@ public class WordEditorController {
         chooseTypeListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
-                System.out.println(newValue);
                 Type type = newValue.getObject();
                 try {
                     management.getWord().getTypes().add(newValue.getObject());
@@ -297,7 +296,7 @@ public class WordEditorController {
             mainController.reloadWordsNav();
             mainController.initHome();
         }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter has already been deleted");
             alert.setTitle("In use error");
             alert.show();
         }catch(SQLIntegrityConstraintViolationException e){

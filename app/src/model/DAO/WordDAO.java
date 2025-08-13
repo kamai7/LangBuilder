@@ -108,7 +108,7 @@ public class WordDAO extends DAO<Word> {
                 ps.getMoreResults();
                 rs = ps.getResultSet();
                 while (rs.next()) {
-                    rootIds.add(rs.getInt("roWordId"));
+                    rootIds.add(rs.getInt("usedRootId"));
                 }
 
                 // Get the links
