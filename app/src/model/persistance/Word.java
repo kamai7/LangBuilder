@@ -166,10 +166,12 @@ public class Word {
     }
 
     public Set<Word> getRoots() {
-        roots = new HashSet<>(); 
-        WordDAO wordDAO = new WordDAO();
-        for (Integer id : rootIds) {
-            roots.add(wordDAO.findById(id));
+        if (roots == null){
+            roots = new HashSet<>(); 
+            WordDAO wordDAO = new WordDAO();
+            for (Integer id : rootIds) {
+                roots.add(wordDAO.findById(id));
+            }
         }
 
         rootIds = null;
@@ -189,14 +191,15 @@ public class Word {
     }
 
     public Set<Word> getLinks() {
-        
-        links = new HashSet<>(); 
-        WordDAO wordDAO = new WordDAO();
-        for (Integer id : linkIds) {
-            links.add(wordDAO.findById(id));
+        if (links == null){
+            links = new HashSet<>(); 
+            WordDAO wordDAO = new WordDAO();
+            for (Integer id : linkIds) {
+                links.add(wordDAO.findById(id));
+            }
         }
-
-        linkIds = null;
+            
+        linkIds = null;        
         return links;
     }
 
@@ -208,6 +211,7 @@ public class Word {
             }
         }
 
+        links = null;
         return linkIds;
     }
 

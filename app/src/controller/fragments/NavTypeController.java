@@ -14,7 +14,7 @@ import model.persistance.Type;
 import utils.Colors;
 import view.FXMLHandler;
 
-public class NavTypeController {
+public class NavTypeController implements NavItem<Type> {
 
     private Controller mainController;
 
@@ -62,11 +62,7 @@ public class NavTypeController {
         }
     }
 
-    public boolean isSelected() {
-        return selectedCheckBox.isSelected();
-    }
-
-    public CheckBox getSelectCheckbox() {
+    public CheckBox getCheckbox() {
         return selectedCheckBox;
     }
 
@@ -85,7 +81,7 @@ public class NavTypeController {
         }
     }
 
-    public Type getType() {
+    public Type getObject() {
         return object;
     }
     

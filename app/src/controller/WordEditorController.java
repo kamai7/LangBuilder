@@ -126,9 +126,9 @@ public class WordEditorController {
             @Override
             public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
                 System.out.println(newValue);
-                Type type = newValue.getType();
+                Type type = newValue.getObject();
                 try {
-                    management.getWord().getTypes().add(newValue.getType());
+                    management.getWord().getTypes().add(newValue.getObject());
 
                     addField(type, typesPane, management.getWord().getTypes(), type.getLabel(), type.getColor());
 
@@ -147,7 +147,7 @@ public class WordEditorController {
         chooseRootListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
-                Word word = newValue.getWord();
+                Word word = newValue.getObject();
                 try {
                     management.getWord().getRoots().add(word);
                     addField(word, rootsPane, management.getWord().getRoots(), PersistenceUtils.wordToString(word), null);
@@ -167,7 +167,7 @@ public class WordEditorController {
         chooseLinkListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
-                Word word = newValue.getWord();
+                Word word = newValue.getObject();
                 try {
                     management.getWord().getLinks().add(word);
                     addField(word, linksPane, management.getWord().getLinks(), PersistenceUtils.wordToString(word), null); 
@@ -265,6 +265,8 @@ public class WordEditorController {
             management.edit();
             removeAllListeners();
             mainController.initHome();
+            mainController.fetchWords();
+            mainController.reloadWordsNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.setTitle("Arguments error");
@@ -292,7 +294,8 @@ public class WordEditorController {
             management.deleteWord();
             removeAllListeners();
             mainController.initHome();
-            mainController.loadLettersNav();
+            mainController.fetchWords();
+            mainController.reloadWordsNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
             alert.setTitle("In use error");
@@ -302,38 +305,6 @@ public class WordEditorController {
             alert.setTitle("In use error");
             alert.show();
         }
-    }
-
-    public double getLength() {
-        return lengthSlider.getValue();
-    }
-
-    public double getEmotionality() {
-        return emotionalitySlider.getValue();
-    }
-
-    public double getVulgarity() {
-        return vulgaritySlider.getValue();
-    }
-
-    public double getFormality() {
-        return formalitySlider.getValue();
-    }
-
-    public void setLength(double length) {
-        lengthSlider.setValue(length);
-    }
-
-    public void setEmotionality(double emotionality) {
-        emotionalitySlider.setValue(emotionality);
-    }
-
-    public void setVulgarity(double vulgarity) {
-        vulgaritySlider.setValue(vulgarity);
-    }
-
-    public void setFormality(double formality) {
-        formalitySlider.setValue(formality);
     }
 
     public void init(Controller mainController, Word word) {

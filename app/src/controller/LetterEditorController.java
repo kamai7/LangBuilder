@@ -48,7 +48,7 @@ public class LetterEditorController {
             management.getLetter().setCharacterAscii(ascii.getText());
             management.editLetter();
             mainController.initHome();
-            mainController.loadLettersNav();
+            mainController.reloadLettersNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
             alert.setTitle("Arguments error");
@@ -72,7 +72,7 @@ public class LetterEditorController {
         try{
             management.deleteLetter();
             mainController.initHome();
-            mainController.loadLettersNav();
+            mainController.reloadLettersNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
             alert.setTitle("In use error");

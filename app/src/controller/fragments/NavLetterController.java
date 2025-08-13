@@ -14,7 +14,7 @@ import model.persistance.Letter;
 import utils.Colors;
 import view.FXMLHandler;
 
-public class NavLetterController {
+public class NavLetterController implements NavItem<Letter>{
 
     private Controller mainController;
 
@@ -29,8 +29,7 @@ public class NavLetterController {
 
 
     @FXML
-    private void initialize() {
-    }
+    private void initialize() {}
 
     @FXML
     private void contentClicked() {
@@ -55,11 +54,7 @@ public class NavLetterController {
         descriptionLabel.setText(letter.getCharacterAscii());
     }
 
-    public boolean isSelected() {
-        return selectedCheckBox.isSelected();
-    }
-
-    public CheckBox getSelectCheckbox() {
+    public CheckBox getCheckbox() {
         return selectedCheckBox;
     }
 
@@ -78,7 +73,7 @@ public class NavLetterController {
         }
     }
 
-    public Letter getLetter() {
+    public Letter getObject() {
         return object;
     }
     

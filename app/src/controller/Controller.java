@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
+import controller.fragments.NavItem;
 import controller.fragments.NavLetterController;
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
@@ -20,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import model.managment.Management;
 import model.persistance.Letter;
@@ -93,9 +96,9 @@ public class Controller {
                                    letterSortList,
                                    typeSortList;
 
-    private ArrayList<FXMLHandler<BorderPane, NavWordController>> wordNavItems;
-    private ArrayList<FXMLHandler<BorderPane, NavLetterController>> letterNavItems;
-    private ArrayList<FXMLHandler<BorderPane, NavTypeController>> typeNavItems;
+    private ArrayList<NavWordController> wordNavItems;
+    private ArrayList<NavLetterController> letterNavItems;
+    private ArrayList<NavTypeController> typeNavItems;
 
     private ObjectProperty<NavWordController> selectedWord;
     private ObjectProperty<NavLetterController> selectedLetter;
@@ -130,14 +133,29 @@ public class Controller {
         wordVulgarityCheckBox.selectedProperty().addListener(event -> wordVulgarityContainer.setDisable(!wordVulgarityCheckBox.isSelected()));
         wordFormalityCheckBox.selectedProperty().addListener(event -> wordFormalityContainer.setDisable(!wordFormalityCheckBox.isSelected()));
         typeParentCheckBox.selectedProperty().addListener(event -> typeParentContainer.setDisable(!typeParentCheckBox.isSelected()));
-        wordSelectAllCheckBox.selectedProperty().addListener(event -> wordSelectAll());
-        letterSelectAllCheckBox.selectedProperty().addListener(event -> letterSelectAll());
-        typeSelectAllCheckBox.selectedProperty().addListener(event -> typeSelectAll());
+        wordSelectAllCheckBox.selectedProperty().addListener(event -> {
+            boolean allSelected = letterSelectAllCheckBox.isSelected();
+            for(NavWordController word: wordNavItems){
+                word.getCheckbox().setSelected(allSelected);
+            }
+        });
+        letterSelectAllCheckBox.selectedProperty().addListener(event -> {
+            boolean allSelected = letterSelectAllCheckBox.isSelected();
+            for(NavLetterController letter: letterNavItems){
+                letter.getCheckbox().setSelected(allSelected);
+            }
+        });
+        typeSelectAllCheckBox.selectedProperty().addListener(event -> {
+            boolean allSelected = typeSelectAllCheckBox.isSelected();
+            for(NavTypeController type: typeNavItems){
+                type.getCheckbox().setSelected(allSelected);
+            }
+        });
 
 
-        wordSearch.textProperty().addListener((observable, oldValue, newValue) -> loadWordsNav());
-        typeSearch.textProperty().addListener((observable, oldValue, newValue) -> loadTypesNav());
-        letterSearch.textProperty().addListener((observable, oldValue, newValue) -> loadLettersNav());
+        wordSearch.textProperty().addListener((observable, oldValue, newValue) -> reloadWordsNav());
+        typeSearch.textProperty().addListener((observable, oldValue, newValue) -> reloadTypesNav());
+        letterSearch.textProperty().addListener((observable, oldValue, newValue) -> reloadLettersNav());
 
         //init combo boxes
         ArrayList<String> wordChoices = new ArrayList<>(Arrays.asList("default (types)", "ascending", "descending", "length", "emotionality", "vulgarity", "formality"));
@@ -146,17 +164,17 @@ public class Controller {
         wordSortList = FXCollections.observableArrayList(wordChoices);
         wordSortComboBox.setItems(wordSortList);
         wordSortComboBox.setValue("default (types)");
-        wordSortComboBox.setOnAction(event -> loadWordsNav());
+        wordSortComboBox.setOnAction(event -> reloadWordsNav());
 
         letterSortList = FXCollections.observableArrayList(letterChoices);
         letterSortComboBox.setItems(letterSortList);
         letterSortComboBox.setValue("default (types)");
-        letterSortComboBox.setOnAction(event -> loadLettersNav());
+        letterSortComboBox.setOnAction(event -> reloadLettersNav());
 
         typeSortList = FXCollections.observableArrayList(typeChoices);
         typeSortComboBox.setItems(typeSortList);
         typeSortComboBox.setValue("default (types)");
-        typeSortComboBox.setOnAction(event -> loadTypesNav());
+        typeSortComboBox.setOnAction(event -> reloadTypesNav());
 
         //create management object
         management = new Management();
@@ -170,9 +188,9 @@ public class Controller {
         selectedType = new SimpleObjectProperty<>();
 
         //init nav lists
-        loadLettersNav();
-        loadTypesNav();
-        loadWordsNav();
+        reloadLettersNav();
+        reloadTypesNav();
+        reloadWordsNav();
         initHome();
 
         System.out.println(Colors.success("Controller initialized"));
@@ -250,37 +268,45 @@ public class Controller {
 
     @FXML
     private void wordDeleteAll() {
-        for(FXMLHandler<BorderPane, NavWordController> item: wordNavItems){
-            if (item.getController().getSelectCheckbox().isSelected()){
-                item.getController().delete();
+        for(NavWordController word: wordNavItems){
+            if (word.getCheckbox().isSelected()){
+                word.delete();
             }
         }
-        loadWordsNav();
+        reloadWordsNav();
         wordSelectAllCheckBox.setSelected(false);
     }
 
     @FXML
     private void letterDeleteAll() {
-        for(FXMLHandler<BorderPane, NavLetterController> item: letterNavItems){
-            if (item.getController().getSelectCheckbox().isSelected()){
-                item.getController().delete();
+        for(NavLetterController letter: letterNavItems){
+            if (letter.getCheckbox().isSelected()){
+                letter.delete();
             }
         }
-        loadLettersNav();
+        reloadLettersNav();
         letterSelectAllCheckBox.setSelected(false);
     }
 
     @FXML
     private void typeDeleteAll() {
-        for(FXMLHandler<BorderPane, NavTypeController> item: typeNavItems){
-            if (item.getController().getSelectCheckbox().isSelected()){
-                item.getController().delete();
+        //ArrayList<Integer> index = new ArrayList<>();
+        for(NavTypeController type: typeNavItems){
+            if (type.getCheckbox().isSelected()){
+                type.delete();
             }
         }
-        loadTypesNav();
+        reloadTypesNav();
         typeSelectAllCheckBox.setSelected(false);
     }
 
+    /**
+     * Sets the content of this controller's content pane.
+     * first, it will remove the node which is the current content of the pane.
+     * then, it will add the new content to the pane.
+     * @param <T> type of content (must be a node)
+     * @param content the node to set as content
+     */
     public <T extends Node> void setContent(T content) {
         if (content == null) {
             throw new IllegalArgumentException(Colors.error("Controller.setContent:", "content cannot be null"));
@@ -289,76 +315,63 @@ public class Controller {
         this.content.getChildren().add(content);
     }
 
-    private void wordSelectAll(){
-        boolean allSelected = wordSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, NavWordController> item: wordNavItems){
-            item.getController().getSelectCheckbox().setSelected(allSelected);
-        }
-    }
-
-    private void letterSelectAll(){
-        boolean allSelected = letterSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, NavLetterController> item: letterNavItems){
-            item.getController().getSelectCheckbox().setSelected(allSelected);
-        }
-    }
-
-    private void typeSelectAll(){
-        boolean allSelected = typeSelectAllCheckBox.isSelected();
-        for(FXMLHandler<BorderPane, NavTypeController> item: typeNavItems){
-            item.getController().getSelectCheckbox().setSelected(allSelected);
-        }
-    }
-
+    /**
+     * Initializes the home page. used by other controllers to go back to the home page
+     */
     public void initHome(){
         FXMLHandler<GridPane, HomeController> home = new FXMLHandler<>("/fxml/static/home_page.fxml");
         setContent(home.get());
         home.getController().init(this);
     }
 
-    public void loadWordsNav(){
-        wordContainer.getChildren().clear();
-        wordNavItems.clear();
-        ArrayList<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
-
-        if (wordSortComboBox.getSelectionModel().getSelectedIndex() == 1) Collections.reverse(filteredWords);
-
-        for(Word word: filteredWords) {
-            FXMLHandler<BorderPane, NavWordController> wordEditor = new FXMLHandler<>("/fxml/fragments/nav/word.fxml");
-            wordContainer.getChildren().add(wordEditor.get());
-            wordNavItems.add(wordEditor);
-            wordEditor.getController().init(this, word);
+    /**
+     * Selects or deselects all items displayed in a list of nav item
+     * @param items the list of nav items
+     * @param checkbox the checkbox which the state will be read to select or deselect all items
+     */
+    public void selectAll(ArrayList<NavItem<?>> items, CheckBox checkbox) {
+        boolean selectAll = checkbox.isSelected();
+        for(NavItem<?> item: items){
+            item.getCheckbox().setSelected(selectAll);
         }
     }
 
-    public void loadLettersNav(){
-        letterContainer.getChildren().clear();
-        letterNavItems.clear();
-        ArrayList<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
+    public void reloadWordsNav(){
+        Platform.runLater(() -> {
+            ArrayList<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
+            reloadNav(wordContainer, wordNavItems, filteredWords, "/fxml/fragments/nav/word.fxml");
+        });
+    }
 
-        if (letterSortComboBox.getSelectionModel().getSelectedIndex() == 1) Collections.reverse(filteredLetters);
+    public void reloadLettersNav(){
+        Platform.runLater(() -> {
+            ArrayList<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
+            reloadNav(letterContainer, letterNavItems, filteredLetters, "/fxml/fragments/nav/letter.fxml");
+        });
+    }
 
-        for(Letter letter: filteredLetters) {
-            FXMLHandler<BorderPane, NavLetterController> letterEditor = new FXMLHandler<>("/fxml/fragments/nav/letter.fxml");
-            letterContainer.getChildren().add(letterEditor.get());
-            letterNavItems.add(letterEditor);
-            letterEditor.getController().init(this, letter);
+    public void reloadTypesNav(){
+        Platform.runLater(() -> {
+            ArrayList<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
+            reloadNav(typeContainer, typeNavItems, filteredTypes, "/fxml/fragments/nav/type.fxml");
+        });
+    }
+
+    private <O, C extends Pane, T extends NavItem<O>> void reloadNav(C itemContainer, ArrayList<T> navItems, ArrayList<O> filteredObjects, String fxmlPath){
+        itemContainer.getChildren().clear();
+        navItems.clear();
+
+        for(O object: filteredObjects) {
+            FXMLHandler<BorderPane, NavItem<T>> itemFragment = new FXMLHandler<>(fxmlPath);
+            itemContainer.getChildren().add(itemFragment.get());
+            T controller = (T) itemFragment.getController();
+            navItems.add(controller);
+            controller.init(this, object);
         }
     }
 
-    public void loadTypesNav(){
-        typeContainer.getChildren().clear();
-        typeNavItems.clear();
-        ArrayList<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
-
-        if (typeSortComboBox.getSelectionModel().getSelectedIndex() == 1) Collections.reverse(filteredTypes);
-
-        for(Type type: filteredTypes) {
-            FXMLHandler<BorderPane, NavTypeController> typeEditor = new FXMLHandler<>("/fxml/fragments/nav/type.fxml");
-            typeContainer.getChildren().add(typeEditor.get());
-            typeNavItems.add(typeEditor);
-            typeEditor.getController().init(this, type);
-        }
+    public void fetchWords(){
+        management.fetchWords();
     }
 
     public ObjectProperty<NavWordController> getSelectedWord() {

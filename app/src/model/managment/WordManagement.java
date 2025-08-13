@@ -43,7 +43,7 @@ public class WordManagement {
     }
 
     public void edit() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
-
+        System.out.println(word);
         if(word.getId() == -1){
             wordDAO.create(word);
         }else{
@@ -65,19 +65,21 @@ public class WordManagement {
     }
 
     public void addTranslations(String translations) {
+        word.getTranslations().clear();
         String[] translationSeparated = translations.split(";");
         for (String translation: translationSeparated) {
             if (translation != null && translation.trim().length() > 0) {
-                word.getTranslations().add(translation);
+                word.getTranslations().add(translation.replace("\n", ""));
             }
         }
     }
 
     public void addDefinitions(String definitions) {
+        word.getDefinitions().clear();
         String[] definitionSeparated = definitions.split(";");
         for (String definition: definitionSeparated) {
             if (definition != null && definition.trim().length() > 0) {
-                word.getDefinitions().add(definition);
+                word.getDefinitions().add(definition.replace("\n", ""));
             }
         }
     }
@@ -88,7 +90,7 @@ public class WordManagement {
         int counter = 0;
         for (String letter: allLetters) {
             if (letter.contains(l)){
-                counter++;;
+                counter++;
             }
         }
         for (String letterAscii: allLettersAscii) {

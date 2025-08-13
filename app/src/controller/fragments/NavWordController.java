@@ -19,7 +19,7 @@ import utils.Colors;
 import utils.PersistenceUtils;
 import view.FXMLHandler;
 
-public class NavWordController {
+public class NavWordController implements NavItem<Word> {
 
     private Controller mainController;
 
@@ -74,11 +74,7 @@ public class NavWordController {
             
     }
 
-    public boolean isSelected() {
-        return selectedCheckBox.isSelected();
-    }
-
-    public CheckBox getSelectCheckbox() {
+    public CheckBox getCheckbox() {
         return selectedCheckBox;
     }
 
@@ -110,7 +106,7 @@ public class NavWordController {
         }
     }
 
-    public Word getWord() {
+    public Word getObject() {
         return object;
     }
 

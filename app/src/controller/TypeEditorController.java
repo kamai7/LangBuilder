@@ -55,7 +55,7 @@ public class TypeEditorController {
         rootListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
-                Word root = newValue.getWord();
+                Word root = newValue.getObject();
                 chooseParentButton.setStyle("-fx-font-weight: bold;");
                 management.getType().setRoot(root);
                 //remove the listener
@@ -67,7 +67,7 @@ public class TypeEditorController {
         parentListener = new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
-                Type parent = newValue.getType();
+                Type parent = newValue.getObject();
                 try {
                     management.setParent(parent);
                     chooseParentButton.setText(parent.getLabel());
@@ -133,7 +133,7 @@ public class TypeEditorController {
             management.editType();
             removeAllListeners();
             mainController.initHome();
-            mainController.loadTypesNav();
+            mainController.reloadTypesNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.setTitle("Arguments error");
@@ -161,7 +161,7 @@ public class TypeEditorController {
             management.deleteType();
             removeAllListeners();
             mainController.initHome();
-            mainController.loadTypesNav();
+            mainController.reloadTypesNav();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this type have already been deleted");
             alert.setTitle("In use error");

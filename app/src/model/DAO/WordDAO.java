@@ -393,10 +393,18 @@ public class WordDAO extends DAO<Word> {
         String queryTrans = "DELETE FROM Translation WHERE tWordId = ?";
         String queryRoot = "DELETE FROM UsedRoots WHERE roWordId = ?";
         String queryLink = "DELETE FROM Link WHERE lWordId = ? OR linkedWordId = ?";
+        String queryType = "DELETE FROM WordsTypes WHERE tyWordId = ?";
 
         int rows = 0;
 
         try(Connection c = getConnection()){
+            c.setAutoCommit(false);
+
+            try (PreparedStatement ps = c.prepareStatement(queryType)) {
+                ps.setInt(1, word.getId());
+                rows += ps.executeUpdate();
+            }
+
             try (PreparedStatement ps = c.prepareStatement(queryLink)) {
                 ps.setInt(1, word.getId());
                 ps.setInt(2, word.getId());
@@ -428,6 +436,7 @@ public class WordDAO extends DAO<Word> {
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
             }
+            c.commit();
         }
         catch (SQLException e) {
             System.err.println(Colors.error("WordDAO delete: invalid parameters\n", e.getMessage()));
@@ -456,7 +465,7 @@ public class WordDAO extends DAO<Word> {
         String queryDef = "INSERT INTO Definition (dWordId, def) VALUES (?, ?)";
         String queryTrans = "INSERT INTO Translation (tWordId, translation) VALUES (?, ?)";
         String queryLink = "INSERT INTO Link (lWordId, linkedWordId) VALUES (?, ?)";
-        String queryRoot = "INSERT INTO UsedRoots (roWordId, rootId) VALUES (?, ?)";
+        String queryRoot = "INSERT INTO UsedRoots (roWordId, usedRootId) VALUES (?, ?)";
         String queryType = "INSERT INTO WordsTypes (tyWordId, wordTypeId) VALUES (?, ?)";
 
         int rows = 0;

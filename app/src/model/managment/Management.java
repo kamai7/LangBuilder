@@ -17,8 +17,6 @@ public class Management {
     TypeDAO typeDAO;
 
     ArrayList<Word> wordAll;
-    ArrayList<Letter> letterAll;
-    ArrayList<Type> typeAll;
 
     public Management() {
         wordDAO = new WordDAO();
@@ -26,8 +24,10 @@ public class Management {
         typeDAO = new TypeDAO();
 
         wordAll = wordDAO.findAll();
-        letterAll = letterDAO.findAll();
-        typeAll = typeDAO.findAll();
+    }
+
+    public void fetchWords() {
+        wordAll = wordDAO.findAll();
     }
 
     public ArrayList<Word> getFilteredWords(String str) {
