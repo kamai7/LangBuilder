@@ -14,25 +14,25 @@ import utils.Colors;
 
 class WordGenerator {
 
-    private HashSet<Word> find;
-    private HashSet<Word> links;
-    private HashSet<Word> roots;
+    private Set<Word> find;
+    private Set<Word> links;
+    private Set<Word> roots;
 
     private Type type;
-    private HashMap<Letter, Integer> letters;
+    private Map<Letter, Integer> letters;
     private int wordLength;
 
     private double emotional;
     private double formality;
     private double vulgarity;
 
-    private ArrayList<Double> vectorWordLength;
-    private ArrayList<HashMap<Double, Letter>> vectorLetters;
+    private Map<Integer, Double> vectorWordLength;
+    private ArrayList<Map<Double, Letter>> vectorLetters;
 
-    private HashMap<String, Double> coeficients;
+    private Map<String, Double> coeficients;
     private double totalCoef;
 
-    private HashSet<Word> words;
+    private Set<Word> words;
 
     public WordGenerator(Type type) {
         if (type == null) {
@@ -40,9 +40,9 @@ class WordGenerator {
         }
 
         this.find = new HashSet<>();
-        this.vectorWordLength = new ArrayList<>();
+        this.vectorWordLength = new HashMap<>();
         for (int i = 0; i < 60; i++) {
-            this.vectorWordLength.add(0.0);
+            this.vectorWordLength.put(0,0.0);
         }
         this.vectorLetters = new ArrayList<>();
 

@@ -18,22 +18,38 @@ public class Management {
 
     ArrayList<Word> wordAll;
 
+    ArrayList<Word> word100;
+    ArrayList<Letter> letter100;
+    ArrayList<Type> type100;
+
     public Management() {
         wordDAO = new WordDAO();
         letterDAO = new LetterDAO();
         typeDAO = new TypeDAO();
 
         wordAll = wordDAO.findAll();
+        word100 = wordDAO.findAll(100);
+        letter100 = letterDAO.findAll(100);
+        type100 = typeDAO.findAll(100);
     }
 
     public void fetchWords() {
         wordAll = wordDAO.findAll();
+        word100 = wordDAO.findAll(100);
+    }
+
+    public void fetchLetters() {
+        letter100 = letterDAO.findAll(100);
+    }
+
+    public void fetchTypes() {
+        type100 = typeDAO.findAll(100);
     }
 
     public ArrayList<Word> getFilteredWords(String str) {
 
         if(str.equals("")){
-            return wordDAO.findAll(100);
+            return word100;
         }else{
             ArrayList<Word> ret = new ArrayList<>();
             for (Word word : wordAll) {
@@ -66,14 +82,14 @@ public class Management {
 
     public ArrayList<Letter> getFilteredLetters(String str) {
         if (str.equals("")){
-            return letterDAO.findAll(100);
+            return letter100;
         }
         return letterDAO.findByString(str);
     }
 
     public ArrayList<Type> getFilteredTypes(String str) {
         if (str.equals("")){
-            return typeDAO.findAll(100);
+            return type100;
         }
         return typeDAO.findByLabel(str);
     }

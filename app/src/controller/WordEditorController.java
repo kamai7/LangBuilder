@@ -264,9 +264,9 @@ public class WordEditorController {
             management.addDefinitions(definitionsArea.getText());
             management.edit();
             removeAllListeners();
-            mainController.initHome();
             mainController.fetchWords();
             mainController.reloadWordsNav();
+            mainController.initHome();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.setTitle("Arguments error");
@@ -293,9 +293,9 @@ public class WordEditorController {
         try{
             management.deleteWord();
             removeAllListeners();
-            mainController.initHome();
             mainController.fetchWords();
             mainController.reloadWordsNav();
+            mainController.initHome();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
             alert.setTitle("In use error");

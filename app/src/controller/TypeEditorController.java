@@ -132,8 +132,9 @@ public class TypeEditorController {
             type.setPosition(positionWordComboBox.getSelectionModel().getSelectedIndex());
             management.editType();
             removeAllListeners();
-            mainController.initHome();
+            mainController.fetchTypes();
             mainController.reloadTypesNav();
+            mainController.initHome();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
             alert.setTitle("Arguments error");
@@ -160,8 +161,9 @@ public class TypeEditorController {
         try{
             management.deleteType();
             removeAllListeners();
-            mainController.initHome();
+            mainController.fetchTypes();
             mainController.reloadTypesNav();
+            mainController.initHome();
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this type have already been deleted");
             alert.setTitle("In use error");

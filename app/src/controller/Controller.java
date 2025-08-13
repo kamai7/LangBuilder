@@ -2,7 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 import controller.fragments.NavItem;
 import controller.fragments.NavLetterController;
@@ -22,7 +21,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import model.managment.Management;
 import model.persistance.Letter;
@@ -339,39 +337,65 @@ public class Controller {
     public void reloadWordsNav(){
         Platform.runLater(() -> {
             ArrayList<Word> filteredWords = management.getFilteredWords(wordSearch.getText());
-            reloadNav(wordContainer, wordNavItems, filteredWords, "/fxml/fragments/nav/word.fxml");
+
+            wordContainer.getChildren().clear();
+            wordNavItems.clear();
+            for(Word word: filteredWords) {
+                FXMLHandler<BorderPane, NavWordController> wordFragment = new FXMLHandler<>("/fxml/fragments/nav/word.fxml");
+                wordContainer.getChildren().add(wordFragment.get());
+                NavWordController controller = wordFragment.getController();
+                wordNavItems.add(controller);
+                controller.init(this, word);
+            }
         });
     }
 
     public void reloadLettersNav(){
         Platform.runLater(() -> {
             ArrayList<Letter> filteredLetters = management.getFilteredLetters(letterSearch.getText());
-            reloadNav(letterContainer, letterNavItems, filteredLetters, "/fxml/fragments/nav/letter.fxml");
+
+            letterContainer.getChildren().clear();
+            wordNavItems.clear();
+            for (Letter letter: filteredLetters) {
+                FXMLHandler<BorderPane, NavLetterController> letterFragment = new FXMLHandler<>("/fxml/fragments/nav/letter.fxml");
+                letterContainer.getChildren().add(letterFragment.get());
+                NavLetterController controller = letterFragment.getController();
+                letterNavItems.add(controller);
+                controller.init(this, letter);
+            }
         });
     }
 
     public void reloadTypesNav(){
         Platform.runLater(() -> {
             ArrayList<Type> filteredTypes = management.getFilteredTypes(typeSearch.getText());
-            reloadNav(typeContainer, typeNavItems, filteredTypes, "/fxml/fragments/nav/type.fxml");
+
+            typeContainer.getChildren().clear();
+            typeNavItems.clear();
+            for (Type type: filteredTypes) {
+                FXMLHandler<BorderPane, NavTypeController> typeFragment = new FXMLHandler<>("/fxml/fragments/nav/type.fxml");
+                typeContainer.getChildren().add(typeFragment.get());
+                NavTypeController controller = typeFragment.getController();
+                typeNavItems.add(controller);
+                controller.init(this, type);
+            }
         });
     }
 
-    private <O, C extends Pane, T extends NavItem<O>> void reloadNav(C itemContainer, ArrayList<T> navItems, ArrayList<O> filteredObjects, String fxmlPath){
-        itemContainer.getChildren().clear();
-        navItems.clear();
-
-        for(O object: filteredObjects) {
-            FXMLHandler<BorderPane, NavItem<T>> itemFragment = new FXMLHandler<>(fxmlPath);
-            itemContainer.getChildren().add(itemFragment.get());
-            T controller = (T) itemFragment.getController();
-            navItems.add(controller);
-            controller.init(this, object);
-        }
-    }
-
+    /**
+     * Fetches all words from the database
+     * filtering words are more complex than others, so for each research. the managment class need all words, to filter them by itself
+     */
     public void fetchWords(){
         management.fetchWords();
+    }
+
+    public void fetchLetters(){
+        management.fetchLetters();
+    }
+
+    public void fetchTypes(){
+        management.fetchTypes();
     }
 
     public ObjectProperty<NavWordController> getSelectedWord() {
