@@ -57,13 +57,14 @@ public class WordDAO extends DAO<Word> {
                        "SELECT * FROM Translation WHERE tWordId = ?;" +
                        "SELECT * FROM UsedRoots WHERE roWordId = ?;" +
                        "SELECT * FROM Link WHERE lWordId = ? OR linkedWordId = ?;" +
+                       "SELECT * FROM Link WHERE lWordId = ? OR linkedWordId = ?;" +
                        "SELECT * FROM WordsTypes WHERE tyWordId = ?;";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
             
             // Set the parameters for the prepared statement
-            for (int i = 1; i <= 8; i++) {
+            for (int i = 1; i <= 10; i++) {
                 ps.setInt(i, id);
             }
 
@@ -115,7 +116,19 @@ public class WordDAO extends DAO<Word> {
                 ps.getMoreResults();
                 rs = ps.getResultSet();
                 while (rs.next()) {
-                    linkIds.add(rs.getInt("linkedWordId"));
+                    int linkedWordId = rs.getInt("linkedWordId");
+                    if (linkedWordId != id){
+                        linkIds.add(linkedWordId);
+                    }
+                }
+                // try to get links in the other way
+                ps.getMoreResults();
+                rs = ps.getResultSet();
+                while (rs.next()) {
+                    int lWordId = rs.getInt("lWordId");
+                    if (lWordId != id){
+                        linkIds.add(lWordId);
+                    }
                 }
 
                 // Get the types
@@ -309,6 +322,9 @@ public class WordDAO extends DAO<Word> {
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
+                System.out.println("--update Root DAO--");
+                System.out.println(word.getRoots());
+                System.out.println("dao: " + word.getRootIds());
                 for(Integer r : word.getRootIds()){
                     ps.setInt(1, word.getId());
                     ps.setInt(2, r);
@@ -325,7 +341,7 @@ public class WordDAO extends DAO<Word> {
     }
 
     public void updateLinks(Word word) {
-        String deleteLinkQuery = "DELETE FROM Link WHERE lWordId = ? AND linkedWordId = ?";
+        String deleteLinkQuery = "DELETE FROM Link WHERE (lWordId = ? AND linkedWordId = ?) OR (linkedWordId = ? AND lWordId = ?)";
         String insertLinkQuery = "INSERT INTO Link (lWordId, linkedWordId) VALUES (?, ?)";
 
         try (Connection c = getConnection()) {
@@ -335,10 +351,7 @@ public class WordDAO extends DAO<Word> {
             // Récupérer les anciens liens
             Set<Integer> oldLinkIds = findById(word.getId()).getLinkIds();
 
-            Set<Integer> newLinkIds = new HashSet<>();
-            for (Integer w : word.getLinkIds()) {
-                newLinkIds.add(w);
-            }
+            Set<Integer> newLinkIds = word.getLinkIds();
 
             // Déterminer les liens à ajouter et à supprimer
             Set<Integer> linksToAdd = new HashSet<>(newLinkIds);
@@ -350,14 +363,14 @@ public class WordDAO extends DAO<Word> {
             // Suppression des liens (dans les deux sens)
             try (PreparedStatement psDelete = c.prepareStatement(deleteLinkQuery)) {
                 for (int linkId : linksToRemove) {
-                    // Suppression lien direct
+                    // essai dans le premier sens
                     psDelete.setInt(1, word.getId());
                     psDelete.setInt(2, linkId);
-                    psDelete.addBatch();
 
-                    // Suppression lien inverse
-                    psDelete.setInt(1, linkId);
+                    // essai dans l'autre sens
                     psDelete.setInt(2, word.getId());
+                    psDelete.setInt(1, linkId);
+                    
                     psDelete.addBatch();
                 }
                 rows += psDelete.executeBatch().length;

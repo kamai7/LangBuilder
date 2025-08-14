@@ -66,7 +66,7 @@ public class Letter {
 
     @Override
     public String toString() {
-        return character + " -> " + characterAscii + " (" + id + ")";
+        return character + " " + characterAscii + " (" + id + ")";
     }
 
     @Override

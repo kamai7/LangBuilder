@@ -99,19 +99,6 @@ public class Word {
         this.isUsable = true;
     }
 
-    @Override
-    public String toString() {
-        return "Word: " + id + " : " + letters +
-            "\n\t translations=" + translations +
-            "\n\t definitions=" + definitions +
-            "\n\t emotional=" + emotional +
-            ", formality=" + formality +
-            ", vulgarity=" + vulgarity +
-            "\n\t rootIds=" + rootIds +
-            "\n\t linkIds=" + linkIds +
-            "\n\t typeIds=" + typeIds;
-    }
-
     public ArrayList<Integer> getLetterIds() {
         if (letterIds == null) {
             letterIds = new ArrayList<>();
@@ -358,8 +345,21 @@ public class Word {
     }
 
     @Override
+    public String toString() {
+        return "Word: " + id + " : " + getLetters() +
+            "\n\t translations=" + translations +
+            "\n\t definitions=" + definitions +
+            "\n\t emotional=" + emotional +
+            ", formality=" + formality +
+            ", vulgarity=" + vulgarity +
+            "\n\t rootIds=" + getRootIds() +
+            "\n\t linkIds=" + getLinkIds() +
+            "\n\t typeIds=" + getTypeIds();
+    }
+
+    @Override
     public int hashCode() {
-        Object[] letterIds = {this.letterIds, this.translations, this.definitions, this.emotional, this.formality, this.vulgarity, this.rootIds, this.linkIds, this.typeIds, this.isUsable};
+        Object[] letterIds = {getLetterIds(), this.translations, this.definitions, this.emotional, this.formality, this.vulgarity, getRootIds(), getLinkIds(), getTypeIds(), this.isUsable};
         return Arrays.deepHashCode(letterIds);
     }
     
@@ -373,6 +373,6 @@ public class Word {
 
     @Override
     public Word clone() {
-        return new Word(this.letterIds, this.emotional, this.formality, this.vulgarity, this.translations, this.definitions, this.isUsable, this.linkIds, this.rootIds, this.typeIds);
+        return new Word(getLetterIds(), this.emotional, this.formality, this.vulgarity, this.translations, this.definitions, this.isUsable, getLinkIds(), getRootIds(), getTypeIds());
     }
 }

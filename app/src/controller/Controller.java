@@ -271,6 +271,7 @@ public class Controller {
                 word.delete();
             }
         }
+        fetchWords();
         reloadWordsNav();
         wordSelectAllCheckBox.setSelected(false);
     }
@@ -282,6 +283,7 @@ public class Controller {
                 letter.delete();
             }
         }
+        fetchLetters();
         reloadLettersNav();
         letterSelectAllCheckBox.setSelected(false);
     }
@@ -294,6 +296,7 @@ public class Controller {
                 type.delete();
             }
         }
+        fetchTypes();
         reloadTypesNav();
         typeSelectAllCheckBox.setSelected(false);
     }

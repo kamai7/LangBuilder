@@ -242,13 +242,13 @@ public class Type {
 
     @Override
     public int hashCode(){
-        Object[] obj = {label, parentId, rootId, position, color};
+        Object[] obj = {label, getParentId(), getRootId(), position, color};
         return Arrays.deepHashCode(obj);
     }
 
     @Override
     public String toString() {
-        return "Type [id=" + id + ", label=" + label + ", parentId=" + parentId + ", rootId=" + rootId + ", position=" + position + ", color=" + color + "]";
+        return "Type [id=" + id + ", label=" + label + ", parentId=" + getParentId() + ", rootId=" + getRootId() + ", position=" + position + ", color=" + color + "]";
     }
 
     @Override
