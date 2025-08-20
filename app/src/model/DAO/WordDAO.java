@@ -322,9 +322,6 @@ public class WordDAO extends DAO<Word> {
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
-                System.out.println("--update Root DAO--");
-                System.out.println(word.getRoots());
-                System.out.println("dao: " + word.getRootIds());
                 for(Integer r : word.getRootIds()){
                     ps.setInt(1, word.getId());
                     ps.setInt(2, r);

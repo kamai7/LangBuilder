@@ -43,9 +43,6 @@ public class WordManagement {
     }
 
     public void edit() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
-        System.out.println("--management--");
-        System.out.println(word);
-        System.out.println(word.getRootIds());
         if(word.getId() == -1){
             wordDAO.create(word);
         }else{

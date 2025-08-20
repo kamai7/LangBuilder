@@ -341,18 +341,12 @@ public class WordEditorController {
         for (Type t : word.getTypes()) {
             addField(t, typesPane, management.getWord().getTypes(), t.getLabel(), t.getColor());
         }
-        System.out.println("-- roots init--");
         for (Word w : word.getRoots()) {
             addField(w, rootsPane, management.getWord().getRoots(), PersistenceUtils.wordToString(w), null);
         }
-        System.out.println("-- roots init--");
         for (Word w : word.getLinks()) {
             addField(w, linksPane, management.getWord().getLinks(), PersistenceUtils.wordToString(w), null);
         }
-        System.out.println("--comparaison--");
-        System.out.println(word.getRootIds());
-        System.out.println(management.getWord().getRootIds());
-        System.out.println("--comparaison--");
 
     }
 
@@ -405,13 +399,7 @@ public class WordEditorController {
 
         fieldControl.getDeleteButton().setOnAction(event -> {
             fieldPane.getChildren().remove(fieldFragment.get());
-            System.out.println("-- actionOn -- " + actionOn);
             actionOn.remove(object);
-            System.out.println("try to remove\n" + object);
-            System.out.println("-- actionOn -- " + actionOn);
-            System.out.println(((Word)object).getRootIds());
-            System.out.println(((Word)object).getRoots());
-            System.out.println(((Word)object).getRootIds());
         });
 
         fieldControl.init(text);
