@@ -296,11 +296,11 @@ public class WordEditorController {
             mainController.reloadWordsNav();
             mainController.initHome();
         }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter has already been deleted");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this word has already been deleted");
             alert.setTitle("In use error");
             alert.show();
         }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this word is used by other words");
             alert.setTitle("In use error");
             alert.show();
         }

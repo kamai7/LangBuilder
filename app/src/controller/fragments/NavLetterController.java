@@ -63,7 +63,7 @@ public class NavLetterController implements NavItem<Letter>{
         try{
             management.deleteLetter();
         }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter has already been deleted");
             alert.setTitle("In use error");
             alert.show();
         }catch(SQLIntegrityConstraintViolationException e){

@@ -71,11 +71,11 @@ public class NavTypeController implements NavItem<Type> {
         try{
             management.deleteType();
         }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this type has already been deleted");
             alert.setTitle("In use error");
             alert.show();
         }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
+            Alert alert = new Alert(Alert.AlertType.ERROR, "this type is used by other types or words");
             alert.setTitle("In use error");
             alert.show();
         }

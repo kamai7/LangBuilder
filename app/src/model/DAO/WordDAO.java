@@ -365,8 +365,8 @@ public class WordDAO extends DAO<Word> {
                     psDelete.setInt(2, linkId);
 
                     // essai dans l'autre sens
-                    psDelete.setInt(2, word.getId());
-                    psDelete.setInt(1, linkId);
+                    psDelete.setInt(3, word.getId());
+                    psDelete.setInt(4, linkId);
                     
                     psDelete.addBatch();
                 }
