@@ -21,21 +21,21 @@ public class HomeController {
     @FXML
     private void createLetter() {
         FXMLHandler<BorderPane, LetterEditorController> editor = new FXMLHandler<>("/fxml/static/editor_letter.fxml");
-        mainController.setContent(editor.get());
+        mainController.setContent(editor.get(), editor.getController());
         editor.getController().init(mainController);
     }
 
     @FXML
     private void createType() {
         FXMLHandler<BorderPane, TypeEditorController> editor = new FXMLHandler<>("/fxml/static/editor_type.fxml");
-        mainController.setContent(editor.get());
+        mainController.setContent(editor.get(), editor.getController());
         editor.getController().init(mainController);
     }
 
     @FXML
     private void createWord() {
         FXMLHandler<BorderPane, WordEditorController> editor = new FXMLHandler<>( "/fxml/static/editor_word.fxml");
-        mainController.setContent(editor.get());
+        mainController.setContent(editor.get(), editor.getController());
         editor.getController().init(mainController);
     }
 }

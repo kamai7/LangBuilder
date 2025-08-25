@@ -13,4 +13,6 @@ public interface NavItem<T> {
 
     public T getObject();
 
+    public boolean equals(Object obj);
+
 }

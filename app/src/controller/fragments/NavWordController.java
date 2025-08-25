@@ -52,7 +52,7 @@ public class NavWordController implements NavItem<Word> {
     @FXML
     private void edit() {
         FXMLHandler<BorderPane, WordEditorController> editor = new FXMLHandler<>("/fxml/static/editor_word.fxml");
-        mainController.setContent(editor.get());
+        mainController.setContent(editor.get(), editor.getController());
         editor.getController().init(mainController, object);
     }
 
@@ -108,6 +108,13 @@ public class NavWordController implements NavItem<Word> {
 
     public Word getObject() {
         return object;
+    }
+
+    public boolean equals(Object other){
+        if (this == other) return true;
+        if (!(other instanceof NavLetterController)) return false;
+        NavWordController otherController = (NavWordController) other;
+        return object.equals(otherController.getObject());
     }
 
 }

@@ -101,6 +101,8 @@ public class Controller {
     private ObjectProperty<NavWordController> selectedWord;
     private ObjectProperty<NavLetterController> selectedLetter;
     private ObjectProperty<NavTypeController> selectedType;
+
+    private Object controllerContent;
     
     @FXML
     private void initialize() {
@@ -131,8 +133,9 @@ public class Controller {
         wordVulgarityCheckBox.selectedProperty().addListener(event -> wordVulgarityContainer.setDisable(!wordVulgarityCheckBox.isSelected()));
         wordFormalityCheckBox.selectedProperty().addListener(event -> wordFormalityContainer.setDisable(!wordFormalityCheckBox.isSelected()));
         typeParentCheckBox.selectedProperty().addListener(event -> typeParentContainer.setDisable(!typeParentCheckBox.isSelected()));
+
         wordSelectAllCheckBox.selectedProperty().addListener(event -> {
-            boolean allSelected = letterSelectAllCheckBox.isSelected();
+            boolean allSelected = wordSelectAllCheckBox.isSelected();
             for(NavWordController word: wordNavItems){
                 word.getCheckbox().setSelected(allSelected);
             }
@@ -149,7 +152,6 @@ public class Controller {
                 type.getCheckbox().setSelected(allSelected);
             }
         });
-
 
         wordSearch.textProperty().addListener((observable, oldValue, newValue) -> reloadWordsNav());
         typeSearch.textProperty().addListener((observable, oldValue, newValue) -> reloadTypesNav());
@@ -308,12 +310,13 @@ public class Controller {
      * @param <T> type of content (must be a node)
      * @param content the node to set as content
      */
-    public <T extends Node> void setContent(T content) {
+    public <T extends Node, U> void setContent(T content, U controller) {
         if (content == null) {
             throw new IllegalArgumentException(Colors.error("Controller.setContent:", "content cannot be null"));
         }
         this.content.getChildren().clear();
         this.content.getChildren().add(content);
+        this.controllerContent = controller;
     }
 
     /**
@@ -321,8 +324,16 @@ public class Controller {
      */
     public void initHome(){
         FXMLHandler<GridPane, HomeController> home = new FXMLHandler<>("/fxml/static/home_page.fxml");
-        setContent(home.get());
+        setContent(home.get(), home.getController());
         home.getController().init(this);
+    }
+
+    /**
+     * Returns the controller of the current content pane
+     * @return the controller of the current content pane
+     */
+    public Object getContent() {
+        return controllerContent;
     }
 
     /**

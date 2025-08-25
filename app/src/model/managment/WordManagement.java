@@ -87,19 +87,21 @@ public class WordManagement {
         Letter ret = null;
 
         int counter = 0;
-        for (String letter: allLetters) {
-            if (letter.contains(l)){
-                counter++;
+        if (allLetters.contains(l) || allLettersAscii.contains(l)){
+            for (String letter: allLetters) {
+                if (letter.contains(l)){
+                    counter++;
+                }
             }
-        }
-        for (String letterAscii: allLettersAscii) {
-            if (letterAscii.contains(l)){
-                counter++;
+            for (String letterAscii: allLettersAscii) {
+                if (letterAscii.contains(l)){
+                    counter++;
+                }
             }
-        }
-        if (counter == 1){
-            LetterDAO letterDAO = new LetterDAO();
-            ret = letterDAO.findByString(l).get(0);
+            if (counter == 1){
+                LetterDAO letterDAO = new LetterDAO();
+                ret = letterDAO.findByString(l).get(0);
+            }
         }
         return ret;
     }

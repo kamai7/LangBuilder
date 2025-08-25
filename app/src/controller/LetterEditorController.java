@@ -29,17 +29,6 @@ public class LetterEditorController {
         System.out.println(Colors.success("LetterEditorController initialized"));
     }
 
-    public String getLetter() {
-        return letter.getText();
-    }
-
-    public String getAscii() {
-        return ascii.getText();
-    }
-
-    public LetterManagement getManagement() {
-        return management;
-    }
 
     @FXML
     private void apply() {

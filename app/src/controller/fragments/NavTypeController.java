@@ -41,7 +41,7 @@ public class NavTypeController implements NavItem<Type> {
     @FXML
     private void edit() {
         FXMLHandler<BorderPane, TypeEditorController> editor = new FXMLHandler<>("/fxml/static/editor_type.fxml");
-        mainController.setContent(editor.get());
+        mainController.setContent(editor.get(), editor.getController());
         editor.getController().init(mainController, object);
     }
 
@@ -83,6 +83,13 @@ public class NavTypeController implements NavItem<Type> {
 
     public Type getObject() {
         return object;
+    }
+
+    public boolean equals(Object other){
+        if (this == other) return true;
+        if (!(other instanceof NavLetterController)) return false;
+        NavTypeController otherController = (NavTypeController) other;
+        return object.equals(otherController.getObject());
     }
     
 }

@@ -40,7 +40,7 @@ public class NavLetterController implements NavItem<Letter>{
     @FXML
     private void edit() {
         FXMLHandler<BorderPane, LetterEditorController> editor = new FXMLHandler<>("/fxml/static/editor_letter.fxml");
-        mainController.setContent(editor.get());
+        mainController.setContent(editor.get(), editor.getController());
         editor.getController().init(mainController, object);
     }
 
@@ -62,6 +62,9 @@ public class NavLetterController implements NavItem<Letter>{
         LetterManagement management = new LetterManagement(object);
         try{
             management.deleteLetter();
+            if (!mainController.getContent().equals(this)) {
+                mainController.initHome();
+            }
         }catch(IllegalArgumentException e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter has already been deleted");
             alert.setTitle("In use error");
@@ -75,6 +78,13 @@ public class NavLetterController implements NavItem<Letter>{
 
     public Letter getObject() {
         return object;
+    }
+
+    public boolean equals(Object other){
+        if (this == other) return true;
+        if (!(other instanceof NavLetterController)) return false;
+        NavLetterController otherController = (NavLetterController) other;
+        return object.equals(otherController.getObject());
     }
     
 }
