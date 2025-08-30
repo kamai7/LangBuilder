@@ -56,7 +56,8 @@ public class TypeEditorController {
             @Override
             public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
                 Word root = newValue.getObject();
-                chooseParentButton.setStyle("-fx-font-weight: bold;");
+                chooseWordButton.setStyle("-fx-font-weight: bold;");
+                chooseWordButton.setText(PersistenceUtils.wordToString(root));
                 management.getType().setRoot(root);
                 //remove the listener
                 mainController.getSelectedWord().removeListener(this);
@@ -90,6 +91,7 @@ public class TypeEditorController {
     @FXML
     private void chooseWord() {
         removeAllListeners();
+        mainController.selectWordTab();
         mainController.getSelectedWord().addListener(rootListener);
         chooseWordButton.setText("click on a Word");
         chooseWordButton.setStyle("-fx-text-fill: #ffffffff;");
@@ -108,6 +110,7 @@ public class TypeEditorController {
     @FXML
     private void chooseParent() {
         removeAllListeners();
+        mainController.selectTypeTab();
         mainController.getSelectedType().addListener(parentListener);
         chooseParentButton.setText("click on a Type");
         chooseParentButton.setStyle("-fx-text-fill: #ffffffff;");

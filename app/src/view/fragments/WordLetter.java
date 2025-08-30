@@ -1,4 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+package view.fragments;
+
+import javafx.scene.control.CheckBox;
+import javafx.scene.text.Font;
+
+public class WordLetter extends WordField{
+
+    private CheckBox checkbox;
+
+    public WordLetter(String objectText) {
+        super(objectText);
+        this.setSpacing(2);
+        objectLabel.setFont(new Font(objectLabel.getFont().getFamily(), 16));
+        checkbox = new CheckBox();
+        this.getChildren().add(0, checkbox);
+    }
+
+    public CheckBox getCheckbox() {
+        return checkbox;
+    }
+    
+}
+
+/*
+ <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -28,3 +52,4 @@
       <Separator orientation="VERTICAL" prefHeight="200.0" />
    </children>
 </HBox>
+ */

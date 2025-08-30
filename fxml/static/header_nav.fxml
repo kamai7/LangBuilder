@@ -139,7 +139,7 @@
       </HBox>
       <SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
          <items>
-            <TabPane maxWidth="500.0" minWidth="300.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane maxWidth="500.0" minWidth="300.0" tabClosingPolicy="UNAVAILABLE" fx:id="tabPane">
               <tabs>
                 <Tab text="Words">
                   <content>

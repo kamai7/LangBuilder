@@ -7,9 +7,7 @@ import java.util.Set;
 
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
-import controller.fragments.WordFieldController;
 
-import controller.fragments.WordLetterController;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,10 +27,12 @@ import model.managment.WordManagement;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
+import utils.AnimationUtils;
 import utils.Colors;
 import utils.FragmentUtils;
 import utils.PersistenceUtils;
-import view.FXMLHandler;
+import view.fragments.WordField;
+import view.fragments.WordLetter;
 
 public class WordEditorController {
 
@@ -226,18 +226,21 @@ public class WordEditorController {
     @FXML
     private void addRoot() {
         removeAllListeners();
+        mainController.selectWordTab();
         mainController.getSelectedWord().addListener(chooseRootListener);
     }
 
     @FXML
     private void addLink() {
         removeAllListeners();
+        mainController.selectWordTab();
         mainController.getSelectedWord().addListener(chooseLinkListener);
     }
 
     @FXML
     private void addType() {
         removeAllListeners();
+        mainController.selectTypeTab();
         mainController.getSelectedType().addListener(chooseTypeListener);
     }
 
@@ -377,13 +380,12 @@ public class WordEditorController {
     }
 
     private void addLetter(Letter l) {
-        FXMLHandler<HBox, WordLetterController> letter = new FXMLHandler<>("../fxml/fragments/editor/word_letter.fxml");
-        WordLetterController wordLetterController = letter.getController();
-        lettersPane.getChildren().add(lettersPane.getChildren().size() - 1,letter.get());
-        wordLetterController.init(l);
-        wordLetterController.getDeleteButton().setOnAction(event -> {
-            lettersPane.getChildren().remove(letter.get());
+        WordLetter wordLetter = new WordLetter(l.getCharacter());
+        lettersPane.getChildren().add(lettersPane.getChildren().size() - 1, wordLetter);
+        wordLetter.getDeleteButton().setOnAction(event -> {
             management.getWord().getLetters().remove(l);
+            AnimationUtils.smooth(wordLetter.opacityProperty(), 0.0);
+            lettersPane.getChildren().remove(wordLetter);
             updateWordPreview();
         });
         Platform.runLater(() -> {
@@ -393,20 +395,21 @@ public class WordEditorController {
     }
 
     private <U> void addField(U object, FlowPane fieldPane, Set<U> actionOn, String text, Color color) {
-        FXMLHandler<HBox, WordFieldController> fieldFragment = new FXMLHandler<>("/fxml/fragments/editor/word_field.fxml");
-        WordFieldController fieldControl = fieldFragment.getController();
-        fieldPane.getChildren().add(fieldFragment.get());
+        WordField field = new WordField(text);
+        fieldPane.getChildren().add(field);
+        field.setTranslateX(30.0);
+        AnimationUtils.smoothApear(field, field.translateXProperty(), 0.0);
 
-        fieldControl.getDeleteButton().setOnAction(event -> {
-            fieldPane.getChildren().remove(fieldFragment.get());
+        field.getDeleteButton().setOnAction(event -> {
             actionOn.remove(object);
+            AnimationUtils.smooth(field.opacityProperty(), 0.0);
+            fieldPane.getChildren().remove(field);
         });
 
-        fieldControl.init(text);
         if (color == null) {
-            fieldControl.setStyle("-fx-font-weight: bold;");
+            field.getObjectLabel().setStyle("-fx-font-weight: bold;");
         } else {
-            fieldControl.setStyle("-fx-text-fill: " + Colors.colorToHex(color) + "; -fx-font-weight: bold;");
+            field.getObjectLabel().setStyle("-fx-text-fill: " + Colors.colorToHex(color) + "; -fx-font-weight: bold;");
         }
         
     }

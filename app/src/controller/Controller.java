@@ -7,6 +7,9 @@ import controller.fragments.NavItem;
 import controller.fragments.NavLetterController;
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -17,15 +20,18 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import model.managment.Management;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
+import utils.AnimationUtils;
 import utils.Colors;
 import utils.FragmentUtils;
 import view.FXMLHandler;
@@ -89,6 +95,9 @@ public class Controller {
     private VBox wordContainer,
                  letterContainer,
                  typeContainer;
+
+    @FXML
+    private TabPane tabPane;
 
     private ObservableList<String> wordSortList,
                                    letterSortList,
@@ -314,9 +323,24 @@ public class Controller {
         if (content == null) {
             throw new IllegalArgumentException(Colors.error("Controller.setContent:", "content cannot be null"));
         }
+
         this.content.getChildren().clear();
         this.content.getChildren().add(content);
         this.controllerContent = controller;
+        content.setScaleX(0.5);
+        content.setScaleY(0.5);
+        content.setOpacity(0);
+        KeyValue scaleX1 = new KeyValue(content.scaleXProperty(), 1.05, AnimationUtils.QUAD_EASE_OUT);
+        KeyValue scaleY1 = new KeyValue(content.scaleYProperty(), 1.05, AnimationUtils.QUAD_EASE_OUT);
+        KeyFrame keyFrame1 = new KeyFrame(Duration.seconds(0.15), scaleX1, scaleY1);
+
+        KeyValue scaleX2 = new KeyValue(content.scaleXProperty(), 1, AnimationUtils.QUAD_EASE_IN);
+        KeyValue scaleY2 = new KeyValue(content.scaleYProperty(), 1, AnimationUtils.QUAD_EASE_IN);
+        KeyValue opacity1 = new KeyValue(content.opacityProperty(), 1, AnimationUtils.QUAD_EASE_OUT);
+        KeyFrame keyFrame2 = new KeyFrame(Duration.seconds(0.3), scaleX2, scaleY2, opacity1);
+        
+        Timeline timeline = new Timeline(keyFrame1, keyFrame2);
+        timeline.play();
     }
 
     /**
@@ -422,6 +446,18 @@ public class Controller {
 
     public ObjectProperty<NavLetterController> getSelectedLetter() {
         return selectedLetter;
+    }
+
+    public void selectTypeTab(){
+        tabPane.getSelectionModel().select(2);
+    }
+
+    public void selectLetterTab(){
+        tabPane.getSelectionModel().select(1);
+    }
+
+    public void selectWordTab(){
+        tabPane.getSelectionModel().select(0);
     }
 
 }

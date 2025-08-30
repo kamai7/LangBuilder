@@ -43,6 +43,9 @@ public class WordManagement {
     }
 
     public void edit() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
+        if (word.getLetterIds().size() == 0) {
+            throw new IllegalArgumentException("word must contains letters");
+        }
         if(word.getId() == -1){
             wordDAO.create(word);
         }else{

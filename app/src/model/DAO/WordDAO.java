@@ -204,11 +204,10 @@ public class WordDAO extends DAO<Word> {
         }
     }
 
-    public void updateParameters(Word word) {
+    public void updateParameters(Word word, Connection c) throws SQLException {
         String query = "UPDATE Word SET emotional = ?, formality = ?, vulgarity = ? WHERE wordId = ?";
         
-        try (Connection c = getConnection();
-             PreparedStatement ps = c.prepareStatement(query)) {
+        try (PreparedStatement ps = c.prepareStatement(query)) {
 
             ps.setDouble(1, word.getEmotional());
             ps.setDouble(2, word.getFormality());
@@ -216,21 +215,19 @@ public class WordDAO extends DAO<Word> {
             ps.setInt(4, word.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
-            System.err.println(Colors.error("WordDAO updateParameters: invalid parameters\n", e.getMessage()));
+            throw new SQLException(Colors.error("WordDAO updateParameters: \n", e.getMessage()));
         }
     }
 
-    public void updateLetters(Word word) {
+    public void updateLetters(Word word, Connection c) throws SQLException {
         String queryAdd = "INSERT INTO WordsLetters VALUES (?, ?, ?)";
         String queryDelete = "DELETE FROM WordsLetters WHERE wordLId = ?";
         int rows = 0;
 
-        try(Connection c = getConnection()){
+        try{
             try (PreparedStatement ps = c.prepareStatement(queryDelete)) {
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
-            } catch(SQLException e) {
-                System.err.println(Colors.error("WordDAO updateLetters: invalid id\n", e.getMessage()));
             }
 
             try (PreparedStatement ps = c.prepareStatement(queryAdd)) {
@@ -241,26 +238,23 @@ public class WordDAO extends DAO<Word> {
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
-            } catch(SQLException e) {
-                System.err.println(Colors.error("WordDAO.updateLetters: invalid letters\n", e.getMessage()));
             }
+
             System.out.println(rows + " rows updated");
-        } catch(SQLException e) {
-            System.err.println(Colors.error("WordDAO.updateLetters: invalid parameters\n", e.getMessage()));
+        }catch(SQLException e) {
+            throw new SQLException(Colors.error("WordDAO.updateLetters: " + e.getMessage()));
         }
     }
 
-    public void updateDefinitions(Word word){
+    public void updateDefinitions(Word word, Connection c) throws SQLException {
         String queryDelete = "DELETE FROM Definition WHERE dWordId = ?";
         String queryAdd = "INSERT INTO Definition VALUES (?, ?)";
         int rows = 0;
-        try(Connection c = getConnection()){
+        try{
 
             try(PreparedStatement ps = c.prepareStatement(queryDelete)){
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
-            }catch(SQLException e){
-                System.err.println(Colors.error("WordDAO updateDefinitions: invalid id\n", e.getMessage()));
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
@@ -270,26 +264,22 @@ public class WordDAO extends DAO<Word> {
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
-            }catch(SQLException e){
-                System.err.println(Colors.error("WordDAO updateDefinitions: invalid definitions\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         }catch (SQLException e){
-            System.err.println(Colors.error("WordDAO updateDefinitions: invalid parameters\n", e.getMessage()));
+            throw new SQLException(Colors.error("WordDAO updateDefinitions: " + e.getMessage()));
         }
     }
 
-    public void updateTranslations(Word word){
+    public void updateTranslations(Word word, Connection c) throws SQLException {
         String queryDelete = "DELETE FROM Translation WHERE tWordId = ?";
         String queryAdd = "INSERT INTO Translation (tWordId, translation) VALUES (?, ?)";
         int rows = 0;
-        try(Connection c = getConnection()){
+        try{
 
             try(PreparedStatement ps = c.prepareStatement(queryDelete)){
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
-            }catch(SQLException e){
-                System.err.println(Colors.error("WordDAO updateTranslations: invalid id\n", e.getMessage()));
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
@@ -299,26 +289,22 @@ public class WordDAO extends DAO<Word> {
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
-            }catch(SQLException e){
-                System.err.println(Colors.error("WordDAO updateTranslations: invalid translations\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         }catch (SQLException e){
-            System.err.println(Colors.error("WordDAO updateTranslations: invalid parameters\n", e.getMessage()));
+            throw new SQLException(Colors.error("WordDAO updateTranslations: " + e.getMessage()));
         }
     }
 
-    public void updateRoots(Word word){
+    public void updateRoots(Word word, Connection c) throws SQLException {
         String queryDelete = "DELETE FROM UsedRoots WHERE roWordId = ?";
         String queryAdd = "INSERT INTO UsedRoots VALUES (?, ?)";
         int rows = 0;
-        try(Connection c = getConnection()){
+        try{
 
             try(PreparedStatement ps = c.prepareStatement(queryDelete)){
                 ps.setInt(1, word.getId());
                 rows += ps.executeUpdate();
-            }catch(SQLException e){
-                System.err.println(Colors.error("WordDAO updateRoots: invalid id\n", e.getMessage()));
             }
 
             try(PreparedStatement ps = c.prepareStatement(queryAdd)){
@@ -328,21 +314,18 @@ public class WordDAO extends DAO<Word> {
                     ps.addBatch();
                 }
                 rows += ps.executeBatch().length;
-            }catch(SQLException e){
-                System.err.println(Colors.error("WordDAO updateRoots: invalid roots\n", e.getMessage()));
             }
             System.out.println(rows + " rows updated");
         }catch (SQLException e){
-            System.err.println(Colors.error("WordDAO updateRoots: invalid parameters\n", e.getMessage()));
+            throw new SQLException(Colors.error("WordDAO updateRoots: " + e.getMessage()));
         }
     }
 
-    public void updateLinks(Word word) {
+    public void updateLinks(Word word, Connection c) throws SQLException {
         String deleteLinkQuery = "DELETE FROM Link WHERE (lWordId = ? AND linkedWordId = ?) OR (linkedWordId = ? AND lWordId = ?)";
         String insertLinkQuery = "INSERT INTO Link (lWordId, linkedWordId) VALUES (?, ?)";
 
-        try (Connection c = getConnection()) {
-            c.setAutoCommit(false); // Démarre une transaction
+        try {
             int rows = 0;
 
             // Récupérer les anciens liens
@@ -371,8 +354,6 @@ public class WordDAO extends DAO<Word> {
                     psDelete.addBatch();
                 }
                 rows += psDelete.executeBatch().length;
-            } catch (SQLException e) {
-                System.err.println(Colors.error("WordDAO updatelinks remove links: " , e.getMessage()));
             }
 
             // Ajout des nouveaux liens (dans les deux sens)
@@ -384,14 +365,35 @@ public class WordDAO extends DAO<Word> {
                     psInsert.addBatch();
                 }
                 rows += psInsert.executeBatch().length;
-            } catch (SQLException e) {
-                System.err.println(Colors.error("WordDAO updatelinks add links: ", e.getMessage()));
             }
-
-            c.commit();
             System.out.println(rows + " rows updated");
         } catch (SQLException e) {
-            System.err.println(Colors.error("WordDAO Transaction failed: ", e.getMessage()));
+            throw new SQLException(Colors.error("WordDAO updateLinks: " + e.getMessage()));
+        }
+    }
+
+    public void updateTypes(Word word, Connection c) throws SQLException {
+        String queryDelete = "DELETE FROM WordsTypes WHERE tyWordId = ?";
+        String queryAdd = "INSERT INTO WordsTypes VALUES (?, ?)";
+        int rows = 0;
+        try{
+
+            try(PreparedStatement ps = c.prepareStatement(queryDelete)){
+                ps.setInt(1, word.getId());
+                rows += ps.executeUpdate();
+            }
+
+            try(PreparedStatement ps = c.prepareStatement(queryAdd)){
+                for(Integer t : word.getTypeIds()){
+                    ps.setInt(1, word.getId());
+                    ps.setInt(2, t);
+                    ps.addBatch();
+                }
+                rows += ps.executeBatch().length;
+            }
+            System.out.println(rows + " rows updated");
+        }catch (SQLException e){
+            throw new SQLException(Colors.error("WordDAO updateTypes: " +  e.getMessage()));
         }
     }
 
@@ -460,12 +462,19 @@ public class WordDAO extends DAO<Word> {
 
     @Override
     public void update(Word word) {
-        updateParameters(word);
-        updateLetters(word);
-        updateDefinitions(word);
-        updateTranslations(word);
-        updateRoots(word);
-        updateLinks(word);
+        try (Connection c = getConnection()) {
+            c.setAutoCommit(false);
+            updateParameters(word,c);
+            updateLetters(word, c);
+            updateDefinitions(word, c);
+            updateTranslations(word, c);
+            updateRoots(word, c);
+            updateLinks(word, c);
+            updateTypes(word, c);
+            c.commit();
+        }catch (SQLException e){
+            System.err.println(Colors.error("WordDAO update: \n", e.getMessage()));
+        }
     }
 
     @Override
