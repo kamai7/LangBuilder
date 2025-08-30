@@ -22,9 +22,8 @@ import model.persistance.Word;
 import utils.Colors;
 import utils.PersistenceUtils;
 
-public class TypeEditorController {
+public class TypeEditorController extends AbstractEditor<Type> {
 
-    private Controller mainController;
     private TypeManagement management;
     private ObservableList<String> positionWords;
     private ChangeListener<NavTypeController> parentListener;

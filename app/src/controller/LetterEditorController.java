@@ -11,7 +11,7 @@ import model.managment.LetterManagement;
 import model.persistance.Letter;
 import utils.Colors;
 
-public class LetterEditorController {
+public class LetterEditorController extends AbstractEditor<Letter>{
 
     private Controller mainController;
 

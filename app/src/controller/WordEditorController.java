@@ -34,11 +34,9 @@ import utils.PersistenceUtils;
 import view.fragments.WordField;
 import view.fragments.WordLetter;
 
-public class WordEditorController {
+public class WordEditorController extends AbstractEditor<Word> {
 
     private boolean delete = true;
-
-    private Controller mainController;
 
     private WordManagement management;
 
