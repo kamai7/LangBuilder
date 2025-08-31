@@ -116,8 +116,6 @@ public class WordEditorController extends AbstractEditor<Word> {
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
         usableCheckBox.selectedProperty().addListener(event -> management.getWord().setUsable(usableCheckBox.isSelected()));
 
-        System.out.println(Colors.info("Initializing WordEditorController..."));
-
         chooseTypeListener = new SelectionListener<>("argument error") {
             public void perform() throws InvalidUserArgument {
                 management.getWord().getTypes().add(newObject);
