@@ -1,17 +1,13 @@
 package controller;
 
-
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
-import java.util.Set;
 
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
-
+import controller.listener.SelectionListener;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
@@ -120,64 +116,24 @@ public class WordEditorController extends AbstractEditor<Word> {
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
         usableCheckBox.selectedProperty().addListener(event -> management.getWord().setUsable(usableCheckBox.isSelected()));
 
-        chooseTypeListener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
-                Type type = newValue.getObject();
-                try {
-                    management.getWord().getTypes().add(newValue.getObject());
-
-                    addField(type, typesPane, management.getWord().getTypes(), type.getLabel(), type.getColor());
-
-                    //remove the listener
-                    mainController.getSelectedType().removeListener(this);
-                    mainController.getSelectedType().set(null);
-                }catch(IllegalArgumentException e){
-                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-                    alert.setTitle("Arguments error");
-                    alert.setContentText(e.getMessage());
-                    alert.show();
-                }
+        chooseTypeListener = new SelectionListener<Type, NavTypeController>(mainController.getSelectedType(), "argument error") {
+            public void perform() {
+                management.getWord().getTypes().add(newObject);
+                addType(newObject);
             }
         };
 
-        chooseRootListener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
-                Word word = newValue.getObject();
-                try {
-                    management.getWord().getRoots().add(word);
-                    addField(word, rootsPane, management.getWord().getRoots(), PersistenceUtils.wordToString(word), null);
-                    
-                    //remove the listener
-                    mainController.getSelectedWord().removeListener(this);
-                    mainController.getSelectedWord().set(null);
-                }catch(IllegalArgumentException e){
-                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-                    alert.setTitle("Arguments error");
-                    alert.setContentText(e.getMessage());
-                    alert.show();
-                }
+        chooseRootListener = new SelectionListener<Word, NavWordController>(mainController.getSelectedWord(), "argument error") {
+            public void perform() {
+                management.getWord().getRoots().add(newObject);
+                addRoot(newObject);
             }
         };
 
-        chooseLinkListener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
-                Word word = newValue.getObject();
-                try {
-                    management.getWord().getLinks().add(word);
-                    addField(word, linksPane, management.getWord().getLinks(), PersistenceUtils.wordToString(word), null); 
-
-                    //remove the listener
-                    mainController.getSelectedWord().removeListener(this);
-                    mainController.getSelectedWord().set(null);
-                }catch(IllegalArgumentException e){
-                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-                    alert.setTitle("Arguments error");
-                    alert.setContentText(e.getMessage());
-                    alert.show();
-                }
+        chooseLinkListener = new SelectionListener<Word,NavWordController>(mainController.getSelectedWord(),"argument error") {
+            public void perform() {
+                management.getWord().getLinks().add(newObject);
+                addLink(newObject);
             }
         };
 
@@ -341,13 +297,13 @@ public class WordEditorController extends AbstractEditor<Word> {
         updateWordPreview();
 
         for (Type t : word.getTypes()) {
-            addField(t, typesPane, management.getWord().getTypes(), t.getLabel(), t.getColor());
+            addType(t);
         }
         for (Word w : word.getRoots()) {
-            addField(w, rootsPane, management.getWord().getRoots(), PersistenceUtils.wordToString(w), null);
+            addRoot(w);
         }
         for (Word w : word.getLinks()) {
-            addField(w, linksPane, management.getWord().getLinks(), PersistenceUtils.wordToString(w), null);
+            addLink(w);
         }
 
     }
@@ -393,24 +349,48 @@ public class WordEditorController extends AbstractEditor<Word> {
         delete = true;
     }
 
-    private <U> void addField(U object, FlowPane fieldPane, Set<U> actionOn, String text, Color color) {
-        WordField field = new WordField(text);
-        fieldPane.getChildren().add(field);
-        field.setTranslateX(30.0);
-        AnimationUtils.smoothApear(field, field.translateXProperty(), 0.0);
+    private void addLink(Word object) {
+        WordField field = new WordField(PersistenceUtils.wordToString(object));
+        rootsPane.getChildren().add(field);
+
+        fieldApear(field);
 
         field.getDeleteButton().setOnAction(event -> {
-            actionOn.remove(object);
+            management.getWord().getRoots().remove(object);
             AnimationUtils.smooth(field.opacityProperty(), 0.0);
-            fieldPane.getChildren().remove(field);
+            rootsPane.getChildren().remove(field);
         });
+    }
 
-        if (color == null) {
-            field.getObjectLabel().setStyle("-fx-font-weight: bold;");
-        } else {
-            field.getObjectLabel().setStyle("-fx-text-fill: " + Colors.colorToHex(color) + "; -fx-font-weight: bold;");
-        }
-        
+    private void addRoot(Word object) {
+        WordField field = new WordField(PersistenceUtils.wordToString(object));
+        linksPane.getChildren().add(field);
+
+        fieldApear(field);
+
+        field.getDeleteButton().setOnAction(event -> {
+            management.getWord().getLinks().remove(object);
+            AnimationUtils.smooth(field.opacityProperty(), 0.0);
+            linksPane.getChildren().remove(field);
+        });
+    }
+
+    private void addType(Type object) {
+        WordField field = new WordField(object.getLabel());
+        typesPane.getChildren().add(field);
+
+        fieldApear(field);
+
+        field.getDeleteButton().setOnAction(event -> {
+            management.getWord().getTypes().remove(object);
+            AnimationUtils.smooth(field.opacityProperty(), 0.0);
+            typesPane.getChildren().remove(field);
+        });
+    }
+
+    private void fieldApear(WordField field) {
+        field.setTranslateX(30.0);
+        AnimationUtils.smoothApear(field, field.translateXProperty(), 0.0);
     }
 
     public void removeAllListeners() {

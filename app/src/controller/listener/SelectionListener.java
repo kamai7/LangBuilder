@@ -6,13 +6,13 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Alert;
 
-public abstract class StyleListener<U,T extends NavItem<U>> implements ChangeListener<T>{
+public abstract class SelectionListener<U,T extends NavItem<U>> implements ChangeListener<T>{
 
     private ObjectProperty<T> property;
     protected U newObject;
     private String errorMessage;
 
-    public StyleListener(ObjectProperty<T> property, String errorMessage) {
+    public SelectionListener(ObjectProperty<T> property, String errorMessage) {
         this.property = property;
         this.errorMessage = errorMessage;
     }

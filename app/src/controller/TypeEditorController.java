@@ -4,7 +4,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
-import controller.listener.StyleListener;
+import controller.listener.SelectionListener;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,7 +49,7 @@ public class TypeEditorController extends AbstractEditor<Type> {
 
         System.out.println(Colors.success("TypeEditorController initialized 0"));
 
-        rootListener = new StyleListener<Word, NavWordController>(mainController.getSelectedWord(), "Arguments error") {
+        rootListener = new SelectionListener<Word, NavWordController>(mainController.getSelectedWord(), "Arguments error") {
             public void perform() {
                 chooseWordButton.setStyle("-fx-font-weight: bold;");
                 chooseWordButton.setText(PersistenceUtils.wordToString(newObject));
@@ -59,7 +59,7 @@ public class TypeEditorController extends AbstractEditor<Type> {
 
         System.out.println(Colors.success("TypeEditorController initialized 1"));
 
-        parentListener = new StyleListener<Type,NavTypeController>(mainController.getSelectedType(), "Arguments error") {
+        parentListener = new SelectionListener<Type,NavTypeController>(mainController.getSelectedType(), "Arguments error") {
             public void perform(){
                 management.setParent(newObject);
                 chooseParentButton.setText(newObject.getLabel());
