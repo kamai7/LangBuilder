@@ -1,10 +1,9 @@
 package controller;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
 import controller.listener.SelectionListener;
+import exceptions.InvalidUserArgument;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -49,21 +48,25 @@ public class TypeEditorController extends AbstractEditor<Type> {
 
         System.out.println(Colors.success("TypeEditorController initialized 0"));
 
-        rootListener = new SelectionListener<Word, NavWordController>(mainController.getSelectedWord(), "Arguments error") {
-            public void perform() {
+        rootListener = new SelectionListener<Word, NavWordController>("Arguments error") {
+            public void perform() throws InvalidUserArgument{
                 chooseWordButton.setStyle("-fx-font-weight: bold;");
                 chooseWordButton.setText(PersistenceUtils.wordToString(newObject));
                 management.getType().setRoot(newObject);
+                mainController.getSelectedWord().removeListener(rootListener);
+                mainController.getSelectedWord().set(null);
             }
         };
 
         System.out.println(Colors.success("TypeEditorController initialized 1"));
 
-        parentListener = new SelectionListener<Type,NavTypeController>(mainController.getSelectedType(), "Arguments error") {
-            public void perform(){
+        parentListener = new SelectionListener<Type,NavTypeController>("Arguments error") {
+            public void perform() throws InvalidUserArgument{
                 management.setParent(newObject);
                 chooseParentButton.setText(newObject.getLabel());
                 chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newObject.getColor()) + "; -fx-font-weight: bold;");
+                mainController.getSelectedType().removeListener(parentListener);
+                mainController.getSelectedType().set(null);
             }
         };
 
@@ -117,23 +120,17 @@ public class TypeEditorController extends AbstractEditor<Type> {
             type.setLabel(nameTextField.getText());
             type.setColor(colorColorPicker.getValue());
             type.setPosition(positionWordComboBox.getSelectionModel().getSelectedIndex());
-            management.editType();
+            management.edit();
             removeAllListeners();
             mainController.fetchTypes();
             mainController.reloadTypesNav();
             mainController.initHome();
-        }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+        }catch(InvalidUserArgument e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Arguments error");
             alert.setContentText(e.getMessage());
             alert.show();
 
-        }catch(SQLIntegrityConstraintViolationException e){
-
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            alert.setTitle("Clone error");
-            alert.setContentText("this letter already exists");
-            alert.show();
         }
     } 
 
@@ -146,17 +143,13 @@ public class TypeEditorController extends AbstractEditor<Type> {
     @FXML
     private void delete() {
         try{
-            management.deleteType();
+            management.delete();
             removeAllListeners();
             mainController.fetchTypes();
             mainController.reloadTypesNav();
             mainController.initHome();
-        }catch(IllegalArgumentException e){
+        }catch(InvalidUserArgument e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this type have already been deleted");
-            alert.setTitle("In use error");
-            alert.show();
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this type is used by several words or other types");
             alert.setTitle("In use error");
             alert.show();
         }

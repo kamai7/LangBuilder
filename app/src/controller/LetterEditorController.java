@@ -1,7 +1,6 @@
 package controller;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
+import exceptions.InvalidUserArgument;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -30,19 +29,14 @@ public class LetterEditorController extends AbstractEditor<Letter>{
         try{
             management.getLetter().setCharacter(letter.getText());
             management.getLetter().setCharacterAscii(ascii.getText());
-            management.editLetter();
+            management.edit();
             mainController.fetchLetters();
             mainController.reloadLettersNav();
             mainController.initHome();
-        }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
+        }catch(InvalidUserArgument e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Arguments error");
             alert.setContentText(e.getMessage());
-            alert.show();
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, Colors.error(e.getMessage()));
-            alert.setTitle("Clone error");
-            alert.setContentText("this letter already exists");
             alert.show();
         }
     }
@@ -55,16 +49,12 @@ public class LetterEditorController extends AbstractEditor<Letter>{
     @FXML
     private void delete() {
         try{
-            management.deleteLetter();
+            management.delete();
             mainController.fetchLetters();
             mainController.reloadLettersNav();
             mainController.initHome();
-        }catch(IllegalArgumentException e){
+        }catch(InvalidUserArgument e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter has already been deleted");
-            alert.setTitle("In use error");
-            alert.show();
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by other words");
             alert.setTitle("In use error");
             alert.show();
         }

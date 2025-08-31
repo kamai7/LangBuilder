@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import javafx.scene.paint.Color;
@@ -111,90 +110,96 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public void update(Type type) {
+    public void update(Type type) throws SQLException {
         String query = "UPDATE Type SET label = ?, colorR = ?, colorG = ?, colorB = ?, colorT = ?, parentId = ?, rootId = ?, position = ? WHERE typeId = ?";
 
         System.out.println(type);
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
+            c.setAutoCommit(false);
+            try{
 
-            ps.setString(1, type.getLabel());
-            int[] color = Colors.convertColorToRGBA(type.getColor());
-            ps.setInt(2,color[0]);
-            ps.setInt(3,color[1]);
-            ps.setInt(4,color[2]);
-            ps.setInt(5,color[3]);
+                ps.setString(1, type.getLabel());
+                int[] color = Colors.convertColorToRGBA(type.getColor());
+                ps.setInt(2,color[0]);
+                ps.setInt(3,color[1]);
+                ps.setInt(4,color[2]);
+                ps.setInt(5,color[3]);
 
-            if (type.getParentId() == -1) {
-                ps.setNull(6, java.sql.Types.INTEGER);
-            } else {
-                ps.setInt(6, type.getParentId());
-            }
+                if (type.getParentId() == -1) {
+                    ps.setNull(6, java.sql.Types.INTEGER);
+                } else {
+                    ps.setInt(6, type.getParentId());
+                }
 
-            if (type.getRootId() == -1) {
-                ps.setNull(7, java.sql.Types.INTEGER);
-            } else {
-                ps.setInt(7, type.getRootId());
+                if (type.getRootId() == -1) {
+                    ps.setNull(7, java.sql.Types.INTEGER);
+                } else {
+                    ps.setInt(7, type.getRootId());
+                }
+                if(type.getPosition() == -1) {
+                    ps.setNull(8, java.sql.Types.INTEGER);
+                }else{
+                    ps.setInt(8, type.getPosition());
+                }
+                ps.setInt(9, type.getId());
+                
+                int lines = ps.executeUpdate();
+                System.out.println(lines + " rows updated");
+
+                c.commit();
+            }catch (SQLException e) {
+                c.rollback();
+                throw e;
             }
-            if(type.getPosition() == -1) {
-                ps.setNull(8, java.sql.Types.INTEGER);
-            }else{
-                ps.setInt(8, type.getPosition());
-            }
-            ps.setInt(9, type.getId());
-            
-            int lines = ps.executeUpdate();
-            System.out.println(lines + " rows updated");
-        }
-        catch (SQLException e) {
-            System.err.println(Colors.error("TypeDAO.update: ", e.getMessage()));
         }
     }
 
     @Override
-    public int create(Type type) throws SQLIntegrityConstraintViolationException{
+    public int create(Type type) throws SQLException{
         String query = "INSERT INTO Type (typeId, label, colorR, colorG, colorB, colorT, parentId, rootId, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         int retId = -1;
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)){
+            c.setAutoCommit(false);
+            try{
 
-            int id = nextId("Type", "typeId");
-            ps.setInt(1, id);
-            ps.setString(2, type.getLabel());
-            int[] color = Colors.convertColorToRGBA(type.getColor());
-            ps.setInt(3,color[0]);
-            ps.setInt(4,color[1]);
-            ps.setInt(5,color[2]);
-            ps.setInt(6,color[3]);
+                int id = nextId("Type", "typeId");
+                ps.setInt(1, id);
+                ps.setString(2, type.getLabel());
+                int[] color = Colors.convertColorToRGBA(type.getColor());
+                ps.setInt(3,color[0]);
+                ps.setInt(4,color[1]);
+                ps.setInt(5,color[2]);
+                ps.setInt(6,color[3]);
 
-            if (type.getParentId() == -1) {
-                ps.setNull(7, java.sql.Types.INTEGER);
-            } else {
-                ps.setInt(7, type.getParentId());
-            }
+                if (type.getParentId() == -1) {
+                    ps.setNull(7, java.sql.Types.INTEGER);
+                } else {
+                    ps.setInt(7, type.getParentId());
+                }
 
-            if (type.getRootId() == -1) {
-                ps.setNull(8, java.sql.Types.INTEGER);
-            } else {
-                ps.setInt(8, type.getRootId());
-            }
-            if (type.getPosition() == -1) {
-                ps.setNull(9, java.sql.Types.INTEGER);
-            } else {
-                ps.setInt(9, type.getPosition());
-            }
-            ps.executeUpdate();
+                if (type.getRootId() == -1) {
+                    ps.setNull(8, java.sql.Types.INTEGER);
+                } else {
+                    ps.setInt(8, type.getRootId());
+                }
+                if (type.getPosition() == -1) {
+                    ps.setNull(9, java.sql.Types.INTEGER);
+                } else {
+                    ps.setInt(9, type.getPosition());
+                }
+                ps.executeUpdate();
 
-            // Only if the insert was successful
-            type.setId(id);
-            retId = id;
-        }
-        catch (SQLException e) {
-            System.err.println(Colors.error("TypeDAO.create: ", e.getMessage()));
-            if (e instanceof SQLIntegrityConstraintViolationException) {
-                throw (SQLIntegrityConstraintViolationException) e;
+                // Only if the insert was successful
+                type.setId(id);
+                retId = id;
+                c.commit();
+            }catch (SQLException e) {
+                c.rollback();
+                throw e;
             }
         }
 
@@ -202,21 +207,24 @@ public class TypeDAO extends DAO<Type>{
     }
 
     @Override
-    public void delete(Type type) throws SQLIntegrityConstraintViolationException{
+    public void delete(Type type) throws SQLException{
         String query = "DELETE FROM Type WHERE typeId = ?";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
-            
-            ps.setInt(1, type.getId());
-            
-            int rows = ps.executeUpdate();
-            System.out.println(rows + " rows deleted");
-        } catch (SQLException e) {
-            System.err.println(Colors.error("TypeDAO delete: ", e.getMessage()));
-            if (e instanceof SQLIntegrityConstraintViolationException) {
-                throw (SQLIntegrityConstraintViolationException) e;
+            c.setAutoCommit(false);
+            try{
+
+                ps.setInt(1, type.getId());
+                
+                int rows = ps.executeUpdate();
+                System.out.println(rows + " rows deleted");
+
+                c.commit();
+            }catch (SQLException e) {
+                c.rollback();
+                throw e;
             }
-        }
+        } 
     }
 }

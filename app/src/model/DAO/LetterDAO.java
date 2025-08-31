@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -92,47 +91,51 @@ public  class LetterDAO extends DAO<Letter> {
     }
 
     @Override
-    public void delete(Letter letter) throws SQLIntegrityConstraintViolationException{
+    public void delete(Letter letter) throws SQLException{
         String query = "DELETE FROM Letter WHERE letterId = ?";
 
          try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
+            c.setAutoCommit(false);
             
             ps.setInt(1, letter.getId());
             ps.executeUpdate();
+
+            c.commit();
         }
         catch(SQLException e) {
-            System.err.println(Colors.error("LetterDAO delete: ", e.getMessage()));
-            if (e instanceof SQLIntegrityConstraintViolationException) {
-                throw (SQLIntegrityConstraintViolationException) e;
-            }
+            throw e;
         }
     }
 
     @Override
-    public void update(Letter letter) {
+    public void update(Letter letter) throws SQLException{
         String query = "UPDATE Letter SET letter = ?, letterAscii = ? WHERE letterId = ?";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
+            c.setAutoCommit(false);
             
             ps.setString(1, letter.getCharacter());
             ps.setString(2, letter.getCharacterAscii());
             ps.setInt(3, letter.getId());
             ps.executeUpdate();
+
+            c.commit();
         }
         catch(SQLException e) {
-            System.err.println(Colors.error("LetterDAO update: ", e.getMessage()));
+            throw e;
         }
     }
 
     @Override
-    public int create(Letter letter) throws SQLIntegrityConstraintViolationException{
+    public int create(Letter letter) throws SQLException{
         int retId = -1; 
         String query = "INSERT INTO Letter (letterId, letter, letterAscii) VALUES (?, ?, ?)";
 
         try (Connection c = getConnection();
              PreparedStatement ps = c.prepareStatement(query)) {
+            c.setAutoCommit(false);
 
             int id = nextId("Letter", "letterId");
 
@@ -144,12 +147,11 @@ public  class LetterDAO extends DAO<Letter> {
              // Only if the insert was successful
             letter.setId(id);
             retId = id;
+
+            c.commit();
         }
         catch (SQLException e) {
-            System.err.println(Colors.error("LetterDAO create: " , e.getMessage()));
-            if (e instanceof SQLIntegrityConstraintViolationException) {
-                throw (SQLIntegrityConstraintViolationException) e;
-            }
+            throw e;
         }
 
         return retId;

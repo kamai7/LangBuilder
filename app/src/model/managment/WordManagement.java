@@ -1,7 +1,8 @@
 package model.managment;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+
+import exceptions.InvalidUserArgument;
 import model.dao.LetterDAO;
 import model.dao.WordDAO;
 import model.persistance.Letter;
@@ -34,22 +35,30 @@ public class WordManagement {
         findLetters();
     }
 
-    public void deleteWord() throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
+    public void delete() throws InvalidUserArgument{
         if (word == null) {
             throw new IllegalArgumentException(Colors.error("WordManagement.deleteWord:", "word cannot be null"));
         }
-        wordDAO.delete(word);
-        this.word = null;
+        try{
+            wordDAO.delete(word);
+            this.word = null;
+        }catch (Exception e){
+            throw new InvalidUserArgument("WordManagement.deleteWord: " + e.getMessage());
+        }
     }
 
-    public void edit() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
+    public void edit() throws InvalidUserArgument {
         if (word.getLetterIds().size() == 0) {
             throw new IllegalArgumentException("word must contains letters");
         }
-        if(word.getId() == -1){
-            wordDAO.create(word);
-        }else{
-            wordDAO.update(word);
+        try{
+            if(word.getId() == -1){
+                wordDAO.create(word);
+            }else{
+                wordDAO.update(word);
+            }
+        }catch (Exception e){
+            throw new InvalidUserArgument("WordManagement.edit: " + e.getMessage());
         }
     }
 

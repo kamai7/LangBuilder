@@ -1,9 +1,8 @@
 package controller.fragments;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import controller.Controller;
 import controller.TypeEditorController;
+import exceptions.InvalidUserArgument;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
@@ -51,13 +50,9 @@ public class NavTypeController extends NavItem<Type> {
     public void delete(){
         TypeManagement management = new TypeManagement(object);
         try{
-            management.deleteType();
-        }catch(IllegalArgumentException e){
+            management.delete();
+        }catch(InvalidUserArgument e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this type has already been deleted");
-            alert.setTitle("In use error");
-            alert.show();
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this type is used by other types or words");
             alert.setTitle("In use error");
             alert.show();
         }

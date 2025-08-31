@@ -1,11 +1,11 @@
 package controller;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
 import controller.listener.SelectionListener;
+import exceptions.InvalidUserArgument;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -37,9 +37,9 @@ public class WordEditorController extends AbstractEditor<Word> {
 
     private WordManagement management;
 
-    private ChangeListener<NavTypeController> chooseTypeListener;
-    private ChangeListener<NavWordController> chooseRootListener;
-    private ChangeListener<NavWordController> chooseLinkListener;
+    private SelectionListener<Type, NavTypeController> chooseTypeListener;
+    private SelectionListener<Word, NavWordController> chooseRootListener;
+    private SelectionListener<Word, NavWordController> chooseLinkListener;
 
     @FXML
     private HBox chooseTypeButtonContainer;
@@ -116,24 +116,32 @@ public class WordEditorController extends AbstractEditor<Word> {
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
         usableCheckBox.selectedProperty().addListener(event -> management.getWord().setUsable(usableCheckBox.isSelected()));
 
-        chooseTypeListener = new SelectionListener<Type, NavTypeController>(mainController.getSelectedType(), "argument error") {
-            public void perform() {
+        System.out.println(Colors.info("Initializing WordEditorController..."));
+
+        chooseTypeListener = new SelectionListener<>("argument error") {
+            public void perform() throws InvalidUserArgument {
                 management.getWord().getTypes().add(newObject);
                 addType(newObject);
+                mainController.getSelectedType().removeListener(this);
+                mainController.getSelectedType().set(null);
             }
         };
 
-        chooseRootListener = new SelectionListener<Word, NavWordController>(mainController.getSelectedWord(), "argument error") {
-            public void perform() {
+        chooseRootListener = new SelectionListener<>("argument error") {
+            public void perform() throws InvalidUserArgument{
                 management.getWord().getRoots().add(newObject);
                 addRoot(newObject);
+                mainController.getSelectedWord().removeListener(this);
+                mainController.getSelectedWord().set(null);
             }
         };
 
-        chooseLinkListener = new SelectionListener<Word,NavWordController>(mainController.getSelectedWord(),"argument error") {
-            public void perform() {
+        chooseLinkListener = new SelectionListener<>("argument error") {
+            public void perform() throws InvalidUserArgument{
                 management.getWord().getLinks().add(newObject);
                 addLink(newObject);
+                mainController.getSelectedWord().removeListener(this);
+                mainController.getSelectedWord().set(null);
             }
         };
 
@@ -224,16 +232,10 @@ public class WordEditorController extends AbstractEditor<Word> {
             mainController.fetchWords();
             mainController.reloadWordsNav();
             mainController.initHome();
-        }catch(IllegalArgumentException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
+        }catch(InvalidUserArgument e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Arguments error");
             alert.setContentText(e.getMessage());
-            alert.show();
-            System.out.println(e.getMessage());
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            alert.setTitle("Clone error");
-            alert.setContentText("this word already exists");
             alert.show();
             System.out.println(e.getMessage());
         }
@@ -248,17 +250,13 @@ public class WordEditorController extends AbstractEditor<Word> {
     @FXML
     private void delete() {
         try{
-            management.deleteWord();
+            management.delete();
             removeAllListeners();
             mainController.fetchWords();
             mainController.reloadWordsNav();
             mainController.initHome();
-        }catch(IllegalArgumentException e){
+        }catch(InvalidUserArgument e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this word has already been deleted");
-            alert.setTitle("In use error");
-            alert.show();
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this word is used by other words");
             alert.setTitle("In use error");
             alert.show();
         }

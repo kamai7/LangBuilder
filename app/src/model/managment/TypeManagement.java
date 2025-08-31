@@ -1,7 +1,8 @@
 package model.managment;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLException;
 
+import exceptions.InvalidUserArgument;
 import model.dao.TypeDAO;
 import model.persistance.Type;
 import utils.Colors;
@@ -25,15 +26,19 @@ public class TypeManagement {
         typeDAO = new TypeDAO();
     }
 
-    public void editType() throws SQLIntegrityConstraintViolationException, IllegalArgumentException {
+    public void edit() throws InvalidUserArgument {
 
         if (type.getRoot() != null && type.getPosition() == -1){
             throw new IllegalArgumentException("radical position is not not valid");
         }
-        if(type.getId() == -1){
-            typeDAO.create(type);
-        }else{
-            typeDAO.update(type);
+        try{
+            if(type.getId() == -1){
+                typeDAO.create(type);
+            }else{
+                typeDAO.update(type);
+            }
+        }catch (SQLException e){
+            throw new InvalidUserArgument("TypeManagement.editType: " + e.getMessage());
         }
     }
 
@@ -41,9 +46,13 @@ public class TypeManagement {
         return type;
     }
 
-    public void deleteType() throws IllegalArgumentException, SQLIntegrityConstraintViolationException{
-        typeDAO.delete(type);
-        this.type = null;
+    public void delete() throws InvalidUserArgument{
+        try{
+            typeDAO.delete(type);
+            this.type = null;
+        }catch (SQLException e){
+            throw new InvalidUserArgument("TypeManagement.deleteType: " + e.getMessage());
+        }
     }
 
     public void setParent(Type parent) throws IllegalArgumentException{

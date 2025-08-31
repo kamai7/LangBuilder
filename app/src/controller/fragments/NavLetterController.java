@@ -1,9 +1,8 @@
 package controller.fragments;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import controller.Controller;
 import controller.LetterEditorController;
+import exceptions.InvalidUserArgument;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
@@ -43,16 +42,12 @@ public class NavLetterController extends NavItem<Letter>{
     public void delete(){
         LetterManagement management = new LetterManagement(object);
         try{
-            management.deleteLetter();
+            management.delete();
             if (!mainController.getContent().equals(this)) {
                 mainController.initHome();
             }
-        }catch(IllegalArgumentException e){
+        }catch(InvalidUserArgument e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter has already been deleted");
-            alert.setTitle("In use error");
-            alert.show();
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
             alert.setTitle("In use error");
             alert.show();
         }

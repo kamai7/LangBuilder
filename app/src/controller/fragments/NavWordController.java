@@ -1,9 +1,8 @@
 package controller.fragments;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-
 import controller.Controller;
 import controller.WordEditorController;
+import exceptions.InvalidUserArgument;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -77,13 +76,9 @@ public class NavWordController extends NavItem<Word> {
     public void delete(){
         WordManagement management = new WordManagement(object);
         try{
-            management.deleteWord();
-        }catch(IllegalArgumentException e){
+            management.delete();
+        }catch(InvalidUserArgument e){
             Alert alert = new Alert(Alert.AlertType.ERROR, "this letter have already been deleted");
-            alert.setTitle("In use error");
-            alert.show();
-        }catch(SQLIntegrityConstraintViolationException e){
-            Alert alert = new Alert(Alert.AlertType.ERROR, "this letter is used by several words");
             alert.setTitle("In use error");
             alert.show();
         }

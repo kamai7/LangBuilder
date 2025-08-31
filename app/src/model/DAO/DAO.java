@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -47,19 +46,19 @@ abstract class DAO<T> {
      * @param obj the object to create.
      * @return the ID of the newly created object, or -1 if creation failed.
      */
-    public abstract int create(T obj) throws SQLIntegrityConstraintViolationException;
+    public abstract int create(T obj) throws SQLException;
     
     /**
      * Updates an existing object of type T in the database.
      * @param obj the object to update.
      */
-    public abstract void update(T obj);
+    public abstract void update(T obj) throws SQLException;
     
     /**
      * Deletes an object of type T from the database.
      * @param obj the object to delete.
      */
-    public abstract void delete(T obj) throws SQLIntegrityConstraintViolationException;
+    public abstract void delete(T obj) throws SQLException;
 
     /**
      * Returns a connection to the database.
