@@ -11,6 +11,7 @@ import controller.fragments.NavWordController;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
@@ -54,8 +55,7 @@ public class WordEditorController extends AbstractEditor<Word> {
                      linksPane;
 
     @FXML
-    private Label headerObject,
-                  wordPreviewLabel,
+    private Label wordPreviewLabel,
                   wordAsciiPreviewLabel;
 
     @FXML
@@ -193,9 +193,9 @@ public class WordEditorController extends AbstractEditor<Word> {
                 if (letter != null) {
                     letters.add(letter);
                     addLetter(letter);
-                    
                 }
             }
+
         } else if (event.getCode() == KeyCode.BACK_SPACE) {
             if (addLetterField.getText().equals("") && lettersPane.getChildren().size() > 1) {
                 if (delete){
@@ -206,6 +206,7 @@ public class WordEditorController extends AbstractEditor<Word> {
                 }
                 
             }
+
         } else {
             Platform.runLater(() -> {
                 Letter letter = management.findLetterUnique(addLetterField.getText());

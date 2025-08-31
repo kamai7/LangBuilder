@@ -4,7 +4,6 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import model.managment.LetterManagement;
@@ -13,12 +12,8 @@ import utils.Colors;
 
 public class LetterEditorController extends AbstractEditor<Letter>{
 
-    private Controller mainController;
-
     private LetterManagement management;
 
-    @FXML
-    private Label headerObject;
 
     @FXML
     private TextField letter,

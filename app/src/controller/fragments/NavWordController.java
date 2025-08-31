@@ -6,7 +6,6 @@ import controller.Controller;
 import controller.WordEditorController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -19,25 +18,13 @@ import utils.Colors;
 import utils.PersistenceUtils;
 import view.FXMLHandler;
 
-public class NavWordController implements NavItem<Word> {
-
-    private Controller mainController;
-
-    private Word object;
-    
-    @FXML
-    private Label objectLabel,
-                  descriptionLabel;
+public class NavWordController extends NavItem<Word> {
 
     @FXML
     private HBox typesContainer;
 
     @FXML
     private ImageView warningImage;
-
-    @FXML
-    private CheckBox selectedCheckBox;
-
 
     @FXML
     private void initialize() {
@@ -74,10 +61,6 @@ public class NavWordController implements NavItem<Word> {
             
     }
 
-    public CheckBox getCheckbox() {
-        return selectedCheckBox;
-    }
-
     public void addType(String text, Color color) {
         if (text == null) {
             throw new IllegalArgumentException(Colors.error("text cannot be null"));
@@ -104,17 +87,6 @@ public class NavWordController implements NavItem<Word> {
             alert.setTitle("In use error");
             alert.show();
         }
-    }
-
-    public Word getObject() {
-        return object;
-    }
-
-    public boolean equals(Object other){
-        if (this == other) return true;
-        if (!(other instanceof NavLetterController)) return false;
-        NavWordController otherController = (NavWordController) other;
-        return object.equals(otherController.getObject());
     }
 
 }

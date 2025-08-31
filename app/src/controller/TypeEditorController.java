@@ -4,8 +4,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
+import controller.listener.StyleListener;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +13,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import model.managment.TypeManagement;
@@ -36,9 +35,6 @@ public class TypeEditorController extends AbstractEditor<Type> {
     private ColorPicker colorColorPicker;
 
     @FXML
-    private Label headerObject;
-
-    @FXML
     private Button chooseWordButton,
                    chooseParentButton;
 
@@ -51,38 +47,27 @@ public class TypeEditorController extends AbstractEditor<Type> {
         positionWords = FXCollections.observableArrayList("start", "middle", "end");
         positionWordComboBox.setItems(positionWords);
 
-        rootListener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends NavWordController> observable, NavWordController oldValue, NavWordController newValue) {
-                Word root = newValue.getObject();
+        System.out.println(Colors.success("TypeEditorController initialized 0"));
+
+        rootListener = new StyleListener<Word, NavWordController>(mainController.getSelectedWord(), "Arguments error") {
+            public void perform() {
                 chooseWordButton.setStyle("-fx-font-weight: bold;");
-                chooseWordButton.setText(PersistenceUtils.wordToString(root));
-                management.getType().setRoot(root);
-                //remove the listener
-                mainController.getSelectedWord().removeListener(this);
-                mainController.getSelectedWord().set(null);
+                chooseWordButton.setText(PersistenceUtils.wordToString(newObject));
+                management.getType().setRoot(newObject);
             }
         };
 
-        parentListener = new ChangeListener<>() {
-            @Override
-            public void changed(ObservableValue<? extends NavTypeController> observable, NavTypeController oldValue, NavTypeController newValue) {
-                Type parent = newValue.getObject();
-                try {
-                    management.setParent(parent);
-                    chooseParentButton.setText(parent.getLabel());
-                    chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(parent.getColor()) + "; -fx-font-weight: bold;");
-                    //remove the listener
-                    mainController.getSelectedType().removeListener(this);
-                    mainController.getSelectedType().set(null);
-                }catch(IllegalArgumentException e){
-                    Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-                    alert.setTitle("Arguments error");
-                    alert.setContentText(e.getMessage());
-                    alert.show();
-                }
+        System.out.println(Colors.success("TypeEditorController initialized 1"));
+
+        parentListener = new StyleListener<Type,NavTypeController>(mainController.getSelectedType(), "Arguments error") {
+            public void perform(){
+                management.setParent(newObject);
+                chooseParentButton.setText(newObject.getLabel());
+                chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newObject.getColor()) + "; -fx-font-weight: bold;");
             }
         };
+
+        System.out.println(Colors.success("TypeEditorController initialized 2"));
 
         System.out.println(Colors.success("TypeEditorController initialized"));
     }

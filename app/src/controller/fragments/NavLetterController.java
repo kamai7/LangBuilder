@@ -6,33 +6,19 @@ import controller.Controller;
 import controller.LetterEditorController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import model.managment.LetterManagement;
 import model.persistance.Letter;
 import utils.Colors;
 import view.FXMLHandler;
 
-public class NavLetterController implements NavItem<Letter>{
-
-    private Controller mainController;
-
-    private Letter object;
-    
-    @FXML
-    private Label objectLabel,
-                  descriptionLabel;
-
-    @FXML
-    private CheckBox selectedCheckBox;
-
+public class NavLetterController extends NavItem<Letter>{
 
     @FXML
     private void initialize() {}
 
     @FXML
-    private void contentClicked() {
+    protected void contentClicked() {
         selectedCheckBox.setSelected(!selectedCheckBox.isSelected());
         mainController.getSelectedLetter().set(this);
     }
@@ -54,10 +40,6 @@ public class NavLetterController implements NavItem<Letter>{
         descriptionLabel.setText(letter.getCharacterAscii());
     }
 
-    public CheckBox getCheckbox() {
-        return selectedCheckBox;
-    }
-
     public void delete(){
         LetterManagement management = new LetterManagement(object);
         try{
@@ -74,17 +56,6 @@ public class NavLetterController implements NavItem<Letter>{
             alert.setTitle("In use error");
             alert.show();
         }
-    }
-
-    public Letter getObject() {
-        return object;
-    }
-
-    public boolean equals(Object other){
-        if (this == other) return true;
-        if (!(other instanceof NavLetterController)) return false;
-        NavLetterController otherController = (NavLetterController) other;
-        return object.equals(otherController.getObject());
     }
     
 }

@@ -6,27 +6,13 @@ import controller.Controller;
 import controller.TypeEditorController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import model.managment.TypeManagement;
 import model.persistance.Type;
 import utils.Colors;
 import view.FXMLHandler;
 
-public class NavTypeController implements NavItem<Type> {
-
-    private Controller mainController;
-
-    private Type object;
-    
-    @FXML
-    private Label objectLabel,
-                  descriptionLabel;
-
-    @FXML
-    private CheckBox selectedCheckBox;
-
+public class NavTypeController extends NavItem<Type> {
 
     @FXML
     private void initialize() {
@@ -62,10 +48,6 @@ public class NavTypeController implements NavItem<Type> {
         }
     }
 
-    public CheckBox getCheckbox() {
-        return selectedCheckBox;
-    }
-
     public void delete(){
         TypeManagement management = new TypeManagement(object);
         try{
@@ -79,17 +61,6 @@ public class NavTypeController implements NavItem<Type> {
             alert.setTitle("In use error");
             alert.show();
         }
-    }
-
-    public Type getObject() {
-        return object;
-    }
-
-    public boolean equals(Object other){
-        if (this == other) return true;
-        if (!(other instanceof NavLetterController)) return false;
-        NavTypeController otherController = (NavTypeController) other;
-        return object.equals(otherController.getObject());
     }
     
 }
