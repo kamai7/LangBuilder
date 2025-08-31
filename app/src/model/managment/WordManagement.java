@@ -137,5 +137,23 @@ public class WordManagement {
         return word;
     }
 
+    public void addRoot(Word root) throws InvalidUserArgument{
+        if (root.equals(word)) {
+            throw new InvalidUserArgument("Word cannot be its own root");
+        }else if (word.getRoots().contains(root)) {
+            throw new InvalidUserArgument("Word already has this root");
+        }
+        word.getRoots().add(root);
+    }
+
+    public void addLink(Word link) throws InvalidUserArgument{
+        if (link.equals(word)) {
+            throw new InvalidUserArgument("Word cannot be its own link");
+        }else if (word.getLinks().contains(link)) {
+            throw new InvalidUserArgument("Word already has this link");
+        }
+        word.getLinks().add(link);
+    }
+
 }
   

@@ -116,33 +116,6 @@ public class WordEditorController extends AbstractEditor<Word> {
         linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
         usableCheckBox.selectedProperty().addListener(event -> management.getWord().setUsable(usableCheckBox.isSelected()));
 
-        chooseTypeListener = new SelectionListener<>("argument error") {
-            public void perform() throws InvalidUserArgument {
-                management.getWord().getTypes().add(newObject);
-                addType(newObject);
-                mainController.getSelectedType().removeListener(this);
-                mainController.getSelectedType().set(null);
-            }
-        };
-
-        chooseRootListener = new SelectionListener<>("argument error") {
-            public void perform() throws InvalidUserArgument{
-                management.getWord().getRoots().add(newObject);
-                addRoot(newObject);
-                mainController.getSelectedWord().removeListener(this);
-                mainController.getSelectedWord().set(null);
-            }
-        };
-
-        chooseLinkListener = new SelectionListener<>("argument error") {
-            public void perform() throws InvalidUserArgument{
-                management.getWord().getLinks().add(newObject);
-                addLink(newObject);
-                mainController.getSelectedWord().removeListener(this);
-                mainController.getSelectedWord().set(null);
-            }
-        };
-
         System.out.println(Colors.success("WordEditorController initialized"));
     }
 
@@ -309,8 +282,29 @@ public class WordEditorController extends AbstractEditor<Word> {
             throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
         }
         management = new WordManagement();
-
         this.mainController = mainController;
+
+        chooseTypeListener = new SelectionListener<>(mainController.getSelectedType()) {
+            public void perform() throws InvalidUserArgument {
+                management.getWord().getTypes().add(newObject);
+                addType(newObject);
+            }
+        };
+
+        chooseRootListener = new SelectionListener<>(mainController.getSelectedWord()) {
+            public void perform() throws InvalidUserArgument{
+                management.addRoot(newObject);
+                addRoot(newObject);
+            }
+        };
+
+        chooseLinkListener = new SelectionListener<>(mainController.getSelectedWord()) {
+            public void perform() throws InvalidUserArgument{
+                management.addLink(newObject);
+                addLink(newObject);
+            }
+        };
+
         this.headerObject.setText("???");
         Color color2 = Colors.convertRGBAToColor(new int[]{153, 0, 255, 255});
         Color color1 = Colors.convertRGBAToColor(new int[]{0, 174, 255, 255});
@@ -347,19 +341,6 @@ public class WordEditorController extends AbstractEditor<Word> {
 
     private void addLink(Word object) {
         WordField field = new WordField(PersistenceUtils.wordToString(object));
-        rootsPane.getChildren().add(field);
-
-        fieldApear(field);
-
-        field.getDeleteButton().setOnAction(event -> {
-            management.getWord().getRoots().remove(object);
-            AnimationUtils.smooth(field.opacityProperty(), 0.0);
-            rootsPane.getChildren().remove(field);
-        });
-    }
-
-    private void addRoot(Word object) {
-        WordField field = new WordField(PersistenceUtils.wordToString(object));
         linksPane.getChildren().add(field);
 
         fieldApear(field);
@@ -368,6 +349,19 @@ public class WordEditorController extends AbstractEditor<Word> {
             management.getWord().getLinks().remove(object);
             AnimationUtils.smooth(field.opacityProperty(), 0.0);
             linksPane.getChildren().remove(field);
+        });
+    }
+
+    private void addRoot(Word object) {
+        WordField field = new WordField(PersistenceUtils.wordToString(object));
+        rootsPane.getChildren().add(field);
+
+        fieldApear(field);
+
+        field.getDeleteButton().setOnAction(event -> {
+            management.getWord().getRoots().remove(object);
+            AnimationUtils.smooth(field.opacityProperty(), 0.0);
+            rootsPane.getChildren().remove(field);
         });
     }
 

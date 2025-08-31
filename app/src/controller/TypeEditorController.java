@@ -42,36 +42,8 @@ public class TypeEditorController extends AbstractEditor<Type> {
 
     @FXML
     private void initialize() {
-
         positionWords = FXCollections.observableArrayList("start", "middle", "end");
         positionWordComboBox.setItems(positionWords);
-
-        System.out.println(Colors.success("TypeEditorController initialized 0"));
-
-        rootListener = new SelectionListener<Word, NavWordController>("Arguments error") {
-            public void perform() throws InvalidUserArgument{
-                chooseWordButton.setStyle("-fx-font-weight: bold;");
-                chooseWordButton.setText(PersistenceUtils.wordToString(newObject));
-                management.getType().setRoot(newObject);
-                mainController.getSelectedWord().removeListener(rootListener);
-                mainController.getSelectedWord().set(null);
-            }
-        };
-
-        System.out.println(Colors.success("TypeEditorController initialized 1"));
-
-        parentListener = new SelectionListener<Type,NavTypeController>("Arguments error") {
-            public void perform() throws InvalidUserArgument{
-                management.setParent(newObject);
-                chooseParentButton.setText(newObject.getLabel());
-                chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newObject.getColor()) + "; -fx-font-weight: bold;");
-                mainController.getSelectedType().removeListener(parentListener);
-                mainController.getSelectedType().set(null);
-            }
-        };
-
-        System.out.println(Colors.success("TypeEditorController initialized 2"));
-
         System.out.println(Colors.success("TypeEditorController initialized"));
     }
 
@@ -191,8 +163,24 @@ public class TypeEditorController extends AbstractEditor<Type> {
             throw new IllegalArgumentException(Colors.error("LetterItemController.init" , "mainController cannot be null"));
         }
         management = new TypeManagement();
-
         this.mainController = mainController;
+
+        rootListener = new SelectionListener<Word, NavWordController>(mainController.getSelectedWord()) {
+            public void perform() throws InvalidUserArgument{
+                chooseWordButton.setStyle("-fx-font-weight: bold;");
+                chooseWordButton.setText(PersistenceUtils.wordToString(newObject));
+                management.getType().setRoot(newObject);
+            }
+        };
+
+        parentListener = new SelectionListener<Type,NavTypeController>(mainController.getSelectedType()) {
+            public void perform() throws InvalidUserArgument{
+                management.setParent(newObject);
+                chooseParentButton.setText(newObject.getLabel());
+                chooseParentButton.setStyle("-fx-text-fill: " + Colors.colorToHex(newObject.getColor()) + "; -fx-font-weight: bold;");
+            }
+        };
+
         this.headerObject.setText("???");
         Color color1 = Colors.convertRGBAToColor(new int[]{255, 0, 234, 255});
         Color color2 = Colors.convertRGBAToColor(new int[]{255, 187, 0, 255});

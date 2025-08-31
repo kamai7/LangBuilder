@@ -2,6 +2,7 @@ package controller.listener;
 
 import controller.fragments.NavItem;
 import exceptions.InvalidUserArgument;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Alert;
@@ -9,10 +10,10 @@ import javafx.scene.control.Alert;
 public abstract class SelectionListener<U,T extends NavItem<U>> implements ChangeListener<T>{
 
     protected U newObject;
-    private String errorMessage;
+    private ObjectProperty<T> property;
 
-    public SelectionListener(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public SelectionListener(ObjectProperty<T> property) {
+        this.property = property;
     }
 
     @Override
@@ -21,12 +22,15 @@ public abstract class SelectionListener<U,T extends NavItem<U>> implements Chang
             newObject = newValue.getObject();
             perform();
 
-            //remove the listener
         }catch(InvalidUserArgument e){
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage());
-            alert.setTitle(errorMessage);
+            alert.setTitle("Arguments error");
             alert.setContentText(e.getMessage());
             alert.show();
+        }finally{
+            //remove the listener
+            property.removeListener(this);
+            property.set(null);
         }
     }
 
