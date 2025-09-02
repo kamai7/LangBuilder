@@ -5,14 +5,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import model.dao.WordDAO;
 import model.persistance.Letter;
 import model.persistance.Type;
 import model.persistance.Word;
 import utils.Colors;
 
-class WordGenerator {
+public class WordGenerator {
 
     private Set<Word> find;
     private Set<Word> links;
