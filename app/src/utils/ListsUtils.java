@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ListsUtils {
@@ -51,6 +52,18 @@ public class ListsUtils {
             }
         }
         return max;
+    }
+
+    public static <T> T draw(Collection<T> c){
+        int goal = (int) (Math.random() * c.size());
+        int count = 0;
+        for (T t : c) {
+            if (count == goal) {
+                return t;
+            }
+            count++;
+        }
+        return null;
     }
     
 }

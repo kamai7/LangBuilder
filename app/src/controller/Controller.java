@@ -7,6 +7,7 @@ import controller.fragments.NavItem;
 import controller.fragments.NavLetterController;
 import controller.fragments.NavTypeController;
 import controller.fragments.NavWordController;
+import controller.osu.OsuController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -35,9 +36,11 @@ import utils.AnimationUtils;
 import utils.Colors;
 import utils.FragmentUtils;
 import view.FXMLHandler;
+import view.View;
 
 public class Controller {
     private Management management;
+    private View view;
 
     @FXML
     private TextField wordSearch,
@@ -205,6 +208,10 @@ public class Controller {
         System.out.println(Colors.success("Controller initialized"));
     }
 
+    public void init(View view) {
+        this.view = view;
+    }
+
     @FXML
     private void load() {
         System.out.println(Colors.info("Load button clicked"));
@@ -310,6 +317,12 @@ public class Controller {
         fetchTypes();
         reloadTypesNav();
         typeSelectAllCheckBox.setSelected(false);
+    }
+
+    @FXML
+    private void osu(){
+        OsuController osuController = new OsuController(view);
+        setContent(osuController.get(), osuController);
     }
 
     /**

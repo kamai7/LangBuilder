@@ -48,8 +48,7 @@ public class Colors {
         return BOLD_YELLOW + message + " -> " + RESET + UNDERLINE_YELLOW + warning + RESET;
     }
 
-    public static Color[] calcGradient(Color color){
-        double distance = 0.4;
+    public static Color[] calcGradient(Color color, double distance){
         double rShift = color.getRed() * distance;
         double gShift = color.getGreen() * distance;
         double bShift = color.getBlue() * distance;
@@ -61,6 +60,10 @@ public class Colors {
         double col2B = Math.min(Math.max(0.0,color.getBlue() - (col1B * bShift * 2)),1.0);
         Color[] ret = new Color[]{new Color(col2R, col2G, col2B, color.getOpacity()), new Color(col1R, col1G, col1B, color.getOpacity())};
         return ret;
+    }
+
+    public static Color[] calcGradient(Color color){
+        return calcGradient(color, 0.4);
     }
 
     public static Color convertRGBAToColor(int[] rgba) {

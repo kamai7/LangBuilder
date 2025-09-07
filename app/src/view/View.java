@@ -26,6 +26,7 @@ public class View extends Stage {
         main.setPrefWidth(1280.0);
 
         scene = new Scene(main, 1280, 720);
+        navHeader.getController().init(this);
         Font.loadFont(getClass().getResourceAsStream("/fxml/fonts/Inter-Regular.ttf"), 12);
         scene.getStylesheets().add("/fxml/style/redefined.css");
         scene.getStylesheets().add("/fxml/style/style.css");
