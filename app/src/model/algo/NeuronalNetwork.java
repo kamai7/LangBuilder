@@ -14,7 +14,7 @@ public class NeuronalNetwork {
                 connections = layers[i + 1];
             }
             for (int j = 0; j < layers[i]; j++) {
-                layer.add(new Neuron(connections));
+                //layer.add(new Neuron(connections));
             }
         }
     }
