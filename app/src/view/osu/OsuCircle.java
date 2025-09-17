@@ -2,6 +2,7 @@ package view.osu;
 
 import java.util.ArrayList;
 
+import controller.osu.OsuCircleController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
@@ -21,7 +22,6 @@ public class OsuCircle extends StackPane{
     public static final int CIRCLE_RADIUS = 40;
     public static final double OUTLINE_ANIMATION_DURATION = 0.2;
     public static final double CIRCLE_DELAY = 0.05;
-    public static final double CIRCLE_MAX_SIZE_FACTOR = 1.25;
 
     private Circle outline;
     private Circle circle;
@@ -35,9 +35,9 @@ public class OsuCircle extends StackPane{
 
     public OsuCircle(Color color, String key, double duration) {
         super();
-
-        setPrefHeight(((CIRCLE_RADIUS * CIRCLE_MAX_SIZE_FACTOR) + 3) * 2);
-        setPrefWidth(((CIRCLE_RADIUS * CIRCLE_MAX_SIZE_FACTOR) + 3) * 2);
+        double maxSize = duration/(duration - OsuCircleController.OVERFLOW);
+        setPrefHeight(((CIRCLE_RADIUS * maxSize) + 3) * 2);
+        setPrefWidth(((CIRCLE_RADIUS * maxSize) + 3) * 2);
 
         initOutline();
         initCircle(color);
@@ -55,7 +55,7 @@ public class OsuCircle extends StackPane{
         KeyValue circleRadiusStart = new KeyValue(circle.radiusProperty(), CIRCLE_RADIUS/6);
         KeyValue circleOpacityStart = new KeyValue(circle.opacityProperty(), 0);
         KeyValue circleOpacityEnd = new KeyValue(circle.opacityProperty(), 1, AnimationUtils.QUAD_EASE_OUT);
-        KeyValue circleRadiusEnd = new KeyValue(circle.radiusProperty(), CIRCLE_RADIUS * CIRCLE_MAX_SIZE_FACTOR);
+        KeyValue circleRadiusEnd = new KeyValue(circle.radiusProperty(), CIRCLE_RADIUS * maxSize);
 
         key0 = new KeyFrame(Duration.seconds(CIRCLE_DELAY), circleRadiusStart, circleOpacityStart);
         key1 = new KeyFrame(Duration.seconds(OUTLINE_ANIMATION_DURATION), outlineRadiusEnd, outlineOpacityEnd);
@@ -95,7 +95,13 @@ public class OsuCircle extends StackPane{
     }
 
     public KeyFrame[] getKeyFrames() {
-        return new KeyFrame[]{key0, key1, key2, key3, key4};
+        KeyFrame[] ret = new KeyFrame[6];
+        ret[0] = key0;
+        ret[1] = key1;
+        ret[2] = key2;
+        ret[3] = key3;
+        ret[4] = key4;
+        return ret;
     }
     
 }

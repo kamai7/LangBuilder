@@ -13,16 +13,8 @@
 .button:hover{
     -fx-background-color: #72727260;
     -fx-cursor: hand;
-    -fx-font-family: 'Inter';
 }
 
-.label {
-    -fx-font-family: 'Inter';
-}
-
-.button .text {
-    -fx-font-family: 'Inter';
-}
 
 /*Tabs*/
 

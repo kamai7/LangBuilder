@@ -17,19 +17,20 @@ import view.osu.OsuCircle;
 
 public class OsuController {
 
-    private final double COLOR_CYCLE_DURATION = 6;
+    public final double TICK_DURATION = 1.0/60.0;
+    public final double COLOR_CYCLE_DURATION = 6;
+    private int nbTick;
 
     private Osu osu;
 
     private Color colorCycle;
     private int colorPhase;
 
-    private Timeline colorLoop;
-    private Timeline circlesGeneration;
+    private Timeline game;
 
     private List<OsuCircleController> circles;
 
-    public static final Set<KeyCode> possibleKeys = Set.of(KeyCode.Q, KeyCode.D, KeyCode.S, KeyCode.F);
+    public static final Set<KeyCode> possibleKeys = Set.of(KeyCode.Q, KeyCode.S);
 
     public OsuController(View mainView) {
         if (mainView == null) {
@@ -37,38 +38,44 @@ public class OsuController {
         }
 
         circles = new ArrayList<>();
-
         this.osu = new Osu();
 
         mainView.getScene().setOnKeyPressed(e -> {
-            System.out.println(circles.get(0).getLifeTime() + ", duration: " + circles.get(0).getDuration() + "must be between " + circles.get(0).getDuration() * OsuCircle.CIRCLE_MAX_SIZE_FACTOR + " and " + (circles.get(0).getDuration() - ((circles.get(0).getDuration() * OsuCircle.CIRCLE_MAX_SIZE_FACTOR) - circles.get(0).getDuration())));
-            if (e.getCode() == circles.get(0).getKey()) {
-                double min = circles.get(0).getDuration() - ((circles.get(0).getDuration() * OsuCircle.CIRCLE_MAX_SIZE_FACTOR) - circles.get(0).getDuration());
-                if (circles.get(0).getLifeTime() > min) {
-                    circles.get(0).close();
-                    circles.remove(0);
-                    osu.getChildren().remove(0);
-                }else {
-                    System.out.println(Colors.error("perdu"));
-                    circlesGeneration.stop();
+            if (possibleKeys.contains(e.getCode())) {
+                OsuCircleController circle = circles.get(0);
+                if (e.getCode().equals(circle.getKey())) {
+
+                    if (circle.getState() == 0){
+                        kill();
+                    } else{
+                        if (circle.getState() == 1) {
+                            System.out.println("OK");
+                        } else if (circle.getState() == 2) {
+                            System.out.println("GOOD");
+                        } else if (circle.getState() == 3) {
+                            System.out.println("PERFECT");
+                        }
+                        circle.getTimeline().stop();
+                        circles.remove(0);
+                        osu.getChildren().remove(0);
+                    }
+                }else{
+                    kill();
                 }
             }
         });
-
-        KeyFrame color = new KeyFrame(Duration.seconds(COLOR_CYCLE_DURATION / 765), e -> changeColor(0.8));
-        colorLoop = new Timeline(color);
-        colorLoop.setCycleCount(Timeline.INDEFINITE);
-
-        KeyFrame circles = new KeyFrame(Duration.seconds(1), e -> randomCircle());
-        circlesGeneration = new Timeline(circles);
-        circlesGeneration.setCycleCount(Timeline.INDEFINITE);
-
-        circlesGeneration.play();
-        colorLoop.play();
+        KeyFrame frame = new KeyFrame(Duration.seconds(TICK_DURATION), _ -> tickUpdate());
+        game = new Timeline(frame);
+        game.setCycleCount(Timeline.INDEFINITE);
+        game.play();
     }
 
     public Osu get() {
         return osu;
+    }
+
+    public int getFrameCount(){
+        return nbTick;
     }
 
     private void changeColor(double saturation) {
@@ -105,15 +112,29 @@ public class OsuController {
 
         KeyCode kCode = ListsUtils.draw(possibleKeys);
 
-        OsuCircleController circle = new OsuCircleController(colorCycle, kCode, 1.2);
-        circle.isAlive().addListener(e -> {
-            System.out.println(Colors.error("perdu"));
-            circlesGeneration.stop();
-        });
+        OsuCircleController circle = new OsuCircleController(this, colorCycle, kCode, 1.3);
         circles.add(circle);
-        osu.getChildren().add(circle.get());
-        circle.get().setLayoutX(x - ((OsuCircle.CIRCLE_RADIUS * OsuCircle.CIRCLE_MAX_SIZE_FACTOR) + 3));
-        circle.get().setLayoutY(y - ((OsuCircle.CIRCLE_RADIUS * OsuCircle.CIRCLE_MAX_SIZE_FACTOR) + 3));
+        osu.getChildren().add(osu.getChildren().size(), circle.get());
+        circle.get().setLayoutX(x - ((OsuCircle.CIRCLE_RADIUS) + 3));
+        circle.get().setLayoutY(y - ((OsuCircle.CIRCLE_RADIUS) + 3));
+    }
+
+    private void tickUpdate() {
+        nbTick++;
+
+        changeColor(0.8);
+
+        if(nbTick%40 == 0){
+            randomCircle();
+        }
+    }
+
+    public void kill(){
+        System.out.println("echec");
+        game.stop();
+        for(OsuCircleController circle: circles){
+            circle.getTimeline().stop();
+        }
     }
     
 }
