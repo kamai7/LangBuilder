@@ -1,0 +1,159 @@
+package kamai_i.model.managment;
+
+import java.util.ArrayList;
+
+import kamai_i.exceptions.InvalidUserArgument;
+import kamai_i.model.dao.LetterDAO;
+import kamai_i.model.dao.WordDAO;
+import kamai_i.model.persistance.Letter;
+import kamai_i.model.persistance.Word;
+import kamai_i.utils.Colors;
+
+public class WordManagement {
+
+    private Word word;
+    private WordDAO wordDAO;
+
+    private ArrayList<String> allLetters;
+    private ArrayList<String> allLettersAscii;
+    
+    public WordManagement() {
+        wordDAO = new WordDAO();
+        
+        word = new Word();
+
+        findLetters();
+    }
+
+    public WordManagement(Word word) {
+        if (word == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.WordManagement:", "word cannot be null"));
+        }
+        this.word = word;
+        wordDAO = new WordDAO();
+
+        findLetters();
+    }
+
+    public void delete() throws InvalidUserArgument{
+        if (word == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.deleteWord:", "word cannot be null"));
+        }
+        try{
+            wordDAO.delete(word);
+            this.word = null;
+        }catch (Exception e){
+            throw new InvalidUserArgument("WordManagement.deleteWord: " + e.getMessage());
+        }
+    }
+
+    public void edit() throws InvalidUserArgument {
+        if (word.getLetterIds().size() == 0) {
+            throw new IllegalArgumentException("word must contains letters");
+        }
+        try{
+            if(word.getId() == -1){
+                wordDAO.create(word);
+            }else{
+                wordDAO.update(word);
+            }
+        }catch (Exception e){
+            throw new InvalidUserArgument("WordManagement.edit: " + e.getMessage());
+        }
+    }
+
+    private void findLetters(){
+        LetterDAO letterDAO = new LetterDAO();
+        ArrayList<Letter> letters = letterDAO.findAll();
+
+        allLetters = new ArrayList<>(letters.size());
+        allLettersAscii = new ArrayList<>(letters.size());
+
+        for (Letter letter : letters) {
+            allLetters.add(letter.getCharacter());
+            allLettersAscii.add(letter.getCharacterAscii());
+        }
+    }
+
+    public void addTranslations(String translations) {
+        word.getTranslations().clear();
+        String[] translationSeparated = translations.split(";");
+        for (String translation: translationSeparated) {
+            if (translation != null && translation.trim().length() > 0) {
+                word.getTranslations().add(translation.replace("\n", ""));
+            }
+        }
+    }
+
+    public void addDefinitions(String definitions) {
+        word.getDefinitions().clear();
+        String[] definitionSeparated = definitions.split(";");
+        for (String definition: definitionSeparated) {
+            if (definition != null && definition.trim().length() > 0) {
+                word.getDefinitions().add(definition.replace("\n", ""));
+            }
+        }
+    }
+
+    public Letter findLetterUnique(String l){
+        Letter ret = null;
+
+        int counter = 0;
+        if (allLetters.contains(l) || allLettersAscii.contains(l)){
+            for (String letter: allLetters) {
+                if (letter.contains(l)){
+                    counter++;
+                }
+            }
+            for (String letterAscii: allLettersAscii) {
+                if (letterAscii.contains(l)){
+                    counter++;
+                }
+            }
+            if (counter == 1){
+                LetterDAO letterDAO = new LetterDAO();
+                ret = letterDAO.findByString(l).get(0);
+            }
+        }
+        return ret;
+    }
+
+    public Letter findLetter(String l){
+        if (l == null) {
+            throw new IllegalArgumentException(Colors.error("WordManagement.addLetter:", "letter cannot be null"));
+        }
+        Letter ret = null;
+        LetterDAO letterDAO = new LetterDAO();
+        int size = letterDAO.findByString(l).size();
+
+        if (size > 0) {
+            ret = letterDAO.findByString(l).get(0);
+        }
+
+        return ret;
+    }
+
+    public Word getWord() {
+        return word;
+    }
+
+    public void addRoot(Word root) throws InvalidUserArgument{
+        if (root.equals(word)) {
+            throw new InvalidUserArgument("Word cannot be its own root");
+        }else if (word.getRoots().contains(root)) {
+            throw new InvalidUserArgument("Word already has this root");
+        }
+        word.getRoots().add(root);
+    }
+
+    public void addLink(Word link) throws InvalidUserArgument{
+        if (link.equals(word)) {
+            throw new InvalidUserArgument("Word cannot be its own link");
+        }else if (word.getLinks().contains(link)) {
+            throw new InvalidUserArgument("Word already has this link");
+        }
+        word.getLinks().add(link);
+    }
+
+}
+  

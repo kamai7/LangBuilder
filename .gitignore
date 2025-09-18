@@ -11,7 +11,7 @@ class/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# package kamai_i.Files #
 *.jar
 !lib/**/*.jar
 *.war
