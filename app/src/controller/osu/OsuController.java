@@ -30,7 +30,7 @@ public class OsuController {
 
     private List<OsuCircleController> circles;
 
-    public static final Set<KeyCode> possibleKeys = Set.of(KeyCode.Q, KeyCode.S);
+    public static final Set<KeyCode> possibleKeys = Set.of(KeyCode.Q, KeyCode.S, KeyCode.L, KeyCode.M);
 
     public OsuController(View mainView) {
         if (mainView == null) {
@@ -44,21 +44,7 @@ public class OsuController {
             if (possibleKeys.contains(e.getCode())) {
                 OsuCircleController circle = circles.get(0);
                 if (e.getCode().equals(circle.getKey())) {
-
-                    if (circle.getState() == 0){
-                        kill();
-                    } else{
-                        if (circle.getState() == 1) {
-                            System.out.println("OK");
-                        } else if (circle.getState() == 2) {
-                            System.out.println("GOOD");
-                        } else if (circle.getState() == 3) {
-                            System.out.println("PERFECT");
-                        }
-                        circle.getTimeline().stop();
-                        circles.remove(0);
-                        osu.getChildren().remove(0);
-                    }
+                    circle.action();
                 }else{
                     kill();
                 }
@@ -117,6 +103,14 @@ public class OsuController {
         osu.getChildren().add(osu.getChildren().size(), circle.get());
         circle.get().setLayoutX(x - ((OsuCircle.CIRCLE_RADIUS) + 3));
         circle.get().setLayoutY(y - ((OsuCircle.CIRCLE_RADIUS) + 3));
+    }
+
+    public void removeCircleList(){
+        circles.remove(0);
+    }
+
+    public void removeCircleContainer(){
+        osu.getChildren().remove(0);
     }
 
     private void tickUpdate() {

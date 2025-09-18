@@ -14,7 +14,7 @@ public class Osu extends Pane {
         maxWidth(Double.MAX_VALUE);
         maxHeight(Double.MAX_VALUE);
         HBox.setHgrow(this, Priority.ALWAYS);
-        setEffect(new Glow(1.6));
+        setEffect(new Glow(0.8));
     }
 
 }
