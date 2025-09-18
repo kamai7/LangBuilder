@@ -97,9 +97,9 @@ public class WordEditorController extends AbstractEditor<Word> {
         FragmentUtils.initSlider(vulgaritySlider, vulgarityValue, 0.05);
         FragmentUtils.initSlider(formalitySlider, formalityValue, 0.05);
 
-        emotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.getWord().setEmotional(newValue.doubleValue()));
-        vulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.getWord().setVulgarity(newValue.doubleValue()));
-        formalitySlider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> management.getWord().setFormality(newValue.doubleValue()));
+        emotionalitySlider.valueProperty().addListener((ChangeListener<Number>) (_, _, newValue) -> management.getWord().setEmotional(newValue.doubleValue()));
+        vulgaritySlider.valueProperty().addListener((ChangeListener<Number>) (_, _, newValue) -> management.getWord().setVulgarity(newValue.doubleValue()));
+        formalitySlider.valueProperty().addListener((ChangeListener<Number>) (_, _, newValue) -> management.getWord().setFormality(newValue.doubleValue()));
 
         lengthContainer.setDisable(!lengthCheckBox.isSelected());
         emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected());
@@ -108,13 +108,13 @@ public class WordEditorController extends AbstractEditor<Word> {
         rootsContainer.setDisable(!rootsCheckBox.isSelected());
         linksContainer.setDisable(!linksCheckBox.isSelected());
 
-        lengthCheckBox.selectedProperty().addListener(event -> lengthContainer.setDisable(!lengthCheckBox.isSelected()));
-        emotionalityCheckBox.selectedProperty().addListener(event -> emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected()));
-        vulgarityCheckBox.selectedProperty().addListener(event -> vulgarityContainer.setDisable(!vulgarityCheckBox.isSelected()));
-        formalityCheckBox.selectedProperty().addListener(event -> formalityContainer.setDisable(!formalityCheckBox.isSelected()));
-        rootsCheckBox.selectedProperty().addListener(event -> rootsContainer.setDisable(!rootsCheckBox.isSelected()));
-        linksCheckBox.selectedProperty().addListener(event -> linksContainer.setDisable(!linksCheckBox.isSelected()));
-        usableCheckBox.selectedProperty().addListener(event -> management.getWord().setUsable(usableCheckBox.isSelected()));
+        lengthCheckBox.selectedProperty().addListener(_ -> lengthContainer.setDisable(!lengthCheckBox.isSelected()));
+        emotionalityCheckBox.selectedProperty().addListener(_ -> emotionalityContainer.setDisable(!emotionalityCheckBox.isSelected()));
+        vulgarityCheckBox.selectedProperty().addListener(_ -> vulgarityContainer.setDisable(!vulgarityCheckBox.isSelected()));
+        formalityCheckBox.selectedProperty().addListener(_ -> formalityContainer.setDisable(!formalityCheckBox.isSelected()));
+        rootsCheckBox.selectedProperty().addListener(_ -> rootsContainer.setDisable(!rootsCheckBox.isSelected()));
+        linksCheckBox.selectedProperty().addListener(_ -> linksContainer.setDisable(!linksCheckBox.isSelected()));
+        usableCheckBox.selectedProperty().addListener(_ -> management.getWord().setUsable(usableCheckBox.isSelected()));
 
         System.out.println(Colors.success("WordEditorController initialized"));
     }
@@ -327,7 +327,7 @@ public class WordEditorController extends AbstractEditor<Word> {
     private void addLetter(Letter l) {
         WordLetter wordLetter = new WordLetter(l.getCharacter());
         lettersPane.getChildren().add(lettersPane.getChildren().size() - 1, wordLetter);
-        wordLetter.getDeleteButton().setOnAction(event -> {
+        wordLetter.getDeleteButton().setOnAction(_ -> {
             management.getWord().getLetters().remove(l);
             AnimationUtils.smooth(wordLetter.opacityProperty(), 0.0);
             lettersPane.getChildren().remove(wordLetter);
@@ -345,7 +345,7 @@ public class WordEditorController extends AbstractEditor<Word> {
 
         fieldApear(field);
 
-        field.getDeleteButton().setOnAction(event -> {
+        field.getDeleteButton().setOnAction(_ -> {
             management.getWord().getLinks().remove(object);
             AnimationUtils.smooth(field.opacityProperty(), 0.0);
             linksPane.getChildren().remove(field);
@@ -358,7 +358,7 @@ public class WordEditorController extends AbstractEditor<Word> {
 
         fieldApear(field);
 
-        field.getDeleteButton().setOnAction(event -> {
+        field.getDeleteButton().setOnAction(_ -> {
             management.getWord().getRoots().remove(object);
             AnimationUtils.smooth(field.opacityProperty(), 0.0);
             rootsPane.getChildren().remove(field);
@@ -371,7 +371,7 @@ public class WordEditorController extends AbstractEditor<Word> {
 
         fieldApear(field);
 
-        field.getDeleteButton().setOnAction(event -> {
+        field.getDeleteButton().setOnAction(_ -> {
             management.getWord().getTypes().remove(object);
             AnimationUtils.smooth(field.opacityProperty(), 0.0);
             typesPane.getChildren().remove(field);

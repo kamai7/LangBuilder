@@ -10,12 +10,12 @@ public class FragmentUtils {
 
         double slice = 1 / precision;
 
-        slider.valueProperty().addListener((ChangeListener<Number>) (ovn, oldValue, newValue) -> {
+        slider.valueProperty().addListener((ChangeListener<Number>) (_, _, newValue) -> {
             double rounded = Math.round(newValue.doubleValue() * slice) / slice;
             field.setText(rounded + "");
         });
 
-        field.textProperty().addListener(event -> {
+        field.textProperty().addListener(_ -> {
             try {
                 double value = Double.parseDouble(field.getText());
                 slider.setValue(value);
