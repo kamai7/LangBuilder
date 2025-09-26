@@ -13,7 +13,7 @@ public class OsuCircleController {
 
     public static final double OVERFLOW = 0.3;
     private OsuCircle circle;
-    private int birthFrame;
+    private int birthDate;
     private double duration;
     private Timeline timeline;
     private KeyCode key;
@@ -25,7 +25,7 @@ public class OsuCircleController {
         this.key = key;
         this.duration = duration;
         this.controller = controller;
-        birthFrame = controller.getFrameCount();
+        birthDate = controller.getFrameCount();
 
         KeyFrame[] keyFrames = circle.getKeyFrames();
         keyFrames[5] = new KeyFrame(Duration.seconds(duration + OVERFLOW), _ -> controller.kill());
@@ -54,7 +54,7 @@ public class OsuCircleController {
     }
 
     public void getState() {
-        double lifeDuration = (controller.getFrameCount() - birthFrame) * controller.TICK_DURATION;
+        double lifeDuration = (controller.getFrameCount() - birthDate) * controller.TICK_DURATION;
         if (lifeDuration < duration - OVERFLOW) {
             state = 0;
         } else if(lifeDuration < duration - (2.0/3.0) * OVERFLOW) {

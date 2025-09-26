@@ -1,5 +1,6 @@
 package kamai_i.controller.osu;
 
+import javafx.event.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import kamai_i.utils.Colors;
@@ -22,14 +24,13 @@ public class OsuController {
     private int nbTick;
 
     private Osu osu;
-
+    private View mainView;
     private Color colorCycle;
     private int colorPhase;
+    private EventHandler<KeyEvent> gameKeys;
 
     private Timeline game;
-
     private List<OsuCircleController> circles;
-
     public static final Set<KeyCode> possibleKeys = Set.of(KeyCode.Q, KeyCode.S, KeyCode.L, KeyCode.M);
 
     public OsuController(View mainView) {
@@ -37,19 +38,26 @@ public class OsuController {
             throw new IllegalArgumentException(Colors.error("OsuController:", "mainView cannot be null"));
         }
 
+        this.mainView = mainView;
+
         circles = new ArrayList<>();
         this.osu = new Osu();
+        this.gameKeys = new EventHandler<>(){
 
-        mainView.getScene().setOnKeyPressed(e -> {
-            if (possibleKeys.contains(e.getCode())) {
-                OsuCircleController circle = circles.get(0);
-                if (e.getCode().equals(circle.getKey())) {
-                    circle.action();
-                }else{
-                    kill();
+            @Override
+            public void handle(KeyEvent event) {
+                if (possibleKeys.contains(event.getCode())) {
+                    OsuCircleController circle = circles.get(0);
+                    if (event.getCode().equals(circle.getKey())) {
+                        circle.action();
+                    }else{
+                        kill();
+                    }
                 }
             }
-        });
+        };
+
+        mainView.getScene().setOnKeyPressed(gameKeys);
         KeyFrame frame = new KeyFrame(Duration.seconds(TICK_DURATION), _ -> tickUpdate());
         game = new Timeline(frame);
         game.setCycleCount(Timeline.INDEFINITE);
@@ -126,6 +134,7 @@ public class OsuController {
     public void kill(){
         System.out.println("echec");
         game.stop();
+        mainView.getScene().setOnKeyPressed(null);
         for(OsuCircleController circle: circles){
             circle.getTimeline().stop();
         }
