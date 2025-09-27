@@ -1,21 +1,21 @@
-package kamai_i.controller.osu;
+package kamai_i.almostroundcircles.controller;
 
-import javafx.event.EventHandler;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
+import kamai_i.almostroundcircles.view.Osu;
+import kamai_i.almostroundcircles.view.OsuCircle;
 import kamai_i.utils.Colors;
 import kamai_i.utils.ListsUtils;
 import kamai_i.view.View;
-import kamai_i.view.osu.Osu;
-import kamai_i.view.osu.OsuCircle;
 
 public class OsuController {
 
@@ -31,7 +31,8 @@ public class OsuController {
 
     private Timeline game;
     private List<OsuCircleController> circles;
-    public static final Set<KeyCode> possibleKeys = Set.of(KeyCode.Q, KeyCode.S, KeyCode.L, KeyCode.M);
+    public static final Set<KeyCode> possibleKeys = Set.of(KeyCode.Q, KeyCode.S);
+    boolean fallDirection;
 
     public OsuController(View mainView) {
         if (mainView == null) {
@@ -39,6 +40,7 @@ public class OsuController {
         }
 
         this.mainView = mainView;
+        this.fallDirection = false;
 
         circles = new ArrayList<>();
         this.osu = new Osu();

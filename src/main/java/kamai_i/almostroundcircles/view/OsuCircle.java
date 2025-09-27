@@ -1,8 +1,7 @@
-package kamai_i.view.osu;
+package kamai_i.almostroundcircles.view;
 
 import java.util.ArrayList;
 
-import kamai_i.controller.osu.OsuCircleController;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.scene.control.Label;
@@ -14,6 +13,7 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import kamai_i.almostroundcircles.controller.OsuCircleController;
 import kamai_i.utils.AnimationUtils;
 import kamai_i.utils.Colors;
 
@@ -102,6 +102,10 @@ public class OsuCircle extends StackPane{
         ret[3] = key3;
         ret[4] = key4;
         return ret;
+    }
+
+    public Circle getOutline(){
+        return outline;
     }
     
 }

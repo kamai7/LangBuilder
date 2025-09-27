@@ -1,4 +1,4 @@
-package kamai_i.view.osu;
+package kamai_i.almostroundcircles.view;
 
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.HBox;
