@@ -5,11 +5,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
-public class Osu extends Pane {
+public class GameView extends Pane {
 
     public static final double MARGIN = 50;
 
-    public Osu() {
+    public GameView() {
         super();
         maxWidth(Double.MAX_VALUE);
         maxHeight(Double.MAX_VALUE);

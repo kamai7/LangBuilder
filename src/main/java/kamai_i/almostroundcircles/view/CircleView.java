@@ -13,31 +13,36 @@ import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
-import kamai_i.almostroundcircles.controller.OsuCircleController;
 import kamai_i.utils.AnimationUtils;
 import kamai_i.utils.Colors;
 
-public class OsuCircle extends StackPane{
+public class CircleView extends StackPane{
 
     public static final int CIRCLE_RADIUS = 40;
     public static final double OUTLINE_ANIMATION_DURATION = 0.2;
-    public static final double CIRCLE_DELAY = 0.05;
+    public static final double CIRCLE_ANIMATION_SHIFT = 0.05;
 
     private Circle outline;
     private Circle circle;
     private Label label;
 
-    private KeyFrame key0;
-    private KeyFrame key1;
-    private KeyFrame key2;
-    private KeyFrame key3;
-    private KeyFrame key4;
+    private final KeyFrame key0;
+    private final KeyFrame key1;
+    private final KeyFrame key2;
+    private final KeyFrame key3;
+    private final KeyFrame key4;
 
-    public OsuCircle(Color color, String key, double duration) {
+    public CircleView(Color color, String key, double animationDuration) {
         super();
-        double maxSize = duration/(duration - OsuCircleController.OVERFLOW);
-        setPrefHeight(((CIRCLE_RADIUS * maxSize) + 3) * 2);
-        setPrefWidth(((CIRCLE_RADIUS * maxSize) + 3) * 2);
+        if (color == null) {
+            throw new IllegalArgumentException(Colors.error("CircleView.CircleView","the color cant be null"));
+        }
+        if (key == null) {
+            throw new IllegalArgumentException(Colors.error("CircleView.CircleView","the key cant be null"));
+        }
+        double maxSize = (1.0 * (animationDuration + (kamai_i.almostroundcircles.model.Circle.TIME_RANGE / 2.0))) / animationDuration;
+        setPrefHeight((CIRCLE_RADIUS * maxSize) * 2);
+        setPrefWidth((CIRCLE_RADIUS * maxSize) * 2);
 
         initOutline();
         initCircle(color);
@@ -57,11 +62,11 @@ public class OsuCircle extends StackPane{
         KeyValue circleOpacityEnd = new KeyValue(circle.opacityProperty(), 1, AnimationUtils.QUAD_EASE_OUT);
         KeyValue circleRadiusEnd = new KeyValue(circle.radiusProperty(), CIRCLE_RADIUS * maxSize);
 
-        key0 = new KeyFrame(Duration.seconds(CIRCLE_DELAY), circleRadiusStart, circleOpacityStart);
+        key0 = new KeyFrame(Duration.seconds(CIRCLE_ANIMATION_SHIFT), circleRadiusStart, circleOpacityStart);
         key1 = new KeyFrame(Duration.seconds(OUTLINE_ANIMATION_DURATION), outlineRadiusEnd, outlineOpacityEnd);
-        key2 = new KeyFrame(Duration.seconds(CIRCLE_DELAY + 0.3), circleOpacityEnd);
-        key3 = new KeyFrame(Duration.seconds(CIRCLE_DELAY + duration/2.5), labelOpacityEnd);
-        key4 = new KeyFrame(Duration.seconds(duration + 0.1), circleRadiusEnd);
+        key2 = new KeyFrame(Duration.seconds(CIRCLE_ANIMATION_SHIFT + 0.3), circleOpacityEnd);
+        key3 = new KeyFrame(Duration.seconds(CIRCLE_ANIMATION_SHIFT + animationDuration/2.5), labelOpacityEnd);
+        key4 = new KeyFrame(Duration.seconds(animationDuration + kamai_i.almostroundcircles.model.Circle.TIME_RANGE / 2), circleRadiusEnd);
     }
 
     private void initOutline() {
@@ -94,8 +99,8 @@ public class OsuCircle extends StackPane{
         label.setOpacity(0);
     }
 
-    public KeyFrame[] getKeyFrames() {
-        KeyFrame[] ret = new KeyFrame[6];
+    public KeyFrame[] keyFrames() {
+        KeyFrame[] ret = new KeyFrame[5];
         ret[0] = key0;
         ret[1] = key1;
         ret[2] = key2;
@@ -104,7 +109,7 @@ public class OsuCircle extends StackPane{
         return ret;
     }
 
-    public Circle getOutline(){
+    public Circle outline(){
         return outline;
     }
     

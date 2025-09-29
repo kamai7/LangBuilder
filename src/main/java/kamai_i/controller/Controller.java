@@ -23,7 +23,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
-import kamai_i.almostroundcircles.controller.OsuController;
+import kamai_i.almostroundcircles.controller.GameController;
+import kamai_i.almostroundcircles.model.Game;
+import kamai_i.almostroundcircles.view.GameView;
 import kamai_i.controller.fragments.NavItem;
 import kamai_i.controller.fragments.NavLetterController;
 import kamai_i.controller.fragments.NavTypeController;
@@ -321,8 +323,10 @@ public class Controller {
 
     @FXML
     private void osu(){
-        OsuController osuController = new OsuController(view);
-        setContent(osuController.get(), osuController);
+        Game model = new Game();
+        GameView gameView = new GameView();
+        GameController gameController = new GameController(view, model, gameView);
+        setContent(gameView, gameController);
     }
 
     /**
