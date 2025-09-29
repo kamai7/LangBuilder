@@ -34,7 +34,7 @@ public class Game {
         alive = new SimpleBooleanProperty(true);
         activeCircle = new SimpleObjectProperty<>();
 
-        KeyFrame addCircle = new KeyFrame(Duration.seconds(1), _ -> randomCircle());
+        KeyFrame addCircle = new KeyFrame(Duration.seconds(0.5), _ -> randomCircle());
         game = new Timeline(addCircle);
         game.setCycleCount(Timeline.INDEFINITE);
 
@@ -114,17 +114,13 @@ public class Game {
         return alive;
     }
 
-    public void hit(KeyCode key) {
+    public void next() {
         if (!circles.isEmpty()) {
-            boolean res = circles.get(0).action(key);
-            if (res){
-                circles.remove(0);
-                if (!circles.isEmpty()) {
-                    activeCircle.set(circles.get(0));
-                }else{
-                    activeCircle.set(null);
-                }
-                
+            circles.remove(0);
+            if (!circles.isEmpty()) {
+                activeCircle.set(circles.get(0));
+            }else{
+                activeCircle.set(null);
             }
         }
     }

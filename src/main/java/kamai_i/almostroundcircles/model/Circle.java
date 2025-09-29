@@ -82,31 +82,17 @@ public class Circle {
         return color;
     }
 
-    boolean action(KeyCode pressedKey){
-        boolean ret = false;
+    public void fail(){
+        game.fail();
+    }
+
+    public int action(KeyCode pressedKey){
+        life.stop();
         if(pressedKey.equals(key)){
-            if (state == 0){
-                game.fail();
-            } else {
-                ret = true;
-                life.stop();
-                switch (state) {
-                    case 1 -> {
-                        System.out.println("OK");
-                    }
-                    case 2 -> {
-                        System.out.println("GOOD");
-                    }
-                    case 3 -> {
-                        System.out.println("PERFECT");
-                    }
-                }
-            }
-            
+            return state;
         }else{
-            game.fail();
+            return 0;
         }
-        return ret;
     }
     
 }

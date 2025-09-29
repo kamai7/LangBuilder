@@ -40,7 +40,10 @@ public class GameController {
     private void initListeners(){
         this.keyEvent = (KeyEvent event) -> {
             if (Game.keys.contains(event.getCode())) {
-                model.hit(event.getCode());
+                if (!circles.isEmpty()){
+                    circles.get(0).action(event);
+                    model.next();
+                }
             }
         };
 
@@ -56,7 +59,7 @@ public class GameController {
         model.newCircleProperty().addListener((_, _, newModel) -> {
 
             CircleView newCircleView = new CircleView(newModel.color(), newModel.key().getName(), newModel.duration());
-            CircleController newController = new CircleController(newCircleView, direction);
+            CircleController newController = new CircleController(newCircleView, newModel, direction);
             direction = !direction;
             view.getChildren().add(newCircleView);
             circles.add(newController);
@@ -64,16 +67,15 @@ public class GameController {
             double x = (((newModel.x() + 1) / 2) * (view.getWidth() - 2 * GameView.MARGIN)) + GameView.MARGIN;
             double y = (((newModel.y() + 1) / 2) * (view.getHeight() - 2 * GameView.MARGIN)) + GameView.MARGIN;
             newCircleView.setLayoutX(x);
-            newCircleView.setLayoutX(y);
+            newCircleView.setLayoutY(y);
         });
 
         model.activeCircleProperty().addListener((_, old, _) -> {
             if (old != null) {
-                KeyFrame[] keys = circles.get(0).disapear(0.7);
                 KeyFrame remove = new KeyFrame(Duration.seconds(0.75), _ -> view.getChildren().remove(0));
                 circles.remove(0);
 
-                Timeline animation = new Timeline(keys[0], keys[1], keys[2], remove);
+                Timeline animation = new Timeline(remove);
                 animation.play();   
             }
         });

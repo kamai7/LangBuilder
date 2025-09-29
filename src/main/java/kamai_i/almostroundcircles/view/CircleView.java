@@ -61,12 +61,13 @@ public class CircleView extends StackPane{
         KeyValue circleOpacityStart = new KeyValue(circle.opacityProperty(), 0);
         KeyValue circleOpacityEnd = new KeyValue(circle.opacityProperty(), 1, AnimationUtils.QUAD_EASE_OUT);
         KeyValue circleRadiusEnd = new KeyValue(circle.radiusProperty(), CIRCLE_RADIUS * maxSize);
+        KeyValue circleOutlineColor = new KeyValue(outline.strokeProperty(), new Color(1,1,1,0.2), AnimationUtils.QUAD_EASE_IN);
 
         key0 = new KeyFrame(Duration.seconds(CIRCLE_ANIMATION_SHIFT), circleRadiusStart, circleOpacityStart);
         key1 = new KeyFrame(Duration.seconds(OUTLINE_ANIMATION_DURATION), outlineRadiusEnd, outlineOpacityEnd);
         key2 = new KeyFrame(Duration.seconds(CIRCLE_ANIMATION_SHIFT + 0.3), circleOpacityEnd);
         key3 = new KeyFrame(Duration.seconds(CIRCLE_ANIMATION_SHIFT + animationDuration/2.5), labelOpacityEnd);
-        key4 = new KeyFrame(Duration.seconds(animationDuration + kamai_i.almostroundcircles.model.Circle.TIME_RANGE / 2), circleRadiusEnd);
+        key4 = new KeyFrame(Duration.seconds(animationDuration + kamai_i.almostroundcircles.model.Circle.TIME_RANGE / 2), circleRadiusEnd, circleOutlineColor);
     }
 
     private void initOutline() {
